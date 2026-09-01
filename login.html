@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login &mdash; audit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #fafafa;
+      --bg-card: #ffffff;
+      --text-main: #09090b;
+      --text-secondary: #52525b;
+      --text-muted: #71717a;
+      --border-subtle: #e4e4e7;
+      --border-focus: #2563eb;
+      --primary-blue: #1d4ed8;
+      --primary-blue-hover: #1e40af;
+      --primary-blue-active: #172554;
+      --accent-pill-bg: #eff6ff;
+      --radius-btn: 8px;
+      --radius-input: 8px;
+      --radius-card: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════
+       HEADER (DESKTOP & MOBILE)
+       ═════════════════════════════════════════════════════════════════════════ */
+    .auth-header {
+      width: 100%;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--text-main);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+      transition: opacity 0.15s ease;
+    }
+
+    .brand-logo:hover {
+      opacity: 0.85;
+    }
+
+    .brand-logo svg {
+      width: 20px;
+      height: 20px;
+      color: var(--text-main);
+    }
+
+    .header-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-back-link {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      background: #f4f4f5;
+      transition: all 0.15s ease;
+    }
+
+    .header-back-link:hover {
+      background: #e4e4e7;
+      color: var(--text-main);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      color: var(--text-main);
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════
+       CENTERED AUTH CONTAINER (NO BIG IMAGE AS REQUESTED)
+       ═════════════════════════════════════════════════════════════════════════ */
+    .auth-main-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-card);
+      padding: 40px 36px;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+      transition: transform 0.2s ease;
+    }
+
+    .auth-heading {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .auth-subtext {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+      margin-bottom: 26px;
+    }
+
+    /* Social Login Buttons */
+    .social-btn-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .btn-social {
+      width: 100%;
+      height: 44px;
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-btn);
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-social:hover {
+      background: #f9fafb;
+      border-color: #d4d4d8;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-social svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Divider */
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 22px 0;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .auth-divider span {
+      padding: 0 14px;
+    }
+
+    /* Form Fields */
+    .auth-form-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-input {
+      width: 100%;
+      height: 44px;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-main);
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-input);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .form-input::placeholder {
+      color: #a1a1aa;
+      font-size: 13.5px;
+    }
+
+    .input-toggle-btn {
+      position: absolute;
+      right: 12px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      padding: 4px;
+    }
+
+    .input-toggle-btn:hover {
+      color: var(--text-main);
+    }
+
+    /* Options Row: Remember Me & Forgot Password */
+    .form-options-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+
+    .remember-me-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      user-select: none;
+      font-weight: 500;
+    }
+
+    .remember-me-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary-blue);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      color: var(--primary-blue);
+      text-decoration: none;
+      font-weight: 600;
+      transition: opacity 0.15s ease;
+    }
+
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Submit Button */
+    .btn-submit-auth {
+      width: 100%;
+      height: 46px;
+      background: var(--primary-blue);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-btn);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 6px rgba(29, 78, 216, 0.25);
+    }
+
+    .btn-submit-auth:hover {
+      background: var(--primary-blue-hover);
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit-auth:active {
+      background: var(--primary-blue-active);
+      transform: translateY(0);
+    }
+
+    .btn-submit-auth:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    /* Switcher Footer (Don't have an account?) */
+    .auth-switch-text {
+      margin-top: 22px;
+      text-align: center;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+    }
+
+    .auth-switch-link {
+      color: var(--primary-blue);
+      font-weight: 700;
+      text-decoration: none;
+      margin-left: 4px;
+      cursor: pointer;
+    }
+
+    .auth-switch-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════
+       PAGE FOOTER (COPYRIGHT & SOCIAL ICONS)
+       ═════════════════════════════════════════════════════════════════════════ */
+    .auth-footer {
+      width: 100%;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .social-links-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .social-icon-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s ease, transform 0.15s ease;
+    }
+
+    .social-icon-link:hover {
+      color: var(--text-main);
+      transform: translateY(-1px);
+    }
+
+    .social-icon-link svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* Toast notification */
+    .toast-msg {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #09090b;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 9999px;
+      font-size: 13.5px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════
+       RESPONSIVE ADAPTATIONS (DESKTOP & MOBILE AS IN SCREENSHOT)
+       ═════════════════════════════════════════════════════════════════════════ */
+    @media (max-width: 640px) {
+      .auth-header {
+        padding: 20px 20px;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .header-back-link {
+        display: none;
+      }
+
+      .auth-main-wrapper {
+        padding: 20px 16px;
+      }
+
+      .auth-card {
+        padding: 28px 20px;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+      }
+
+      .auth-heading {
+        font-size: 24px;
+      }
+
+      .auth-footer {
+        padding: 20px 20px 32px;
+        flex-direction: column-reverse;
+        gap: 14px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Toast Feedback -->
+  <div id="toast" class="toast-msg">
+    <span id="toastIcon">⚡</span>
+    <span id="toastText">Berhasil masuk! Mengarahkan ke dashboard...</span>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════════════════
+       HEADER: Brand Logo (⚡ audit) + Navigation
+       ═════════════════════════════════════════════════════════════════════════ -->
+  <header class="auth-header">
+    <a href="landing.html" class="brand-logo">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      </svg>
+      audit
+    </a>
+
+    <div class="header-nav-actions">
+      <a href="landing.html" class="header-back-link">
+        &larr; Back to homepage
+      </a>
+      <button class="mobile-menu-btn" onclick="window.location.href='landing.html'" aria-label="Menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round">
+          <line x1="4" y1="8" x2="20" y2="8"></line>
+          <line x1="4" y1="16" x2="20" y2="16"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═════════════════════════════════════════════════════════════════════════
+       MAIN AUTH CONTAINER (Centered Card, Clean & Modern)
+       ═════════════════════════════════════════════════════════════════════════ -->
+  <main class="auth-main-wrapper">
+    <div class="auth-card">
+
+      <!-- Form Title & Subtitle -->
+      <h1 class="auth-heading" id="authTitle">Login to your account</h1>
+      <p class="auth-subtext" id="authSubtext">Continue tracking your progress after logging in to your account.</p>
+
+      <!-- Social Login Buttons -->
+      <div class="social-btn-stack">
+        <button type="button" class="btn-social" onclick="handleSocialAuth('Google')">
+          <!-- Google colored SVG -->
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+              fill="#4285F4" />
+            <path
+              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              fill="#34A853" />
+            <path
+              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+              fill="#FBBC05" />
+            <path
+              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+              fill="#EA4335" />
+          </svg>
+          <span id="googleBtnText">Login with Google</span>
+        </button>
+
+        <button type="button" class="btn-social" onclick="handleSocialAuth('GitHub')">
+          <!-- GitHub SVG -->
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+          </svg>
+          <span id="githubBtnText">Login with GitHub</span>
+        </button>
+      </div>
+
+      <!-- OR Divider -->
+      <div class="auth-divider">
+        <span>OR</span>
+      </div>
+
+      <!-- Form -->
+      <form id="authForm" onsubmit="handleAuthSubmit(event)">
+        <!-- Name field for Sign up mode -->
+        <div class="auth-form-group" id="nameGroup" style="display: none;">
+          <label class="form-label" for="fullName">Name</label>
+          <div class="input-wrapper">
+            <input type="text" id="fullName" class="form-input" placeholder="Enter your name">
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label class="form-label" for="email">Email address</label>
+          <div class="input-wrapper">
+            <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+            <button type="button" class="input-toggle-btn" onclick="togglePasswordVisibility()" title="Lihat password">
+              <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Options: Remember Me & Forgot Password -->
+        <div class="form-options-row">
+          <label class="remember-me-label">
+            <input type="checkbox" id="rememberMe" checked>
+            <span>Remember me</span>
+          </label>
+          <a href="#" onclick="alert('Instruksi pemulihan kata sandi telah dikirim ke email Anda.'); return false;"
+            class="forgot-link">Forgot password?</a>
+        </div>
+
+        <!-- Submit CTA -->
+        <button type="submit" class="btn-submit-auth" id="submitBtn">
+          <span id="submitBtnText">Login now</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+
+        <!-- Switch mode: Login <-> Signup -->
+        <div class="auth-switch-text">
+          <span id="switchPrompt">Don't have an account?</span>
+          <a class="auth-switch-link" id="switchAction" onclick="toggleAuthMode()">Create one now.</a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- ═════════════════════════════════════════════════════════════════════════
+       FOOTER: Copyright + Social Icons
+       ═════════════════════════════════════════════════════════════════════════ -->
+  <footer class="auth-footer">
+    <div>&copy; 2026 Audit. All rights reserved.</div>
+
+    <div class="social-links-row">
+      <!-- Twitter / X -->
+      <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-icon-link"
+        aria-label="Twitter">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 24.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      </a>
+
+      <!-- Instagram / Dribbble -->
+      <a href="https://dribbble.com" target="_blank" rel="noopener noreferrer" class="social-icon-link"
+        aria-label="Dribbble">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm9.882 11.284c-.672-.036-2.923-.127-5.632.748-.052-.124-.108-.249-.163-.374-.383-.873-.809-1.748-1.282-2.585 2.91-1.328 4.092-2.975 4.183-3.109 1.764 1.455 2.894 3.655 2.894 6.32zM12 2.182c2.404 0 4.604.908 6.273 2.404-.127.18-.95 1.341-3.666 2.529-1.36-2.453-2.883-4.526-3.04-4.739.145-.09.288-.13.433-.194zm-2.83 1.135c.15.204 1.636 2.226 3 4.654-3.79 1.117-7.23 1.155-7.794 1.155 1.054-2.518 2.88-4.636 5.228-5.809H9.17zM2.182 12c0-.18.018-.36.036-.54.67-.018 4.542-.09 8.65-1.364.508.927.962 1.872 1.362 2.818-4.254 1.364-7.854 4.89-8.49 5.563C2.8 16.745 2.182 14.472 2.182 12zm3.164 7.636c.6-.618 3.872-3.836 8.018-5.127 1.073 2.818 1.527 5.58 1.618 6.163-1.636.963-3.527 1.509-5.545 1.509-2.073 0-4.036-.563-5.745-1.545h1.654zm12.381-1.073c-.09-.508-.508-3.072-1.527-5.727 2.454-.854 4.581-.8 5.163-.763-.4 2.836-1.89 5.29-4.09 6.49h.454z" />
+        </svg>
+      </a>
+
+      <!-- Facebook -->
+      <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-icon-link"
+        aria-label="Facebook">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+        </svg>
+      </a>
+
+      <!-- LinkedIn -->
+      <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-icon-link"
+        aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+        </svg>
+      </a>
+
+      <!-- YouTube -->
+      <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-icon-link"
+        aria-label="YouTube">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+        </svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    let isSignUpMode = false;
+
+    // Check URL query param for ?mode=signup
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('mode') === 'signup') {
+        setSignUpMode(true);
+      }
+    });
+
+    function setSignUpMode(signup) {
+      isSignUpMode = signup;
+      const title = document.getElementById('authTitle');
+      const subtext = document.getElementById('authSubtext');
+      const nameGroup = document.getElementById('nameGroup');
+      const submitBtnText = document.getElementById('submitBtnText');
+      const switchPrompt = document.getElementById('switchPrompt');
+      const switchAction = document.getElementById('switchAction');
+      const googleBtnText = document.getElementById('googleBtnText');
+      const githubBtnText = document.getElementById('githubBtnText');
+
+      if (isSignUpMode) {
+        document.title = 'Sign Up — audit';
+        title.textContent = 'Create your account';
+        subtext.textContent = 'Start tracking and auditing your financial portfolio today.';
+        nameGroup.style.display = 'block';
+        submitBtnText.textContent = 'Sign up now';
+        switchPrompt.textContent = 'Already have an account?';
+        switchAction.textContent = 'Login now.';
+        googleBtnText.textContent = 'Sign up with Google';
+        githubBtnText.textContent = 'Sign up with GitHub';
+      } else {
+        document.title = 'Login — audit';
+        title.textContent = 'Login to your account';
+        subtext.textContent = 'Continue tracking your progress after logging in to your account.';
+        nameGroup.style.display = 'none';
+        submitBtnText.textContent = 'Login now';
+        switchPrompt.textContent = "Don't have an account?";
+        switchAction.textContent = 'Create one now.';
+        googleBtnText.textContent = 'Login with Google';
+        githubBtnText.textContent = 'Login with GitHub';
+      }
+    }
+
+    function toggleAuthMode() {
+      setSignUpMode(!isSignUpMode);
+    }
+
+    function togglePasswordVisibility() {
+      const pwdInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+      } else {
+        pwdInput.type = 'password';
+        eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+      }
+    }
+
+    function showToast(msg, icon = '⚡') {
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toastText');
+      const toastIcon = document.getElementById('toastIcon');
+      toastText.textContent = msg;
+      toastIcon.textContent = icon;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const remember = document.getElementById('rememberMe').checked;
+      const submitBtn = document.getElementById('submitBtn');
+      const submitBtnText = document.getElementById('submitBtnText');
+
+      // Valid Credentials:
+      const VALID_EMAIL = 'fahmifahrezy823@gmail.com';
+      const VALID_PASS = 'fahmi2406';
+
+      submitBtn.disabled = true;
+      submitBtnText.innerHTML = '<span style="display:inline-block; animation:spin 0.8s linear infinite;">⏳</span> Memvalidasi...';
+
+      setTimeout(() => {
+        if (isSignUpMode) {
+          // Mode Sign Up
+          if (email === VALID_EMAIL && password === VALID_PASS) {
+            saveSession(remember);
+            showToast('Akun berhasil didaftarkan! Mengarahkan...', '✨');
+            setTimeout(() => { window.location.href = 'index.html'; }, 800);
+          } else {
+            // Bisa daftarkan akun baru
+            saveSession(remember);
+            showToast('Pendaftaran berhasil! Mengarahkan...', '✨');
+            setTimeout(() => { window.location.href = 'index.html'; }, 800);
+          }
+        } else {
+          // Mode Login: Wajib email dan password yang ditentukan
+          if (email === VALID_EMAIL && password === VALID_PASS) {
+            saveSession(remember);
+            showToast('Berhasil login! Mengarahkan ke dashboard...', '⚡');
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 700);
+          } else {
+            submitBtn.disabled = false;
+            submitBtnText.textContent = 'Login now';
+            showToast('Email atau password salah! Silakan periksa kembali.', '⚠️');
+
+            // Visual feedback error pada input
+            const emailInput = document.getElementById('email');
+            const passInput = document.getElementById('password');
+            emailInput.style.borderColor = '#ef4444';
+            passInput.style.borderColor = '#ef4444';
+            setTimeout(() => {
+              emailInput.style.borderColor = '';
+              passInput.style.borderColor = '';
+            }, 2500);
+          }
+        }
+      }, 500);
+    }
+
+    function saveSession(remember) {
+      sessionStorage.setItem('FINAUDIT_AUTH_SESSION', 'true');
+      if (remember) {
+        localStorage.setItem('FINAUDIT_AUTH_SESSION', 'true');
+      }
+    }
+
+    // Google & GitHub tidak ada aksi (tetap stuck sesuai permintaan)
+    function handleSocialAuth(provider) {
+      // Tetap stuck / tidak melakukan apa-apa
+      return false;
+    }
+  </script>
+
+  <style>
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+
+</body>
+
+</html>

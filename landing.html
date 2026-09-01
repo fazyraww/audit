@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>audit — Era Baru Manajemen & Audit Finansial Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #ffffff;
+      --text-main: #09090b;
+      --text-secondary: #52525b;
+      --text-muted: #71717a;
+      --border-color: #e4e4e7;
+      --accent-blue: #2563eb;
+      --accent-pill-bg: #eff6ff;
+      --btn-secondary-bg: #f4f4f5;
+      --btn-secondary-hover: #e4e4e7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════
+       NAVBAR (EXACT REPLICA OF REFERENCE)
+       ═════════════════════════════════════════════════════════════════════════ */
+    .site-nav-container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-left-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-main);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-logo svg {
+      color: var(--text-main);
+    }
+
+    .badge-update-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--accent-pill-bg);
+      color: var(--accent-blue);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: background-color 0.15s ease;
+    }
+
+    .badge-update-pill:hover {
+      background: #dbeafe;
+    }
+
+    .nav-links-group {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-link-item {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.15s ease;
+      cursor: pointer;
+    }
+
+    .nav-link-item:hover {
+      color: var(--text-main);
+    }
+
+    .nav-link-item svg {
+      width: 12px;
+      height: 12px;
+      color: var(--text-muted);
+    }
+
+    .nav-auth-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-signin-link {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 9999px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-signin-link:hover {
+      background: var(--btn-secondary-bg);
+      color: var(--text-main);
+    }
+
+    .btn-signup-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--text-main);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-signup-pill:hover {
+      background: #27272a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════
+       HERO SECTION (FAITHFUL TO REFERENCE IMAGE IN INDONESIAN)
+       ═════════════════════════════════════════════════════════════════════════ */
+    .hero-wrapper {
+      max-width: 960px;
+      margin: 90px auto 40px;
+      text-align: center;
+      padding: 0 24px;
+    }
+
+    .hero-headline {
+      font-size: 64px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.08;
+      color: var(--text-main);
+      margin-bottom: 24px;
+    }
+
+    .hero-subtext {
+      font-size: 17.5px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 26px;
+    }
+
+    .btn-hero-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #09090b;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 13px 26px;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-hero-primary:hover {
+      background: #27272a;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+    }
+
+    .btn-hero-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--btn-secondary-bg);
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 13px 24px;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-hero-secondary:hover {
+      background: var(--btn-secondary-hover);
+      border-color: #d4d4d8;
+    }
+
+    .hero-check-benefits {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .hero-check-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .check-icon {
+      font-size: 13px;
+      color: #10b981;
+      font-weight: 700;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════
+       INTERACTIVE DASHBOARD PREVIEW BANNER
+       ═════════════════════════════════════════════════════════════════════════ */
+    .preview-card-section {
+      max-width: 1100px;
+      margin: 60px auto 100px;
+      padding: 0 24px;
+    }
+
+    .preview-browser-frame {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .preview-browser-frame:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 30px 70px -10px rgba(0, 0, 0, 0.14);
+    }
+
+    .browser-header-dots {
+      background: #fafafa;
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .window-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #e4e4e7;
+    }
+
+    .window-dot.red {
+      background: #fca5a5;
+    }
+
+    .window-dot.yellow {
+      background: #fde047;
+    }
+
+    .window-dot.green {
+      background: #86efac;
+    }
+
+    .browser-url-bar {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 4px 16px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      width: 320px;
+      text-align: center;
+    }
+
+    .preview-body-content {
+      padding: 40px;
+      background: #fafafa;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .preview-left-info h3 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .preview-left-info p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .feature-pill-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .feature-pill-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .feature-pill-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: #eff6ff;
+      color: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════
+       FROSTED GLASSMORPHISM 3D CARD CANVAS (MATCHING REFERENCE)
+       ═════════════════════════════════════════════════════════════════════════ */
+    .glass-cards-canvas {
+      min-height: 380px;
+      border-radius: 28px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, #d8b4fe 0%, #f472b6 35%, #93c5fd 75%, #a5b4fc 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.6), 0 24px 50px -12px rgba(168, 85, 247, 0.35);
+      perspective: 1200px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-cards-canvas:hover {
+      box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.8), 0 30px 60px -10px rgba(168, 85, 247, 0.45);
+    }
+
+    /* Ambient Animated Mesh Glow Orbs */
+    .mesh-glow-container {
+      position: absolute;
+      inset: 0;
+      filter: blur(50px);
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .mesh-glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.85;
+      animation: pulseOrb 8s ease-in-out infinite alternate;
+    }
+
+    .orb-purple {
+      width: 220px;
+      height: 220px;
+      background: #c084fc;
+      top: -10%;
+      left: 5%;
+      animation-delay: 0s;
+    }
+
+    .orb-pink {
+      width: 260px;
+      height: 260px;
+      background: #f43f5e;
+      bottom: -15%;
+      left: -10%;
+      animation-delay: 2s;
+    }
+
+    .orb-cyan {
+      width: 240px;
+      height: 240px;
+      background: #38bdf8;
+      top: 10%;
+      right: -10%;
+      animation-delay: 4s;
+    }
+
+    @keyframes pulseOrb {
+      0% {
+        transform: scale(1) translate(0, 0);
+      }
+
+      50% {
+        transform: scale(1.15) translate(15px, -15px);
+      }
+
+      100% {
+        transform: scale(0.95) translate(-10px, 10px);
+      }
+    }
+
+    /* Glass Cards 3D Scene */
+    .glass-cards-scene {
+      position: relative;
+      width: 300px;
+      height: 230px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Frosted Translucent Acrylic Glass Card */
+    .frosted-glass-card {
+      width: 275px;
+      height: 172px;
+      border-radius: 20px;
+      padding: 20px 22px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.16) 100%);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
+      border: 1.5px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 28px 50px -10px rgba(0, 0, 0, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.95);
+      color: #ffffff;
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      user-select: none;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card-layer-back {
+      transform: rotate(-12deg) translate(-26px, 18px) scale(0.92);
+      opacity: 0.78;
+      z-index: 1;
+      animation: floatBack 7s ease-in-out infinite alternate;
+    }
+
+    .card-layer-front {
+      transform: rotate(-7deg) translate(20px, -8px);
+      z-index: 2;
+      animation: floatFront 6s ease-in-out infinite alternate;
+    }
+
+    .glass-cards-canvas:hover .card-layer-front {
+      transform: rotate(-4deg) translate(24px, -14px) scale(1.05);
+      box-shadow: 0 36px 60px -10px rgba(0, 0, 0, 0.25), inset 0 1px 2px rgba(255, 255, 255, 1);
+      border-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .glass-cards-canvas:hover .card-layer-back {
+      transform: rotate(-14deg) translate(-34px, 26px) scale(0.94);
+      opacity: 0.9;
+    }
+
+    @keyframes floatFront {
+      0% {
+        transform: rotate(-7deg) translate(20px, -8px);
+      }
+
+      50% {
+        transform: rotate(-5deg) translate(22px, -18px);
+      }
+
+      100% {
+        transform: rotate(-8deg) translate(18px, -4px);
+      }
+    }
+
+    @keyframes floatBack {
+      0% {
+        transform: rotate(-12deg) translate(-26px, 18px) scale(0.92);
+      }
+
+      50% {
+        transform: rotate(-10deg) translate(-22px, 8px) scale(0.93);
+      }
+
+      100% {
+        transform: rotate(-13deg) translate(-28px, 24px) scale(0.91);
+      }
+    }
+
+    /* Card Elements */
+    .card-glass-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-brand-text {
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-type-tag {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .contactless-wave-icon {
+      color: #ffffff;
+      opacity: 0.9;
+    }
+
+    .card-emv-chip {
+      margin: 4px 0;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    .card-pan-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #ffffff;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+    }
+
+    .card-holder-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .card-label-tiny {
+      font-size: 7.5px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      opacity: 0.85;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .card-val-text {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-glass-shimmer {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg,
+          transparent 35%,
+          rgba(255, 255, 255, 0.25) 50%,
+          transparent 65%);
+      transform: rotate(25deg);
+      pointer-events: none;
+      animation: shimmerPass 6s infinite;
+    }
+
+    @keyframes shimmerPass {
+      0% {
+        transform: translateY(-100%) rotate(25deg);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 0.8;
+      }
+
+      40% {
+        transform: translateY(100%) rotate(25deg);
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════
+       FEATURES GRID
+       ═════════════════════════════════════════════════════════════════════════ */
+    .features-section {
+      max-width: 1100px;
+      margin: 0 auto 100px;
+      padding: 0 24px;
+    }
+
+    .features-heading-area {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .features-heading-area h2 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+
+    .features-heading-area p {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    .features-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-box-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 32px 26px;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-box-card:hover {
+      border-color: #cbd5e1;
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.08);
+    }
+
+    .feature-icon-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .feature-box-card:hover .feature-icon-badge {
+      transform: scale(1.06);
+    }
+
+    .feature-icon-badge.blue {
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+    }
+
+    .feature-icon-badge.green {
+      background: #ecfdf5;
+      border: 1px solid #d1fae5;
+    }
+
+    .feature-icon-badge.purple {
+      background: #f5f3ff;
+      border: 1px solid #ede9fe;
+    }
+
+    .feature-box-card h4 {
+      font-size: 17.5px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      letter-spacing: -0.4px;
+      color: var(--text-main);
+    }
+
+    .feature-box-card p {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════
+       MODERN SAAS FOOTER
+       ═════════════════════════════════════════════════════════════════════════ */
+    .landing-footer {
+      border-top: 1px solid var(--border-color);
+      background: #fafafa;
+      padding: 60px 32px 36px;
+      margin-top: 60px;
+    }
+
+    .footer-inner-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-top-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid #e4e4e7;
+    }
+
+    .footer-brand-col .brand-logo {
+      margin-bottom: 12px;
+    }
+
+    .footer-brand-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 340px;
+      margin-bottom: 16px;
+    }
+
+    .status-badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #059669;
+      background: #ecfdf5;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      border: 1px solid #d1fae5;
+    }
+
+    .status-dot-pulse {
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+    }
+
+    .footer-nav-col h5 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+
+    .footer-nav-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-nav-col a {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .footer-nav-col a:hover {
+      color: var(--accent-blue);
+    }
+
+    .footer-bottom-bar {
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-social-icons {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer-social-icons a {
+      color: var(--text-muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s ease;
+    }
+
+    .footer-social-icons a:hover {
+      color: var(--text-main);
+    }
+
+    .footer-social-icons svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    @media (max-width: 860px) {
+      .footer-top-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .footer-bottom-bar {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════
+       NAVBAR DROPDOWN MENUS — Clean SaaS Style (no emoji)
+       ═════════════════════════════════════════════════════════════════════════ */
+    .nav-dropdown-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .nav-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 16px);
+      left: 50%;
+      transform: translateX(-50%) translateY(6px);
+      background: #ffffff;
+      border: 1px solid #e4e4e7;
+      border-radius: 18px;
+      padding: 8px;
+      min-width: 360px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.09), 0 1px 3px rgba(0, 0, 0, 0.06);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.18s;
+      z-index: 1000;
+    }
+
+    .nav-dropdown-wrapper:hover .nav-dropdown-menu,
+    .nav-dropdown-wrapper:focus-within .nav-dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Ghost bridge so menu stays open when moving mouse from trigger to menu */
+    .nav-dropdown-menu::before {
+      content: '';
+      position: absolute;
+      top: -16px;
+      left: 0;
+      width: 100%;
+      height: 16px;
+    }
+
+    /* 2-column grid for Resources dropdown */
+    .nav-dropdown-menu.grid-2col {
+      min-width: 480px;
+    }
+
+    .dropdown-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .dropdown-section-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #a1a1aa;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 8px 10px 4px;
+    }
+
+    .nav-dropdown-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.12s ease;
+      cursor: pointer;
+    }
+
+    .nav-dropdown-item:hover {
+      background: #f4f4f5;
+    }
+
+    .nav-dropdown-item:hover .dropdown-item-icon-box {
+      border-color: #d4d4d8;
+    }
+
+    .dropdown-item-icon-box {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 1px solid #e4e4e7;
+      background: #fafafa;
+      color: #3f3f46;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: border-color 0.12s ease;
+    }
+
+    .dropdown-item-icon-box svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .dropdown-item-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .dropdown-item-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #09090b;
+      line-height: 1.2;
+    }
+
+    .dropdown-item-desc {
+      font-size: 11.5px;
+      color: #71717a;
+      line-height: 1.35;
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: #f4f4f5;
+      margin: 4px 0;
+    }
+
+    .dropdown-cta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.12s ease;
+    }
+
+    .dropdown-cta-row:hover {
+      background: #f4f4f5;
+    }
+
+    .dropdown-cta-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #2563eb;
+    }
+
+    .dropdown-cta-arrow {
+      font-size: 13px;
+      color: #2563eb;
+    }
+
+    /* Two-column Resources dropdown */
+    .nav-dropdown-menu.grid-2col {
+      display: flex;
+      gap: 0;
+      min-width: 480px;
+      padding: 8px;
+    }
+
+    .dropdown-col {
+      flex: 1;
+      padding: 0 4px;
+    }
+
+    .dropdown-col+.dropdown-col {
+      border-left: 1px solid #f4f4f5;
+      padding-left: 8px;
+    }
+
+    /* Pricing dropdown row with price tag on right */
+    .pricing-item {
+      align-items: center;
+    }
+
+    .pricing-tier-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .pricing-tier-tag.free {
+      background: #f0fdf4;
+      color: #16a34a;
+    }
+
+    .pricing-tier-tag.paid {
+      background: #f4f4f5;
+      color: #3f3f46;
+    }
+
+    .popular-nano {
+      display: inline-block;
+      font-size: 9.5px;
+      font-weight: 700;
+      background: #09090b;
+      color: #ffffff;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 5px;
+      vertical-align: middle;
+      letter-spacing: 0.3px;
+    }
+
+    .dark-icon {
+      background: #09090b !important;
+      border-color: #09090b !important;
+      color: #ffffff !important;
+    }
+
+    .dropdown-compare-row {
+      padding: 8px 10px 4px;
+      border-top: 1px solid #f4f4f5;
+      margin-top: 4px;
+    }
+
+    .dropdown-compare-row a {
+      font-size: 12px;
+      font-weight: 600;
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .dropdown-compare-row a:hover {
+      text-decoration: underline;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════
+       PRICING SECTION (MATCHING USER REFERENCE SCREENSHOT)
+       ═════════════════════════════════════════════════════════════════════════ */
+    .pricing-section {
+      max-width: 1140px;
+      margin: 90px auto 100px;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .pricing-header-area h2 {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    .pricing-header-area p {
+      font-size: 15.5px;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 32px;
+      line-height: 1.5;
+    }
+
+    /* Billing Toggle Switch */
+    .pricing-toggle-wrap {
+      display: inline-flex;
+      align-items: center;
+      background: #f4f4f5;
+      padding: 4px;
+      border-radius: 9999px;
+      margin-bottom: 48px;
+      border: 1px solid var(--border-color);
+    }
+
+    .billing-toggle-btn {
+      padding: 8px 18px;
+      border-radius: 9999px;
+      border: none;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .billing-toggle-btn.active {
+      background: #ffffff;
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .discount-badge-fire {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #ea580c;
+    }
+
+    /* 3 Pricing Cards Grid */
+    .pricing-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      text-align: left;
+      align-items: stretch;
+    }
+
+    .pricing-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 22px;
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Dark theme for Teams / Most Popular card */
+    .pricing-card.dark-theme {
+      background: #18181b;
+      border-color: #27272a;
+      color: #ffffff;
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.25);
+    }
+
+    .pricing-card.dark-theme:hover {
+      box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.35);
+    }
+
+    .popular-pill-badge {
+      position: absolute;
+      top: 28px;
+      right: 28px;
+      background: #ffffff;
+      color: #09090b;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 9999px;
+    }
+
+    .pricing-tier-name {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .pricing-tier-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      min-height: 38px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .pricing-card.dark-theme .pricing-tier-desc {
+      color: #a1a1aa;
+    }
+
+    .price-value-row {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+
+    .price-number {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .price-period {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .pricing-card.dark-theme .price-period {
+      color: #a1a1aa;
+    }
+
+    .price-note-right {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .btn-pricing-cta {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.15s ease;
+      margin-bottom: 28px;
+    }
+
+    .btn-pricing-cta.outline {
+      background: #f4f4f5;
+      color: var(--text-main);
+      border: 1px solid #e4e4e7;
+    }
+
+    .btn-pricing-cta.outline:hover {
+      background: #e4e4e7;
+    }
+
+    .btn-pricing-cta.blue {
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-pricing-cta.blue:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .btn-pricing-cta.dark {
+      background: #09090b;
+      color: #ffffff;
+      border: none;
+    }
+
+    .btn-pricing-cta.dark:hover {
+      background: #27272a;
+    }
+
+    .pricing-features-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 14px;
+    }
+
+    .pricing-features-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .pricing-feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .pricing-card.dark-theme .pricing-feature-item {
+      color: #d4d4d8;
+    }
+
+    .pricing-check-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #f4f4f5;
+      color: #09090b;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .pricing-card.dark-theme .pricing-check-icon {
+      background: #27272a;
+      color: #ffffff;
+    }
+
+    .pricing-bottom-contact {
+      margin-top: 40px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .pricing-bottom-contact a {
+      color: var(--accent-blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .pricing-bottom-contact a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 860px) {
+      .pricing-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═════════════════════════════════════════════════════════════════════════
+       NAVBAR (Sesuai Referensi Gambar)
+       ═════════════════════════════════════════════════════════════════════════ -->
+  <nav class="site-nav-container">
+    <div class="nav-left-group">
+      <a href="landing.html" class="brand-logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+        </svg>
+        audit
+      </a>
+      <a href="index.html" class="badge-update-pill">
+        New features in v2.3 &rarr;
+      </a>
+    </div>
+
+    <div class="nav-links-group">
+      <a href="#about" class="nav-link-item">About</a>
+
+      <!-- Resources Dropdown -->
+      <div class="nav-dropdown-wrapper">
+        <span class="nav-link-item" tabindex="0">
+          Resources
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </span>
+        <div class="nav-dropdown-menu grid-2col">
+
+          <!-- Left column: Learn -->
+          <div class="dropdown-col">
+            <div class="dropdown-section-label">Learn</div>
+            <a href="#features" class="nav-dropdown-item">
+              <div class="dropdown-item-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+              </div>
+              <div class="dropdown-item-text">
+                <div class="dropdown-item-title">Documentation</div>
+                <div class="dropdown-item-desc">Panduan lengkap fitur audit &amp; analitik.</div>
+              </div>
+            </a>
+            <a href="#about" class="nav-dropdown-item">
+              <div class="dropdown-item-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <polygon points="23 7 16 12 23 17 23 7" />
+                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                </svg>
+              </div>
+              <div class="dropdown-item-text">
+                <div class="dropdown-item-title">Tutorials &amp; Videos</div>
+                <div class="dropdown-item-desc">Cara baca mutasi &amp; rekonsiliasi.</div>
+              </div>
+            </a>
+            <a href="#features" class="nav-dropdown-item">
+              <div class="dropdown-item-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 8v4l3 3" />
+                </svg>
+              </div>
+              <div class="dropdown-item-text">
+                <div class="dropdown-item-title">Changelog</div>
+                <div class="dropdown-item-desc">Update terbaru fitur &amp; perbaikan.</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Right column: Tools -->
+          <div class="dropdown-col">
+            <div class="dropdown-section-label">Tools</div>
+            <a href="index.html" class="nav-dropdown-item">
+              <div class="dropdown-item-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10" />
+                  <line x1="12" y1="20" x2="12" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+              </div>
+              <div class="dropdown-item-text">
+                <div class="dropdown-item-title">Sample Reports</div>
+                <div class="dropdown-item-desc">Template CSV &amp; grafik arus kas.</div>
+              </div>
+            </a>
+            <a href="#features" class="nav-dropdown-item">
+              <div class="dropdown-item-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <div class="dropdown-item-text">
+                <div class="dropdown-item-title">Security &amp; Privacy</div>
+                <div class="dropdown-item-desc">Data diproses lokal, 100% aman.</div>
+              </div>
+            </a>
+            <a href="#about" class="nav-dropdown-item">
+              <div class="dropdown-item-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+              </div>
+              <div class="dropdown-item-text">
+                <div class="dropdown-item-title">Community</div>
+                <div class="dropdown-item-desc">Forum diskusi &amp; Q&amp;A pengguna.</div>
+              </div>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+      <a href="#about" class="nav-link-item">Company</a>
+
+      <!-- Plan & Pricing Dropdown -->
+      <div class="nav-dropdown-wrapper">
+        <span class="nav-link-item" tabindex="0">
+          Plan &amp; Pricing
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </span>
+        <div class="nav-dropdown-menu pricing-dropdown">
+          <div class="dropdown-section-label">Choose a plan</div>
+
+          <!-- Basic -->
+          <a href="#pricing" class="nav-dropdown-item pricing-item">
+            <div class="dropdown-item-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3" />
+                <path d="M9 12h6M12 9v6" />
+              </svg>
+            </div>
+            <div class="dropdown-item-text" style="flex:1">
+              <div class="dropdown-item-title">Basic</div>
+              <div class="dropdown-item-desc">Gratis selamanya, fitur esensial.</div>
+            </div>
+            <span class="pricing-tier-tag free">Free</span>
+          </a>
+
+          <!-- Teams -->
+          <a href="#pricing" class="nav-dropdown-item pricing-item">
+            <div class="dropdown-item-icon-box dark-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <div class="dropdown-item-text" style="flex:1">
+              <div class="dropdown-item-title">Teams <span class="popular-nano">Popular</span></div>
+              <div class="dropdown-item-desc">Multi-akun, export CSV, rekonsiliasi.</div>
+            </div>
+            <span class="pricing-tier-tag paid">Rp 32rb</span>
+          </a>
+
+          <!-- Enterprise -->
+          <a href="#pricing" class="nav-dropdown-item pricing-item">
+            <div class="dropdown-item-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+              </svg>
+            </div>
+            <div class="dropdown-item-text" style="flex:1">
+              <div class="dropdown-item-title">Enterprise</div>
+              <div class="dropdown-item-desc">Unlimited, priority support, audit log.</div>
+            </div>
+            <span class="pricing-tier-tag paid">Rp 93rb</span>
+          </a>
+
+          <div class="dropdown-compare-row">
+            <a href="#pricing">Compare all plans &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-auth-actions">
+      <a href="login.html?mode=signin" class="btn-signin-link">Sign in</a>
+      <a href="login.html?mode=signup" class="btn-signup-pill">
+        Sign up &rarr;
+      </a>
+    </div>
+  </nav>
+
+
+
+  <!-- ═════════════════════════════════════════════════════════════════════════
+       HERO SECTION (Persis seperti gambar, Bahasa Indonesia)
+       ═════════════════════════════════════════════════════════════════════════ -->
+  <main>
+    <section class="hero-wrapper">
+      <h1 class="hero-headline">
+        Welcome to the new<br>age of online banking.
+      </h1>
+
+      <p class="hero-subtext">
+        Kelola akun bank pribadi, bisnis, atau gabungan secara online dan mudah. Mulai gratis sekarang.
+      </p>
+
+      <div class="hero-cta-row">
+        <a href="login.html?mode=signup" class="btn-hero-primary">
+          Mulai sekarang &rarr;
+        </a>
+        <a href="#features" class="btn-hero-secondary">
+          Pelajari lebih lanjut &rarr;
+        </a>
+      </div>
+
+      <div class="hero-check-benefits">
+        <div class="hero-check-item">
+          <span class="check-icon">&#10003;</span> Tanpa perlu kartu kredit
+        </div>
+        <div class="hero-check-item">
+          <span class="check-icon">&#10003;</span> Gratis di web dan seluler
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════════════════════════
+         INTERACTIVE PREVIEW OF AUDIT DASHBOARD
+         ═════════════════════════════════════════════════════════════════════════ -->
+    <section class="preview-card-section" id="about">
+      <div class="preview-browser-frame">
+        <div class="browser-header-dots">
+          <div class="window-dots">
+            <div class="window-dot red"></div>
+            <div class="window-dot yellow"></div>
+            <div class="window-dot green"></div>
+          </div>
+          <div class="browser-url-bar">https://audit.app/dashboard/analytics</div>
+          <div style="width:50px;"></div>
+        </div>
+
+        <div class="preview-body-content">
+          <div class="preview-left-info">
+            <span
+              style="font-size:12px; font-weight:700; color:#3b82f6; background:#eff6ff; padding:3px 10px; border-radius:6px; display:inline-block; margin-bottom:10px;">Platform
+              Finansial Terpadu</span>
+            <h3>Audit Arus Kas & Rekonsiliasi Otomatis</h3>
+            <p>Sistem cerdas untuk melacak seluruh rekening bank, memantau perputaran arus kas, serta menyusun laporan
+              keuangan terpadu secara aman dan privat.</p>
+
+            <div class="feature-pill-list">
+              <div class="feature-pill-item">
+                <div class="feature-pill-icon">&#10003;</div>
+                <span>Auto-scan mutasi rekening & e-Statement instan</span>
+              </div>
+              <div class="feature-pill-item">
+                <div class="feature-pill-icon">&#10003;</div>
+                <span>Kategorisasi transaksi cerdas & deteksi pengeluaran</span>
+              </div>
+              <div class="feature-pill-item">
+                <div class="feature-pill-icon">&#10003;</div>
+                <span>Buku Besar Terpadu & visualisasi analitik interaktif</span>
+              </div>
+            </div>
+
+            <div style="margin-top:24px;">
+              <a href="index.html" class="btn-hero-primary" style="padding:10px 20px; font-size:13px;">
+                Buka Dashboard Langsung &rarr;
+              </a>
+            </div>
+          </div>
+
+          <!-- Frosted Glassmorphism 3D Card Stack (Faithful to Reference Image) -->
+          <div class="glass-cards-canvas" onclick="window.location.href='index.html'" title="Buka Dashboard Finansial">
+            <!-- Dynamic Mesh Gradient Glow Backdrop -->
+            <div class="mesh-glow-container">
+              <div class="mesh-glow-orb orb-purple"></div>
+              <div class="mesh-glow-orb orb-pink"></div>
+              <div class="mesh-glow-orb orb-cyan"></div>
+            </div>
+
+            <!-- Floating Translucent Acrylic Glass Cards -->
+            <div class="glass-cards-scene" id="glassCardsScene">
+              <!-- Back Card (Layer 1) -->
+              <div class="frosted-glass-card card-layer-back">
+                <div class="card-glass-top">
+                  <div class="card-brand-text">VISA</div>
+                  <div class="card-type-tag">AUDIT PRO</div>
+                </div>
+                <div class="card-emv-chip">
+                  <svg width="34" height="26" viewBox="0 0 34 26" fill="none">
+                    <rect x="0.5" y="0.5" width="33" height="25" rx="4.5" fill="rgba(255,255,255,0.25)"
+                      stroke="rgba(255,255,255,0.7)" />
+                    <path d="M0 9h10M0 17h10M24 9h10M24 17h10M10 0v26M24 0v26" stroke="rgba(255,255,255,0.5)"
+                      stroke-width="1.2" />
+                    <rect x="12" y="7" width="10" height="12" rx="2" fill="rgba(255,255,255,0.4)"
+                      stroke="rgba(255,255,255,0.8)" />
+                  </svg>
+                </div>
+                <div class="card-pan-number">4000 8820 1399 4766</div>
+                <div class="card-holder-row">
+                  <div>
+                    <div class="card-val-text">VALUED CARDMEMBER</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div class="card-label-tiny">VALID THRU</div>
+                    <div class="card-val-text">08/29</div>
+                  </div>
+                </div>
+                <div class="card-glass-shimmer"></div>
+              </div>
+
+              <!-- Front Card (Layer 2 - Focused Glass Card) -->
+              <div class="frosted-glass-card card-layer-front">
+                <div class="card-glass-top">
+                  <div class="card-brand-text">VISA</div>
+                  <div class="contactless-wave-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                      stroke-linecap="round">
+                      <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                      <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                      <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="card-emv-chip">
+                  <svg width="36" height="28" viewBox="0 0 36 28" fill="none">
+                    <rect x="0.5" y="0.5" width="35" height="27" rx="5" fill="rgba(255,255,255,0.3)"
+                      stroke="rgba(255,255,255,0.85)" />
+                    <path d="M0 10h11M0 18h11M25 10h11M25 18h11M11 0v28M25 0v28" stroke="rgba(255,255,255,0.6)"
+                      stroke-width="1.2" />
+                    <rect x="13" y="8" width="10" height="12" rx="2" fill="rgba(255,255,255,0.45)"
+                      stroke="rgba(255,255,255,0.9)" />
+                  </svg>
+                </div>
+                <div class="card-pan-number">4000 1234 5678 9010</div>
+                <div class="card-holder-row">
+                  <div>
+                    <div class="card-val-text">VALUED CARDMEMBER</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div class="card-label-tiny">VALID THRU</div>
+                    <div class="card-val-text">12/28</div>
+                  </div>
+                </div>
+                <div class="card-glass-shimmer"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════════════════════════
+         FEATURES SECTION
+         ═════════════════════════════════════════════════════════════════════════ -->
+    <section class="features-section" id="features">
+      <div class="features-heading-area">
+        <h2>Dibuat untuk Akurasi & Kecepatan Tinggi</h2>
+        <p>Solusi komprehensif audit finansial yang dapat berjalan di browser tanpa server eksternal.</p>
+      </div>
+
+      <div class="features-grid-3">
+        <!-- Card 1: Auto-Scan -->
+        <div class="feature-box-card">
+          <div class="feature-icon-badge blue">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <h4>Auto-Scan Multi-Format</h4>
+          <p>Dukung upload PDF e-Statement BCA, file CSV, teks rekening copas m-banking, hingga pengenalan mutasi cerdas
+            otomatis.</p>
+        </div>
+
+        <!-- Card 2: Security & Privacy -->
+        <div class="feature-box-card">
+          <div class="feature-icon-badge green">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <path d="M9 12l2 2 4-4"></path>
+            </svg>
+          </div>
+          <h4>Proteksi Privasi & Enkripsi Sesi</h4>
+          <p>Otentikasi kredensial aman dengan pemrosesan data 100% lokal di browser tanpa transmisi data rahasia ke
+            server eksternal.</p>
+        </div>
+
+        <!-- Card 3: Visual Analytics -->
+        <div class="feature-box-card">
+          <div class="feature-icon-badge purple">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+              <polyline points="4 6 12 11 20 5"></polyline>
+            </svg>
+          </div>
+          <h4>Visualisasi & Ekspor Komparasi</h4>
+          <p>Grafik arus kas interaktif, distribusi jam perputaran dana, matriks komparasi tahunan, serta ekspor laporan
+            CSV instan.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═════════════════════════════════════════════════════════════════════════
+       PRICING SECTION (id="pricing")
+       ═════════════════════════════════════════════════════════════════════════ -->
+  <section class="pricing-section" id="pricing">
+    <div class="pricing-header-area">
+      <h2>Pricing That Grows With You</h2>
+      <p>Pilih paket yang cocok upgrade kapan saja sesuai kebutuhan analitik finansial kamu.</p>
+
+      <!-- Billing Toggle -->
+      <div class="pricing-toggle-wrap">
+        <button class="billing-toggle-btn" id="billMonthlyBtn" onclick="setBilling('monthly')">Monthly</button>
+        <button class="billing-toggle-btn active" id="billAnnualBtn" onclick="setBilling('annual')">
+          Annually <span class="discount-badge-fire">Save 20% Off 🔥</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="pricing-grid-3">
+
+      <!-- Card 1: Basic (Free) -->
+      <div class="pricing-card">
+        <div>
+          <div class="pricing-tier-name">Basic</div>
+          <div class="pricing-tier-desc">Untuk pengguna individu yang ingin memulai audit finansial sederhana.</div>
+          <div class="price-value-row">
+            <span class="price-number">Rp 0</span>
+            <span class="price-period">/bulan</span>
+            <span class="price-note-right">10 anggota saja</span>
+          </div>
+          <a href="login.html?mode=signup" class="btn-pricing-cta outline">Current Plan</a>
+          <div class="pricing-features-title">Featured</div>
+          <ul class="pricing-features-list">
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Upload hingga 500 transaksi mutasi BCA
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Grafik arus kas dasar
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Akses hanya ke modul publik
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Email support dasar
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Kompatibel hingga 3 perangkat
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Alokasi memori 2 GB
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Analitik penggunaan dasar
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 2: Teams (Most Popular) — dark theme -->
+      <div class="pricing-card dark-theme">
+        <div class="popular-pill-badge">Most Popular</div>
+        <div>
+          <div class="pricing-tier-name">Teams</div>
+          <div class="pricing-tier-desc">Untuk pengguna aktif dengan kebutuhan rekonsiliasi lanjutan.</div>
+          <div class="price-value-row">
+            <span class="price-number">Rp 32rb</span>
+            <span class="price-period">/bulan</span>
+            <span class="price-note-right" style="color:#71717a;">per pengguna</span>
+          </div>
+          <a href="login.html?mode=signup" class="btn-pricing-cta blue">Upgrade ke Paket Ini</a>
+          <div class="pricing-features-title">Featured</div>
+          <ul class="pricing-features-list">
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Upload tak terbatas per bulan
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Smart AI Rekonsiliasi Otomatis
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Akses modul publik & privat
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Prioritas email & live chat support
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Hingga 5 perangkat terhubung
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Alokasi memori 10 GB
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Laporan aktivitas & penggunaan detail
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Card 3: Enterprise -->
+      <div class="pricing-card">
+        <div>
+          <div class="pricing-tier-name">Enterprise</div>
+          <div class="pricing-tier-desc">Dibangun untuk kebutuhan audit skala besar dengan keamanan maksimal.</div>
+          <div class="price-value-row">
+            <span class="price-number">Rp 93rb</span>
+            <span class="price-period">/bulan</span>
+            <span class="price-note-right">per pengguna</span>
+          </div>
+          <a href="login.html?mode=signup" class="btn-pricing-cta dark">Upgrade ke Enterprise</a>
+          <div class="pricing-features-title">Featured</div>
+          <ul class="pricing-features-list">
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Upload tak terbatas & prioritas tinggi
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>AI Rekonsiliasi & Prediksi Arus Kas
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Akses penuh semua modul & fitur baru
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Dukungan prioritas 24/7 dedicated
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Koneksi perangkat tak terbatas
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Alokasi memori 50 GB
+            </li>
+            <li class="pricing-feature-item">
+              <span class="pricing-check-icon">✓</span>Keamanan lanjutan & audit log penuh
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="pricing-bottom-contact">
+      Ingin solusi khusus dengan support one-on-one? <a href="mailto:fahmifahrezy823@gmail.com">Hubungi kami →</a>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════════════════════
+       MODERN SAAS FOOTER
+       ═════════════════════════════════════════════════════════════════════════ -->
+  <footer class="landing-footer">
+    <div class="footer-inner-container">
+      <div class="footer-top-grid">
+        <!-- Brand Info -->
+        <div class="footer-brand-col">
+          <a href="landing.html" class="brand-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+            audit
+          </a>
+          <p class="footer-brand-desc">
+            Platform analitik arus kas, audit mutasi rekening, dan rekonsiliasi finansial modern yang dirancang untuk
+            kecepatan dan akurasi tinggi.
+          </p>
+        </div>
+
+        <!-- Col 1: Modul Finansial & Audit -->
+        <div class="footer-nav-col">
+          <h5>Modul Finansial</h5>
+          <ul>
+            <li><a href="index.html">Overview Dashboard</a></li>
+            <li><a href="index.html">Mutasi Bank</a></li>
+            <li><a href="index.html">Kegiatan Harian</a></li>
+            <li><a href="index.html">Simpan Uang Auto</a></li>
+            <li><a href="index.html">Buku Besar Gabungan</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 2: Akses & Navigasi -->
+        <div class="footer-nav-col">
+          <h5>Akses & Bantuan</h5>
+          <ul>
+            <li><a href="login.html?mode=signin">Masuk ke Akun</a></li>
+            <li><a href="login.html?mode=signup">Daftar Akun Baru</a></li>
+            <li><a href="#about">Tentang Platform</a></li>
+            <li><a href="#features">Fitur Utama</a></li>
+            <li><a href="index.html">Buka Dashboard</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Row: Copyright & Social -->
+      <div class="footer-bottom-bar">
+        <div>&copy; 2026 audit. Hak Cipta Dilindungi. design by <strong>Fazy</strong>.</div>
+        <div class="footer-social-icons">
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" title="Twitter / X">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 24.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+          </a>
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" title="GitHub">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+          </a>
+          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Dynamic 3D Interactive Parallax for Frosted Glass Cards
+    const glassCanvas = document.querySelector('.glass-cards-canvas');
+    const glassScene = document.getElementById('glassCardsScene');
+
+    if (glassCanvas && glassScene) {
+      glassCanvas.addEventListener('mousemove', (e) => {
+        const rect = glassCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -12;
+        const rotateY = ((x - centerX) / centerX) * 15;
+
+        glassScene.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+
+      glassCanvas.addEventListener('mouseleave', () => {
+        glassScene.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+      });
+    }
+  </script>
+
+  <script>
+    // Billing Toggle (Monthly / Annually) for Pricing Section
+    const monthlyPrices = ['Rp 0', 'Rp 40rb', 'Rp 116rb'];
+    const annualPrices = ['Rp 0', 'Rp 32rb', 'Rp 93rb'];
+
+    function setBilling(mode) {
+      const monthBtn = document.getElementById('billMonthlyBtn');
+      const annualBtn = document.getElementById('billAnnualBtn');
+      const priceEls = document.querySelectorAll('.price-number');
+
+      if (mode === 'monthly') {
+        monthBtn.classList.add('active');
+        annualBtn.classList.remove('active');
+        priceEls.forEach((el, i) => {
+          el.style.transform = 'translateY(-4px)';
+          el.style.opacity = '0';
+          setTimeout(() => {
+            el.textContent = monthlyPrices[i] || el.textContent;
+            el.style.transition = 'all 0.25s ease';
+            el.style.transform = 'translateY(0)';
+            el.style.opacity = '1';
+          }, 150);
+        });
+      } else {
+        annualBtn.classList.add('active');
+        monthBtn.classList.remove('active');
+        priceEls.forEach((el, i) => {
+          el.style.transform = 'translateY(-4px)';
+          el.style.opacity = '0';
+          setTimeout(() => {
+            el.textContent = annualPrices[i] || el.textContent;
+            el.style.transition = 'all 0.25s ease';
+            el.style.transform = 'translateY(0)';
+            el.style.opacity = '1';
+          }, 150);
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>

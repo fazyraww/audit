@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>BCA Mutation Automated Extractor</title>
+    <script src="../assets/vendor/pdfjs/pdf.min.js"></script>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; }
+        .log { background: #1e293b; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px; max-height: 400px; overflow-y: auto; white-space: pre-wrap; }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+        .info { color: #60a5fa; }
+        .summary-card { background: #1e293b; border: 1px solid #334155; padding: 16px; border-radius: 8px; margin-top: 16px; }
+    </style>
+</head>
+<body>
+    <h1>BCA Mutation Automated Data Extractor</h1>
+    <div id="status">Starting extraction...</div>
+    <div class="log" id="log"></div>
+    <div id="summary" class="summary-card"></div>
+
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "../assets/vendor/pdfjs/pdf.worker.min.js";
+
+        const pdfFiles = [
+            "1210931399_APR_2023.pdf",
+            "1210931399_MAY_2023.pdf",
+            "1210931399_JUN_2023.pdf",
+            "1210931399_JUL_2023.pdf",
+            "1210931399_AUG_2023.pdf",
+            "1210931399_SEP_2023.pdf",
+            "1210931399_OCT_2023.pdf",
+            "1210931399_NOV_2023.pdf",
+            "1210931399_DEC_2023.pdf",
+            "1210931399_JAN_2024.pdf",
+            "1210931399_FEB_2024.pdf",
+            "1210931399_MAR_2024.pdf",
+            "1210931399_APR_2024.pdf",
+            "1210931399_MAY_2024.pdf",
+            "1210931399_JUN_2024.pdf",
+            "1210931399_JUL_2024.pdf",
+            "1210931399_AUG_2024.pdf",
+            "1210931399_SEP_2024.pdf",
+            "1210931399_OCT_2024.pdf",
+            "1210931399_NOV_2024.pdf",
+            "1210931399_DEC_2024.pdf",
+            "1210931399_JAN_2025.pdf",
+            "1210931399_FEB_2025.pdf",
+            "1210931399_MAR_2025.pdf",
+            "1210931399_APR_2025.pdf",
+            "1210931399_MAY_2025.pdf",
+            "1210931399_JUN_2025.pdf",
+            "1210931399_JUL_2025.pdf",
+            "1210931399_AUG_2025.pdf",
+            "1210931399_SEP_2025.pdf",
+            "1210931399_OCT_2025.pdf",
+            "1210931399_NOV_2025.pdf",
+            "1210931399_DEC_2025.pdf",
+            "1210931399_JAN_2026.pdf",
+            "1210931399_FEB_2026.pdf",
+            "1210931399_MAR_2026.pdf",
+            "1210931399_APR_2026.pdf",
+            "1210931399_MAY_2026.pdf",
+            "1210931399_JUN_2026.pdf",
+            "1210931399_JUL_2026.pdf",
+            "1210931399_AGU_2026.pdf"
+        ];
+
+        const monthLabels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        const monthNames = {
+            JAN: 0, JANUARI: 0, FEB: 1, FEBRUARI: 1, MAR: 2, MARET: 2, APR: 3, APRIL: 3,
+            MEI: 4, MAY: 4, JUN: 5, JUNI: 5, JUL: 6, JULI: 6, AGU: 7, AGUSTUS: 7,
+            AUG: 7, SEP: 8, SEPTEMBER: 8, OKT: 9, OKTOBER: 9, OCT: 9, NOV: 10,
+            NOVEMBER: 10, DES: 11, DESEMBER: 11, DEC: 11
+        };
+
+        const riskWords = [
+            "slot", "slt", "casino", "bet", "bett", "bola", "poker", "domino", "jackpot",
+            "gacor", "maxwin", "zeus", "wd", "scatter", "spin", "game", "gaming", "obsian", "soulshard", "duskweaver"
+        ];
+        const genericMerchantWords = [
+            "usaha", "usahaa", "usahaaa", "market", "shop", "store", "warung", "toko",
+            "craft", "pixel", "digital", "tech", "pay", "payment", "agen", "mitra", "topup"
+        ];
+        const normalMerchantWords = [
+            "alfam", "indom", "shopee", "tokopedia", "go-pay", "gopay", "dana",
+            "ovo", "linkaja", "pln", "telkom", "grab", "gojek", "bca", "biaya adm",
+            "tarikan atm", "setoran", "saldo awal"
+        ];
+
+        const logEl = document.getElementById("log");
+        const statusEl = document.getElementById("status");
+        const summaryEl = document.getElementById("summary");
+
+        function log(msg, cls = "") {
+            const div = document.createElement("div");
+            if (cls) div.className = cls;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logEl.appendChild(div);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function parseMoney(value) {
+            if (!value) return 0;
+            let raw = String(value).replace(/[^\d,.-]/g, "");
+            if (!raw) return 0;
+
+            const hasComma = raw.includes(",");
+            const hasDot = raw.includes(".");
+            if (hasComma && hasDot) {
+                const lastComma = raw.lastIndexOf(",");
+                const lastDot = raw.lastIndexOf(".");
+                if (lastDot > lastComma) {
+                    raw = raw.replace(/,/g, "");
+                } else {
+                    raw = raw.replace(/\./g, "").replace(",", ".");
+                }
+            } else if (hasComma) {
+                const parts = raw.split(",");
+                const last = parts[parts.length - 1];
+                if (last.length === 2) raw = parts.slice(0, -1).join("") + "." + last;
+                else raw = raw.replace(/,/g, "");
+            } else if (hasDot) {
+                const parts = raw.split(".");
+                const last = parts[parts.length - 1];
+                if (parts.length > 2 || last.length === 3) raw = raw.replace(/\./g, "");
+            }
+
+            return Number(raw) || 0;
+        }
+
+        async function extractPdfText(url) {
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status} ${resp.statusText}`);
+            const buffer = await resp.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({
+                data: new Uint8Array(buffer),
+                disableWorker: true,
+                useWorkerFetch: false,
+                isEvalSupported: false
+            }).promise;
+
+            const pages = [];
+            for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+                const page = await pdf.getPage(pageNumber);
+                const content = await page.getTextContent();
+                const items = content.items
+                    .map(item => ({
+                        text: item.str,
+                        x: Math.round(item.transform[4]),
+                        y: Math.round(item.transform[5])
+                    }))
+                    .filter(item => item.text && item.text.trim());
+
+                items.sort((a, b) => {
+                    if (Math.abs(b.y - a.y) > 3) return b.y - a.y;
+                    return a.x - b.x;
+                });
+
+                const lines = [];
+                for (const item of items) {
+                    const last = lines[lines.length - 1];
+                    if (!last || Math.abs(last.y - item.y) > 3) {
+                        lines.push({ y: item.y, parts: [item] });
+                    } else {
+                        last.parts.push(item);
+                    }
+                }
+
+                pages.push(lines.map(line => {
+                    line.parts.sort((a, b) => a.x - b.x);
+                    return line.parts.map(part => part.text).join(" ").replace(/\s+/g, " ").trim();
+                }).join("\n"));
+            }
+
+            return pages.join("\n");
+        }
+
+        function getStatementMeta(text, fileName) {
+            const account = (text.match(/NO\.?\s*REKENING\s*:?\s*(\d+)/i) || [])[1] || "";
+            const periodRaw = (text.match(/PERIODE\s*:?\s*([A-Z]+)\s+(\d{4})/i) || []);
+            const monthName = periodRaw[1] || getMonthFromFile(fileName) || "";
+            const year = Number(periodRaw[2] || getYearFromFile(fileName) || new Date().getFullYear());
+            const month = monthNames[monthName.toUpperCase()] ?? 0;
+            const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+            const owner = findOwnerName(lines) || "";
+            const periodLabel = monthName ? `${normalizeMonthName(monthName)} ${year}` : String(year);
+            const monthKey = `${year}-${String(month + 1).padStart(2, "0")}`;
+            const summary = extractStatementSummary(text, fileName, monthKey, periodLabel);
+            return { account, owner, year, month, periodLabel, monthKey, summary };
+        }
+
+        function extractStatementSummary(text, fileName, monthKey, periodLabel) {
+            const orderedSummary = extractOrderedSummaryValues(text);
+            const crValue = orderedSummary?.cr || findSummaryValue(text, "CR");
+            const dbValue = orderedSummary?.db || findSummaryValue(text, "DB");
+            if (!crValue && !dbValue) return null;
+            return {
+                file: fileName,
+                monthKey,
+                periodLabel,
+                totalIn: parseMoney(crValue || 0),
+                totalOut: parseMoney(dbValue || 0),
+                openingBalance: parseMoney(orderedSummary?.opening || 0),
+                endingBalance: parseMoney(orderedSummary?.ending || 0)
+            };
+        }
+
+        function extractOrderedSummaryValues(text) {
+            const lines = text.split(/\r?\n/);
+            let start = -1;
+            for (let i = lines.length - 1; i >= 0; i--) {
+                if (/SALDO\s+AWAL\s*:/i.test(lines[i])) {
+                    start = i;
+                    break;
+                }
+            }
+            if (start < 0) return null;
+
+            const block = lines.slice(start, Math.min(start + 12, lines.length)).join(" ");
+            const values = [...block.matchAll(/\d{1,3}(?:[,.]\d{3})*(?:[,.]\d{2})|\d+(?:[,.]\d{2})/g)].map(match => match[0]);
+            if (values.length < 4) return null;
+
+            return {
+                opening: values[0],
+                cr: values[1],
+                db: values[2],
+                ending: values[3]
+            };
+        }
+
+        function findSummaryValue(text, kind) {
+            const lines = text.split(/\r?\n/);
+            const re = new RegExp(`MUTASI\\s+${kind}\\s*:?(.*)`, "i");
+            const nextSummaryRe = kind === "CR" ? /MUTASI\s+DB|SALDO\s+AKHIR/i : /SALDO\s+AKHIR|MUTASI\s+CR/i;
+            for (let i = lines.length - 1; i >= 0; i--) {
+                const match = lines[i].match(re);
+                if (!match) continue;
+
+                const current = (match[1] || "").match(/[\d,.]+/);
+                if (current) return current[0];
+
+                for (let j = i + 1; j < Math.min(i + 4, lines.length); j++) {
+                    if (nextSummaryRe.test(lines[j])) break;
+                    const next = lines[j].match(/[\d,.]+/);
+                    if (next) return next[0];
+                }
+            }
+            return "";
+        }
+
+        function getMonthFromFile(fileName) {
+            const upper = fileName.toUpperCase();
+            return Object.keys(monthNames).find(name => upper.includes(name));
+        }
+
+        function getYearFromFile(fileName) {
+            const match = fileName.match(/20\d{2}/);
+            return match ? match[0] : "";
+        }
+
+        function findOwnerName(lines) {
+            const skip = /^(REKENING|KCU|NO\.|HALAMAN|PERIODE|MATA UANG|CATATAN|TANGGAL|INDONESIA|RT|KP|PANARUKAN|SITUBONDO)/i;
+            for (const line of lines.slice(0, 25)) {
+                if (skip.test(line)) continue;
+                if (/^[A-Z][A-Z\s.'-]{5,}$/.test(line) && !/\d/.test(line)) return line;
+            }
+            return "";
+        }
+
+        function normalizeMonthName(name) {
+            if (/^\d{1,2}$/.test(String(name))) {
+                const numericIndex = Number(name) - 1;
+                return monthLabels[numericIndex] || String(name);
+            }
+            const idx = monthNames[name.toUpperCase()];
+            return monthLabels[idx] || name;
+        }
+
+        function finalizeTransaction(current, meta) {
+            const body = current.lines.join(" ").replace(/\s+/g, " ").trim();
+            if (!body) return null;
+            if (/SALDO\s+AWAL/i.test(body)) return null;
+
+            const hasDebitMarker = /\bDB\b/i.test(body);
+            const amountRegex = /(\d{1,3}(?:[,.]\d{3})*(?:[,.]\d{2})|\d+(?:[,.]\d{2}))(?:\s*DB)?/g;
+            const amounts = [...body.matchAll(amountRegex)];
+            if (!amounts.length) return null;
+
+            let amountMatch = amounts[0];
+            let balanceAmount = null;
+
+            if (hasDebitMarker) {
+                amountMatch = amounts.find(match => /\bDB\b/i.test(body.slice(match.index, match.index + match[0].length + 4))) || amountMatch;
+                if (amounts.length > 1) {
+                    const otherAmounts = amounts.filter(m => m !== amountMatch);
+                    if (otherAmounts.length) balanceAmount = parseMoney(otherAmounts[otherAmounts.length - 1][1]);
+                }
+            } else if (amounts.length > 1) {
+                amountMatch = chooseCreditAmount(body, amounts);
+                const otherAmounts = amounts.filter(m => m !== amountMatch);
+                if (otherAmounts.length) balanceAmount = parseMoney(otherAmounts[otherAmounts.length - 1][1]);
+            }
+
+            const amount = parseMoney(amountMatch[1]);
+            const type = hasDebitMarker ? "out" : "in";
+            const date = new Date(current.year, current.month, current.day);
+            const dateKey = `${current.year}-${String(current.month + 1).padStart(2, "0")}-${String(current.day).padStart(2, "0")}`;
+            const cleanDescription = body
+                .replace(amountRegex, " ")
+                .replace(/\bCBG\b|\bMUTASI\b|\bSALDO\b/gi, " ")
+                .replace(/\s+/g, " ")
+                .trim();
+
+            const party = extractParty(cleanDescription || body, type);
+            const category = categorize(cleanDescription || body, type, party);
+
+            return {
+                date: dateKey,
+                displayDate: `${String(current.day).padStart(2, "0")}/${String(current.month + 1).padStart(2, "0")}/${current.year}`,
+                monthKey: `${current.year}-${String(current.month + 1).padStart(2, "0")}`,
+                monthLabel: `${monthLabels[current.month] || String(current.month + 1)} ${current.year}`,
+                type,
+                amount,
+                balance: balanceAmount,
+                description: cleanDescription || body,
+                party,
+                category,
+                file: current.file,
+                owner: current.owner || meta.owner,
+                account: current.account || meta.account,
+                period: current.period || meta.periodLabel
+            };
+        }
+
+        function chooseCreditAmount(body, amounts) {
+            const text = body.toUpperCase();
+            const first = amounts[0];
+            const second = amounts[1];
+            if (/TRSF|BI-FAST|SETORAN|CDM/.test(text)) return first;
+            return second || first;
+        }
+
+        function extractParty(description, type) {
+            const text = description.replace(/\s+/g, " ").trim();
+            const qris = text.match(/QR\s*\d+\s+0+\.00\s*([A-Z0-9][A-Z0-9 ._-]{2,40})/i);
+            if (qris) return cleanupParty(qris[1]);
+
+            const transfer = text.match(/TRANSFER\s+KE\s+\d+\s+([A-Z][A-Z\s.'-]{3,40})/i);
+            if (transfer) return cleanupParty(transfer[1]);
+
+            const transferDari = text.match(/TRANSFER\s+DR\s+\d+\s+([A-Z][A-Z\s.'-]{3,40})/i);
+            if (transferDari) return cleanupParty(transferDari[1]);
+
+            const wallets = text.match(/\b(\/?GO-PAY CUSTO|GOPAY|DANA|SHOPEEPAY|SHOPEE|OVO|LINKAJA)\b/i);
+            if (wallets) return cleanupParty(wallets[1]);
+
+            const debitMerchant = text.match(/\b(ALFAMRT|ALFAMART|INDOMARET|EDC Mini-AT|DOMPET ANAK BANGSA)[A-Z0-9\s.-]*/i);
+            if (debitMerchant) return cleanupParty(debitMerchant[0]);
+
+            const words = text.split(" ").filter(part => /[A-Z]/i.test(part) && !/^\d/.test(part));
+            if (words.length >= 2) return cleanupParty(words.slice(-4).join(" "));
+            if (type === "out") return "Pengeluaran lain";
+            return "Pemasukan lain";
+        }
+
+        function cleanupParty(value) {
+            const cleaned = String(value || "")
+                .replace(/^\/+/, "")
+                .replace(/\bTGL:.*$/i, "")
+                .replace(/\bDB\b/gi, "")
+                .replace(/\s+/g, " ")
+                .trim();
+            return cleaned || "Tidak terbaca";
+        }
+
+        function categorize(description, type, party) {
+            const text = (description + " " + party).toLowerCase();
+            if (text.includes("qr ") || text.includes("qris")) return "QRIS";
+            if (text.includes("tarikan atm") || text.includes("tarik tunai")) return "Tarikan ATM";
+            if (text.includes("biaya adm") || text.includes("adm bulanan") || text.includes("biaya kartu")) return "Biaya admin";
+            if (text.includes("trsf") || text.includes("transfer") || text.includes("bi-fast") || text.includes("switching")) {
+                return type === "in" ? "Transfer Masuk" : "Transfer Keluar";
+            }
+            if (text.includes("shopee") || text.includes("spaylater") || text.includes("spinjam")) return "Shopee / Pinjol";
+            if (text.includes("dana") || text.includes("gopay") || text.includes("go-pay") || text.includes("ovo") || text.includes("linkaja")) return "Topup E-Wallet";
+            if (text.includes("transaksi debit") || text.includes("kartu debit") || text.includes("alfamart") || text.includes("indomaret")) return "Belanja / Merchant";
+            if (text.includes("spp") || text.includes("kuliah") || text.includes("dpp") || text.includes("pendidikan")) return "Pendidikan / Kuliah";
+            return type === "in" ? "Pemasukan Lain" : "Pengeluaran Lain";
+        }
+
+        function detectRisk(tx) {
+            const text = `${tx.description} ${tx.party}`.toLowerCase();
+            const reasons = [];
+            let score = 0;
+
+            if (tx.type !== "out") return { flagged: false, score: 0, reasons };
+
+            const allSafeWords = [...normalMerchantWords];
+            const allRiskWords = [...riskWords];
+            const safeHit = allSafeWords.find(word => word && text.includes(word));
+            if (safeHit) {
+                return { flagged: false, score: 0, reasons: [`Whitelist: ${safeHit}`] };
+            }
+
+            if (text.includes("qr ") || text.includes("qris")) {
+                score += 3;
+                reasons.push("Transaksi QRIS");
+            }
+
+            for (const word of allRiskWords) {
+                if (text.includes(word)) {
+                    score += 5;
+                    reasons.push(`Kata risiko judol: ${word}`);
+                    break;
+                }
+            }
+
+            for (const word of genericMerchantWords) {
+                if (text.includes(word)) {
+                    score += 2;
+                    reasons.push(`Nama merchant generik: ${word}`);
+                    break;
+                }
+            }
+
+            const party = tx.party.toLowerCase();
+            const consonantHeavy = /[bcdfghjklmnpqrstvwxyz]{5,}/i.test(party.replace(/\s/g, ""));
+            const hasDigits = /\d{4,}/.test(text);
+
+            if (consonantHeavy) {
+                score += 2;
+                reasons.push("Nama merchant berhuruf mati rapat");
+            }
+            if (hasDigits && (tx.category === "QRIS" || text.includes("qr "))) {
+                score += 1;
+                reasons.push("Kode acak/angka pada QRIS");
+            }
+
+            return { flagged: score >= 5, score, reasons };
+        }
+
+        function parseStatement(text, fileName) {
+            const meta = getStatementMeta(text, fileName);
+            const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+            const transactions = [];
+            let current = null;
+            let activeDate = null;
+
+            for (const rawLine of lines) {
+                const line = rawLine.replace(/\s+/g, " ").trim();
+                const dateMatch = line.match(/^(\d{2})\/(\d{2})(?:\s+(.+))?$/);
+
+                if (dateMatch) {
+                    if (current) transactions.push(finalizeTransaction(current, meta));
+                    activeDate = {
+                        day: Number(dateMatch[1]),
+                        month: Number(dateMatch[2]) - 1,
+                        year: meta.year
+                    };
+                    current = {
+                        ...activeDate,
+                        lines: [dateMatch[3] || ""],
+                        file: fileName,
+                        owner: meta.owner,
+                        account: meta.account,
+                        period: meta.periodLabel
+                    };
+                    continue;
+                }
+
+                if (!current) continue;
+                if (/^(REKENING|KCU|CATATAN|TANGGAL|Bersambung|HALAMAN|MATA UANG)/i.test(line)) continue;
+                if (/^(MUTASI CR|MUTASI DB|SALDO AKHIR|SALDO AWAL\s*:)/i.test(line)) continue;
+
+                if (activeDate && looksLikeNewTransactionLine(line)) {
+                    transactions.push(finalizeTransaction(current, meta));
+                    current = {
+                        ...activeDate,
+                        lines: [line],
+                        file: fileName,
+                        owner: meta.owner,
+                        account: meta.account,
+                        period: meta.periodLabel
+                    };
+                    continue;
+                }
+
+                current.lines.push(line);
+            }
+
+            if (current) transactions.push(finalizeTransaction(current, meta));
+            return {
+                transactions: transactions.filter(Boolean),
+                summary: meta.summary,
+                meta
+            };
+        }
+
+        function looksLikeNewTransactionLine(line) {
+            const hasAmount = /(\d{1,3}(?:[,.]\d{3})*(?:[,.]\d{2})|\d+(?:[,.]\d{2}))(?:\s*DB)?/.test(line);
+            const hasKeyword = /\b(TRSF|SWITCHING|TRANSAKSI|KARTU|BIAYA|TARIKAN|SETORAN|QR)\b/i.test(line);
+            return hasAmount && hasKeyword;
+        }
+
+        async function startExtraction() {
+            try {
+                log(`Mulai memproses ${pdfFiles.length} file PDF mutasi BCA...`, "info");
+                const allStatements = [];
+                let allTransactions = [];
+
+                for (let i = 0; i < pdfFiles.length; i++) {
+                    const file = pdfFiles[i];
+                    log(`[${i+1}/${pdfFiles.length}] Membaca data/pdf_mutasi/${file}...`);
+                    const text = await extractPdfText(`../data/pdf_mutasi/${file}`);
+                    const parsed = parseStatement(text, file);
+                    
+                    const txWithRisk = parsed.transactions.map((tx, idx) => ({
+                        ...tx,
+                        id: `BCA-${tx.monthKey}-${idx+1}`,
+                        risk: detectRisk(tx)
+                    }));
+
+                    const sumIn = txWithRisk.filter(t => t.type === "in").reduce((a, b) => a + b.amount, 0);
+                    const sumOut = txWithRisk.filter(t => t.type === "out").reduce((a, b) => a + b.amount, 0);
+
+                    allStatements.push({
+                        file,
+                        monthKey: parsed.meta.monthKey,
+                        periodLabel: parsed.meta.periodLabel,
+                        account: parsed.meta.account,
+                        owner: parsed.meta.owner,
+                        officialSummary: parsed.summary,
+                        computedIn: sumIn,
+                        computedOut: sumOut,
+                        txCount: txWithRisk.length
+                    });
+
+                    allTransactions = allTransactions.concat(txWithRisk);
+                    log(`-> Sukses: ${txWithRisk.length} mutasi, CR: Rp ${Math.round(sumIn).toLocaleString('id-ID')}, DB: Rp ${Math.round(sumOut).toLocaleString('id-ID')}`, "success");
+                }
+
+                allTransactions.sort((a, b) => a.date.localeCompare(b.date));
+
+                const grandTotalIn = allStatements.reduce((a, b) => a + (b.officialSummary?.totalIn || b.computedIn), 0);
+                const grandTotalOut = allStatements.reduce((a, b) => a + (b.officialSummary?.totalOut || b.computedOut), 0);
+                const grandRiskOut = allTransactions.filter(t => t.risk.flagged).reduce((a, b) => a + b.amount, 0);
+
+                const finalData = {
+                    extractedAt: new Date().toISOString(),
+                    accountNumber: allStatements[0]?.account || "1210931399",
+                    accountOwner: allStatements[0]?.owner || "USER",
+                    totalMonths: allStatements.length,
+                    totalTransactions: allTransactions.length,
+                    grandTotalIn,
+                    grandTotalOut,
+                    grandRiskOut,
+                    statements: allStatements,
+                    transactions: allTransactions
+                };
+
+                log(`Menyimpan ke mutasi_bca_data.json via POST /save_mutasi.json...`, "info");
+                const saveResp = await fetch("save_mutasi.json", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(finalData)
+                });
+                
+                if (saveResp.ok) {
+                    log(`BERHASIL! Data mutasi BCA tersimpan lengkap (${allTransactions.length} transaksi dari ${allStatements.length} bulan).`, "success");
+                    statusEl.textContent = "Extraction complete & saved!";
+                    summaryEl.innerHTML = `
+                        <h3>Ekstraksi & Rekonsiliasi Selesai 100%</h3>
+                        <p><strong>Total File PDF:</strong> ${allStatements.length} Bulan (Apr 2023 - Agu 2026)</p>
+                        <p><strong>Total Transaksi BCA:</strong> ${allTransactions.length} Baris</p>
+                        <p><strong>Total Mutasi Masuk (CR):</strong> Rp ${Math.round(grandTotalIn).toLocaleString('id-ID')}</p>
+                        <p><strong>Total Mutasi Keluar (DB):</strong> Rp ${Math.round(grandTotalOut).toLocaleString('id-ID')}</p>
+                        <p><strong>Total Transaksi Dicurigai Judol/QRIS Risiko:</strong> Rp ${Math.round(grandRiskOut).toLocaleString('id-ID')} (${allTransactions.filter(t => t.risk.flagged).length} transaksi)</p>
+                    `;
+                } else {
+                    log(`Gagal menyimpan: ${saveResp.statusText}`, "error");
+                }
+            } catch (err) {
+                log(`Error extraction: ${err.message}`, "error");
+                statusEl.textContent = "Error: " + err.message;
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", startExtraction);
+    </script>
+</body>
+</html>

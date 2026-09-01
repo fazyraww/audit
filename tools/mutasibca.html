@@ -1,0 +1,2631 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Mutasi BCA</title>
+    <script src="../assets/vendor/pdfjs/pdf.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f4f7fb;
+            --surface: #ffffff;
+            --surface-2: #f7f9fc;
+            --surface-3: #eef3f8;
+            --border: #dce3ec;
+            --text: #16202b;
+            --muted: #667587;
+            --green: #16834a;
+            --green-soft: rgba(22, 131, 74, .11);
+            --red: #c93636;
+            --red-soft: rgba(201, 54, 54, .1);
+            --yellow: #a26d00;
+            --yellow-soft: rgba(207, 145, 11, .13);
+            --blue: #0b67b2;
+            --blue-soft: rgba(11, 103, 178, .1);
+            --shadow: 0 10px 28px rgba(22, 32, 43, .08);
+            --font: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        .container {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-mark {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--blue);
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .brand-mark::after {
+            content: "";
+            position: absolute;
+            inset: 9px;
+            border: 2px solid #fff;
+            border-radius: 999px;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface-2);
+            color: var(--text);
+            cursor: pointer;
+            min-height: 38px;
+            padding: 8px 12px;
+            transition: background .15s, border-color .15s, opacity .15s;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: var(--surface-3);
+            border-color: #47515d;
+        }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: .45;
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #81bdff;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 320px minmax(0, 1fr);
+            gap: 16px;
+            align-items: start;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .upload-zone {
+            display: grid;
+            place-items: center;
+            min-height: 170px;
+            border: 1.5px dashed var(--border);
+            border-radius: 8px;
+            background: var(--surface-2);
+            color: var(--muted);
+            cursor: pointer;
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 12px;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.over {
+            border-color: var(--blue);
+            background: var(--blue-soft);
+        }
+
+        .upload-main {
+            color: var(--text);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .hint {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        .files-list {
+            display: grid;
+            gap: 8px;
+            max-height: 260px;
+            overflow: auto;
+            margin: 12px 0;
+        }
+
+        .file-chip {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 8px;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface-2);
+            padding: 9px 10px;
+        }
+
+        .file-name {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .file-meta {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .remove {
+            width: 30px;
+            height: 30px;
+            border-radius: 7px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+        .remove:hover {
+            color: var(--red);
+            border-color: rgba(255, 107, 107, .45);
+        }
+
+        .filters {
+            display: grid;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .field {
+            display: grid;
+            gap: 6px;
+        }
+
+        label {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        select,
+        input[type="search"] {
+            width: 100%;
+            min-height: 38px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface-2);
+            color: var(--text);
+            padding: 8px 10px;
+            outline: none;
+        }
+
+        select:focus,
+        input[type="search"]:focus {
+            border-color: var(--blue);
+        }
+
+        .notice {
+            border-left: 3px solid var(--yellow);
+            background: var(--yellow-soft);
+            border-radius: 0 8px 8px 0;
+            padding: 10px 12px;
+            color: #795515;
+            font-size: 12px;
+            line-height: 1.5;
+            margin-top: 12px;
+        }
+
+        .status {
+            min-height: 44px;
+            color: var(--muted);
+            font-size: 13px;
+            padding-top: 4px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .stat {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            min-width: 0;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .4px;
+            text-transform: uppercase;
+            margin-bottom: 7px;
+        }
+
+        .stat-note {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 800;
+            overflow-wrap: anywhere;
+        }
+
+        .green {
+            color: var(--green);
+        }
+
+        .red {
+            color: var(--red);
+        }
+
+        .yellow {
+            color: var(--yellow);
+        }
+
+        .sections {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 12px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .4px;
+            text-transform: uppercase;
+        }
+
+        .row-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .rank-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 10px;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .rank-row:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .rank-name {
+            font-size: 13px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .rank-meta {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .rank-amount {
+            text-align: right;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .bar {
+            width: 100%;
+            height: 5px;
+            background: var(--surface-2);
+            border-radius: 99px;
+            overflow: hidden;
+            margin-top: 7px;
+        }
+
+        .bar > span {
+            display: block;
+            height: 100%;
+            border-radius: 99px;
+        }
+
+        .bar .in {
+            background: var(--green);
+        }
+
+        .bar .out {
+            background: var(--red);
+        }
+
+        .chart {
+            display: grid;
+            gap: 10px;
+        }
+
+        .chart-row {
+            display: grid;
+            grid-template-columns: 92px minmax(0, 1fr) 120px;
+            gap: 10px;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .chart-label {
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .chart-bars {
+            display: grid;
+            gap: 3px;
+        }
+
+        .chart-bar {
+            display: block;
+            height: 8px;
+            min-width: 2px;
+            border-radius: 999px;
+        }
+
+        .chart-bar.in {
+            background: var(--green);
+        }
+
+        .chart-bar.out {
+            background: var(--red);
+        }
+
+        .chart-bar.risk {
+            background: var(--yellow);
+        }
+
+        .chart-value {
+            text-align: right;
+            font-weight: 800;
+        }
+
+        .print-report {
+            display: none;
+        }
+
+        .report-shell {
+            position: relative;
+            background: #fff;
+            color: #111827;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        .bank-masthead {
+            display: grid;
+            grid-template-columns: 150px 1fr 150px;
+            gap: 12px;
+            align-items: center;
+            padding-bottom: 9px;
+            margin-bottom: 8px;
+        }
+
+        .bca-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #0b67b2;
+        }
+
+        .bca-logo-img {
+            width: 118px;
+            height: auto;
+            display: block;
+        }
+
+        .bca-mark {
+            width: 42px;
+            height: 42px;
+            border: 3px solid #0b67b2;
+            border-radius: 11px;
+            position: relative;
+            background: #fff;
+        }
+
+        .bca-mark::before,
+        .bca-mark::after {
+            content: "";
+            position: absolute;
+            border: 2px solid #0b67b2;
+            border-radius: 999px;
+        }
+
+        .bca-mark::before {
+            inset: 10px 7px;
+        }
+
+        .bca-mark::after {
+            inset: 7px 12px;
+        }
+
+        .bca-word {
+            font-size: 30px;
+            line-height: 1;
+            font-weight: 900;
+            letter-spacing: .02em;
+        }
+
+        .bank-name {
+            color: #475467;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .statement-heading {
+            text-align: center;
+        }
+
+        .statement-heading h2 {
+            color: #0f172a;
+            font-size: 18px;
+            margin-bottom: 2px;
+            letter-spacing: 0;
+        }
+
+        .statement-heading p {
+            color: #667085;
+            font-size: 10.5px;
+            line-height: 1.35;
+        }
+
+        .statement-note-card {
+            border: 1.5px solid #111827;
+            border-radius: 12px;
+            background: #fff;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            padding: 0;
+            color: #1f2937;
+            font-size: 10.5px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .statement-note-title {
+            grid-column: 1 / -1;
+            color: #111827;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 8px 10px 4px;
+        }
+
+        .statement-note-cell {
+            padding: 0 10px 8px;
+        }
+
+        .statement-note-cell + .statement-note-cell {
+            border-left: 0;
+        }
+
+        .doc-badge {
+            justify-self: end;
+            border: 1px solid #b6d6f2;
+            border-radius: 8px;
+            padding: 7px 9px;
+            min-width: 132px;
+            background: #f3f9ff;
+            text-align: right;
+        }
+
+        .doc-badge span {
+            display: block;
+            color: #667085;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+        }
+
+        .doc-badge strong {
+            display: block;
+            color: #0b67b2;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .statement-meta {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .meta-panel {
+            border: 1.5px solid #111827;
+            border-radius: 8px;
+            background: #fff;
+            padding: 8px 10px;
+        }
+
+        .meta-panel h3 {
+            font-size: 11px;
+            color: #0f172a;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        .meta-row {
+            display: grid;
+            grid-template-columns: max-content 1fr;
+            column-gap: 22px;
+            padding: 3px 0;
+            font-size: 10.5px;
+            border-top: 0;
+        }
+
+        .meta-row:first-of-type {
+            border-top: 0;
+        }
+
+        .meta-label {
+            color: #111827;
+            font-weight: 700;
+        }
+
+        .meta-value {
+            color: #111827;
+            font-weight: 700;
+        }
+
+        .statement-notice {
+            border: 1px solid #e7d3a3;
+            border-left: 4px solid #c58a18;
+            border-radius: 8px;
+            background: #fff9ed;
+            color: #553900;
+            padding: 7px 9px;
+            font-size: 10px;
+            line-height: 1.35;
+            margin-bottom: 8px;
+        }
+
+        .report-hero {
+            position: relative;
+            overflow: hidden;
+            background: #f6fbff;
+            color: #0f172a;
+            border: 1px solid #d8e0ea;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+        }
+
+        .report-hero::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 3px;
+            background: #0b67b2;
+        }
+
+        .report-kicker {
+            position: relative;
+            z-index: 1;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #0b67b2;
+            margin-bottom: 5px;
+        }
+
+        .report-hero h2 {
+            position: relative;
+            z-index: 1;
+            font-size: 20px;
+            line-height: 1.15;
+            margin-bottom: 5px;
+            letter-spacing: 0;
+            color: #0f172a;
+        }
+
+        .report-hero p {
+            position: relative;
+            z-index: 1;
+            max-width: 690px;
+            line-height: 1.4;
+            color: #475467;
+            font-size: 11px;
+        }
+
+        .report-owner {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 10px;
+            max-width: 300px;
+            margin-top: 8px;
+        }
+
+        .report-owner-item {
+            padding: 8px 10px;
+            border: 1px solid #b6d6f2;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .report-owner-item span {
+            display: block;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: #667085;
+            margin-bottom: 3px;
+        }
+
+        .report-owner-item strong {
+            display: block;
+            font-size: 15px;
+            letter-spacing: 0;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .report-grid.compact {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .report-card {
+            border: 1.5px solid #111827;
+            border-radius: 8px;
+            padding: 8px 9px;
+            background: #fff;
+        }
+
+        .report-card.emphasis {
+            border-color: #111827;
+            background: #fff;
+        }
+
+        .report-label {
+            color: #111827;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .report-value {
+            color: #111827 !important;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .report-section {
+            border: 1.5px solid #111827;
+            border-radius: 8px;
+            background: #fff;
+            padding: 10px 11px;
+            margin-bottom: 7px;
+        }
+
+        .report-section.plain-section {
+            border: 0;
+            border-radius: 0;
+            padding: 0;
+            margin-bottom: 18px;
+        }
+
+        .report-section h3 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            margin-bottom: 6px;
+            color: #0f172a;
+        }
+
+        .report-section h3::before {
+            display: none;
+        }
+
+        .plain-section h3::before {
+            display: none;
+        }
+
+        .promise-box {
+            border-left: 4px solid #0b67b2;
+            background: #f1f7fd;
+            border-radius: 0 8px 8px 0;
+            padding: 8px 10px;
+            line-height: 1.42;
+            font-size: 10.8px;
+            color: #1f2937;
+        }
+
+        .agreement-box {
+            display: grid;
+            gap: 6px;
+            border: 1px solid #b6d6f2;
+            border-radius: 8px;
+            background: #f8fbff;
+            padding: 8px 10px;
+            font-size: 10.8px;
+            line-height: 1.4;
+        }
+
+        .agreement-row {
+            display: grid;
+            grid-template-columns: 24px 1fr;
+            gap: 9px;
+            align-items: start;
+        }
+
+        .agreement-number {
+            display: grid;
+            place-items: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 999px;
+            background: #0b67b2;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .identity-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .identity-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 7px 9px;
+            background: #fcfdff;
+        }
+
+        .signature-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 310px);
+            gap: 18px;
+            margin-top: 12px;
+            page-break-inside: avoid;
+            justify-content: end;
+        }
+
+        .signature-card {
+            min-height: 105px;
+            border: 1px solid #d8e0ea;
+            border-radius: 8px;
+            padding: 10px;
+            display: grid;
+            align-content: end;
+            background: #fff;
+        }
+
+        .signature-role {
+            color: #667085;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin-bottom: 42px;
+        }
+
+        .report-list {
+            padding-left: 20px;
+            line-height: 1.38;
+            font-size: 10.8px;
+        }
+
+        .report-list li {
+            margin-bottom: 3px;
+        }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9.5px;
+            table-layout: fixed;
+        }
+
+        .report-table th,
+        .report-table td {
+            border-bottom: 0;
+            padding: 4px 5px;
+            text-align: left;
+            vertical-align: top;
+            overflow-wrap: anywhere;
+        }
+
+        .report-table th {
+            border-top: 1px solid #111827;
+            border-bottom: 1px solid #111827;
+            border-left: 1px solid #111827;
+            background: #fff;
+            color: #111827;
+            text-transform: uppercase;
+            font-size: 8.5px;
+            letter-spacing: .04em;
+            font-weight: 800;
+        }
+
+        .report-table th:last-child {
+            border-right: 1px solid #111827;
+        }
+
+        .report-note {
+            color: #111827;
+            font-size: 9.8px;
+            line-height: 1.35;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .report-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            color: #667085;
+            font-size: 9.5px;
+            border-top: 1px solid #d8e0ea;
+            padding-top: 7px;
+            margin-top: 8px;
+        }
+
+        .audit-strip {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .audit-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 6px 8px;
+            background: #fff;
+            font-size: 9.8px;
+            color: #475467;
+        }
+
+        .audit-item strong {
+            display: block;
+            color: #0f172a;
+            font-size: 10.8px;
+            margin-top: 2px;
+        }
+
+        .report-sign {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: 1fr 230px;
+            gap: 16px;
+            align-items: end;
+            page-break-inside: avoid;
+        }
+
+        .signature-box {
+            border-top: 1px solid #98a2b3;
+            padding-top: 8px;
+            font-weight: 500;
+            color: #111827;
+        }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 12mm;
+            }
+
+            body {
+                background: #fff;
+            }
+
+            .topbar,
+            .layout {
+                display: none !important;
+            }
+
+            .container {
+                max-width: none;
+                padding: 0;
+            }
+
+            .print-report {
+                display: block;
+            }
+
+            .report-shell {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .bank-masthead {
+                break-inside: avoid;
+            }
+
+            .report-card,
+            .report-section,
+            .meta-panel {
+                box-shadow: none;
+            }
+
+            .report-grid {
+                break-inside: avoid;
+            }
+
+            .bank-masthead,
+            .statement-meta,
+            .signature-grid,
+            .signature-card {
+                break-inside: avoid;
+            }
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .tab {
+            min-height: 34px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface-2);
+            color: var(--muted);
+            cursor: pointer;
+            padding: 7px 10px;
+            font-size: 13px;
+        }
+
+        .tab.active {
+            color: var(--text);
+            border-color: var(--blue);
+            background: var(--blue-soft);
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 780px;
+            border-collapse: collapse;
+            background: var(--surface);
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            vertical-align: top;
+            font-size: 12px;
+        }
+
+        th {
+            color: var(--muted);
+            background: var(--surface-2);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .money {
+            text-align: right;
+            white-space: nowrap;
+            font-weight: 800;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            min-height: 22px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 3px 8px;
+            color: var(--muted);
+            background: var(--surface-2);
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .tag-risk {
+            border-color: rgba(248, 193, 74, .45);
+            background: var(--yellow-soft);
+            color: #f9d782;
+        }
+
+        .tag-safe {
+            border-color: rgba(45, 220, 130, .35);
+            background: var(--green-soft);
+            color: #9ef2c3;
+        }
+
+        .empty {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+            padding: 10px 0;
+        }
+
+        .risk-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .mini-btn {
+            border: 1px solid var(--border);
+            background: var(--surface-2);
+            color: var(--muted);
+            border-radius: 7px;
+            cursor: pointer;
+            padding: 5px 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .mini-btn:hover {
+            color: var(--text);
+            border-color: #4c5664;
+        }
+
+        @media (max-width: 900px) {
+            .layout,
+            .sections,
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .actions {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .container {
+                padding: 16px;
+            }
+
+            .summary-grid {
+                gap: 8px;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+
+            .chart-row {
+                grid-template-columns: 74px minmax(0, 1fr);
+            }
+
+            .chart-value {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="topbar">
+            <div class="brand">
+                <div class="brand-mark"></div>
+                <div>
+                    <h1>Analisis Mutasi BCA</h1>
+                    <div class="subtitle">Ringkasan pemasukan, pengeluaran, QRIS mencurigakan, dan estimasi kerugian.</div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn" id="btn-clear" type="button">Reset</button>
+                <button class="btn" id="btn-export" type="button" disabled>Export CSV</button>
+                <button class="btn btn-primary" id="btn-pdf" type="button" disabled>Export PDF</button>
+            </div>
+        </header>
+
+        <section id="print-report" class="print-report"></section>
+
+        <main class="layout">
+            <aside class="panel">
+                <div id="upload-zone" class="upload-zone">
+                    <div>
+                        <div class="upload-main">Klik atau drag PDF e-statement BCA</div>
+                        <div class="hint">Bisa upload banyak file sekaligus, misalnya 40-45 PDF dari 2023 sampai sekarang.</div>
+                    </div>
+                </div>
+                <input type="file" id="file-input" accept="application/pdf,.pdf" multiple>
+                <button class="btn btn-primary" id="btn-analyze" type="button" disabled>Analisis PDF</button>
+                <div id="files-list" class="files-list"></div>
+
+                <div class="filters">
+                    <div class="field">
+                        <label for="month-filter">Periode</label>
+                        <select id="month-filter" disabled>
+                            <option value="all">Semua periode</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="type-filter">Jenis</label>
+                        <select id="type-filter" disabled>
+                            <option value="all">Semua transaksi</option>
+                            <option value="in">Pemasukan</option>
+                            <option value="out">Pengeluaran</option>
+                            <option value="qris">QRIS saja</option>
+                            <option value="risk">Dicurigai judol</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="search-box">Cari nama / keterangan</label>
+                        <input id="search-box" type="search" placeholder="Contoh: QRIS, DANA, AGHATECH" disabled>
+                    </div>
+                    <div class="field">
+                        <label for="safe-words">Whitelist merchant aman</label>
+                        <input id="safe-words" type="search" placeholder="alfamart, shopee, gopay">
+                    </div>
+                    <div class="field">
+                        <label for="risk-words">Blacklist / kata judol</label>
+                        <input id="risk-words" type="search" placeholder="obsian, soulshard, duskweaver">
+                    </div>
+                    <button class="btn" id="btn-apply-rules" type="button">Terapkan Rules</button>
+                </div>
+
+                <div class="notice">
+                    Deteksi judol di sini bersifat indikasi, bukan bukti mutlak. QRIS dengan nama toko generik/acak akan ditandai agar kamu bisa review dan koreksi manual.
+                </div>
+                <div class="status" id="status">Belum ada file dianalisis.</div>
+            </aside>
+
+            <section>
+                <div id="summary" class="summary-grid"></div>
+                <div id="content" class="sections"></div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const zone = document.getElementById("upload-zone");
+        const fileInput = document.getElementById("file-input");
+        const filesList = document.getElementById("files-list");
+        const btnAnalyze = document.getElementById("btn-analyze");
+        const btnClear = document.getElementById("btn-clear");
+        const btnExport = document.getElementById("btn-export");
+        const btnPdf = document.getElementById("btn-pdf");
+        const monthFilter = document.getElementById("month-filter");
+        const typeFilter = document.getElementById("type-filter");
+        const searchBox = document.getElementById("search-box");
+        const safeWordsInput = document.getElementById("safe-words");
+        const riskWordsInput = document.getElementById("risk-words");
+        const btnApplyRules = document.getElementById("btn-apply-rules");
+        const statusEl = document.getElementById("status");
+        const summaryEl = document.getElementById("summary");
+        const contentEl = document.getElementById("content");
+        const printReportEl = document.getElementById("print-report");
+
+        if (window.pdfjsLib) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = "../assets/vendor/pdfjs/pdf.worker.min.js";
+        }
+
+        const monthLabels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+        const monthNames = {
+            JAN: 0, JANUARI: 0, FEB: 1, FEBRUARI: 1, MAR: 2, MARET: 2, APR: 3, APRIL: 3,
+            MEI: 4, MAY: 4, JUN: 5, JUNI: 5, JUL: 6, JULI: 6, AGU: 7, AGUSTUS: 7,
+            AUG: 7, SEP: 8, SEPTEMBER: 8, OKT: 9, OKTOBER: 9, OCT: 9, NOV: 10,
+            NOVEMBER: 10, DES: 11, DESEMBER: 11, DEC: 11
+        };
+
+        const riskWords = [
+            "slot", "slt", "casino", "bet", "bett", "bola", "poker", "domino", "jackpot",
+            "gacor", "maxwin", "zeus", "wd", "scatter", "spin", "game", "gaming"
+        ];
+        const genericMerchantWords = [
+            "usaha", "usahaa", "usahaaa", "market", "shop", "store", "warung", "toko",
+            "craft", "pixel", "digital", "tech", "pay", "payment", "agen", "mitra"
+        ];
+        const normalMerchantWords = [
+            "alfam", "indom", "shopee", "tokopedia", "go-pay", "gopay", "dana",
+            "ovo", "linkaja", "pln", "telkom", "grab", "gojek", "bca", "biaya adm",
+            "tarikan atm", "setoran", "saldo awal"
+        ];
+
+        let files = [];
+        let allTransactions = [];
+        let statementSummaries = [];
+        let manualLabels = {};
+        let customSafeWords = [];
+        let customRiskWords = [];
+        let activeTab = "all";
+
+        function fmtSize(bytes) {
+            if (bytes < 1048576) return Math.round(bytes / 1024) + " KB";
+            return (bytes / 1048576).toFixed(1) + " MB";
+        }
+
+        function fmtIDR(value) {
+            const n = Number(value || 0);
+            return "Rp " + Math.round(n).toLocaleString("id-ID");
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "").replace(/[&<>"']/g, char => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+            }[char]));
+        }
+
+        function parseMoney(value) {
+            if (!value) return 0;
+            let raw = String(value).replace(/[^\d,.-]/g, "");
+            if (!raw) return 0;
+
+            const hasComma = raw.includes(",");
+            const hasDot = raw.includes(".");
+            if (hasComma && hasDot) {
+                const lastComma = raw.lastIndexOf(",");
+                const lastDot = raw.lastIndexOf(".");
+                if (lastDot > lastComma) {
+                    raw = raw.replace(/,/g, "");
+                } else {
+                    raw = raw.replace(/\./g, "").replace(",", ".");
+                }
+            } else if (hasComma) {
+                const parts = raw.split(",");
+                const last = parts[parts.length - 1];
+                if (last.length === 2) raw = parts.slice(0, -1).join("") + "." + last;
+                else raw = raw.replace(/,/g, "");
+            } else if (hasDot) {
+                const parts = raw.split(".");
+                const last = parts[parts.length - 1];
+                if (parts.length > 2 || last.length === 3) raw = raw.replace(/\./g, "");
+            }
+
+            return Number(raw) || 0;
+        }
+
+        function addFiles(newFiles) {
+            for (const file of Array.from(newFiles)) {
+                const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+                const exists = files.some(item => item.name === file.name && item.size === file.size);
+                if (isPdf && !exists) files.push(file);
+            }
+            renderFiles();
+        }
+
+        function renderFiles() {
+            filesList.innerHTML = files.map((file, index) => `
+                <div class="file-chip">
+                    <div>
+                        <div class="file-name">${escapeHtml(file.name)}</div>
+                        <div class="file-meta">${fmtSize(file.size)}</div>
+                    </div>
+                    <button class="remove" type="button" title="Hapus" onclick="removeFile(${index})">x</button>
+                </div>
+            `).join("");
+            btnAnalyze.disabled = files.length === 0;
+        }
+
+        function removeFile(index) {
+            files.splice(index, 1);
+            renderFiles();
+        }
+        window.removeFile = removeFile;
+
+        zone.addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("change", event => addFiles(event.target.files));
+        zone.addEventListener("dragover", event => {
+            event.preventDefault();
+            zone.classList.add("over");
+        });
+        zone.addEventListener("dragleave", () => zone.classList.remove("over"));
+        zone.addEventListener("drop", event => {
+            event.preventDefault();
+            zone.classList.remove("over");
+            addFiles(event.dataTransfer.files);
+        });
+
+        btnAnalyze.addEventListener("click", analyzeFiles);
+        btnClear.addEventListener("click", resetAll);
+        btnExport.addEventListener("click", exportCsv);
+        btnPdf.addEventListener("click", exportPdfReport);
+        btnApplyRules.addEventListener("click", applyCustomRules);
+        monthFilter.addEventListener("change", renderDashboard);
+        typeFilter.addEventListener("change", renderDashboard);
+        searchBox.addEventListener("input", renderDashboard);
+
+        async function analyzeFiles() {
+            if (!window.pdfjsLib) {
+                statusEl.textContent = "PDF.js gagal dimuat. Pastikan folder assets/vendor/pdfjs ada.";
+                return;
+            }
+
+            btnAnalyze.disabled = true;
+            allTransactions = [];
+            statusEl.textContent = `Membaca ${files.length} file PDF...`;
+
+            try {
+                const parsed = [];
+                statementSummaries = [];
+                for (let index = 0; index < files.length; index++) {
+                    const file = files[index];
+                    statusEl.textContent = `Membaca ${index + 1}/${files.length}: ${file.name}`;
+                    const text = await withTimeout(
+                        extractPdfText(file, (message) => {
+                            statusEl.textContent = `${index + 1}/${files.length}: ${message}`;
+                        }),
+                        45000,
+                        `Terlalu lama membaca ${file.name}. Coba refresh lalu analisis lagi.`
+                    );
+                    const statement = parseStatement(text, file.name);
+                    if (statement.summary) statementSummaries.push(statement.summary);
+                    parsed.push(...statement.transactions);
+                }
+
+                allTransactions = parsed
+                    .filter(tx => tx.amount > 0 && tx.type !== "opening")
+                    .map((tx, index) => ({
+                        ...tx,
+                        id: `${tx.file}|${tx.dateKey}|${tx.type}|${tx.amount}|${index}`,
+                        risk: detectRisk(tx)
+                    }))
+                    .sort((a, b) => a.date - b.date || a.file.localeCompare(b.file));
+
+                buildFilters();
+                enableFilters(allTransactions.length > 0);
+                renderDashboard();
+                statusEl.textContent = `Selesai. ${allTransactions.length} transaksi terbaca dari ${files.length} file.`;
+            } catch (error) {
+                statusEl.textContent = `Error: ${error.message}`;
+            } finally {
+                btnAnalyze.disabled = files.length === 0;
+            }
+        }
+
+        async function withTimeout(promise, ms, message) {
+            let timer;
+            const timeout = new Promise((_, reject) => {
+                timer = setTimeout(() => reject(new Error(message)), ms);
+            });
+            try {
+                return await Promise.race([promise, timeout]);
+            } finally {
+                clearTimeout(timer);
+            }
+        }
+
+        async function extractPdfText(file, onProgress) {
+            const buffer = await file.arrayBuffer();
+            onProgress(`Membuka ${file.name}...`);
+            const pdf = await pdfjsLib.getDocument({
+                data: new Uint8Array(buffer),
+                disableWorker: true,
+                useWorkerFetch: false,
+                isEvalSupported: false
+            }).promise;
+            const pages = [];
+
+            for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+                onProgress(`Membaca halaman ${pageNumber}/${pdf.numPages}: ${file.name}`);
+                const page = await pdf.getPage(pageNumber);
+                const content = await page.getTextContent();
+                const items = content.items
+                    .map(item => ({
+                        text: item.str,
+                        x: Math.round(item.transform[4]),
+                        y: Math.round(item.transform[5])
+                    }))
+                    .filter(item => item.text && item.text.trim());
+
+                items.sort((a, b) => {
+                    if (Math.abs(b.y - a.y) > 3) return b.y - a.y;
+                    return a.x - b.x;
+                });
+
+                const lines = [];
+                for (const item of items) {
+                    const last = lines[lines.length - 1];
+                    if (!last || Math.abs(last.y - item.y) > 3) {
+                        lines.push({ y: item.y, parts: [item] });
+                    } else {
+                        last.parts.push(item);
+                    }
+                }
+
+                pages.push(lines.map(line => {
+                    line.parts.sort((a, b) => a.x - b.x);
+                    return line.parts.map(part => part.text).join(" ").replace(/\s+/g, " ").trim();
+                }).join("\n"));
+            }
+
+            return pages.join("\n");
+        }
+
+        function parseStatement(text, fileName) {
+            const meta = getStatementMeta(text, fileName);
+            const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+            const transactions = [];
+            let current = null;
+            let activeDate = null;
+
+            for (const rawLine of lines) {
+                const line = rawLine.replace(/\s+/g, " ").trim();
+                const dateMatch = line.match(/^(\d{2})\/(\d{2})(?:\s+(.+))?$/);
+
+                if (dateMatch) {
+                    if (current) transactions.push(finalizeTransaction(current, meta));
+                    activeDate = {
+                        day: Number(dateMatch[1]),
+                        month: Number(dateMatch[2]) - 1,
+                        year: meta.year
+                    };
+                    current = {
+                        ...activeDate,
+                        lines: [dateMatch[3] || ""],
+                        file: fileName,
+                        owner: meta.owner,
+                        account: meta.account,
+                        period: meta.periodLabel
+                    };
+                    continue;
+                }
+
+                if (!current) continue;
+                if (/^(REKENING|KCU|CATATAN|TANGGAL|Bersambung|HALAMAN|MATA UANG)/i.test(line)) continue;
+                if (/^(MUTASI CR|MUTASI DB|SALDO AKHIR|SALDO AWAL\s*:)/i.test(line)) continue;
+
+                if (activeDate && looksLikeNewTransactionLine(line)) {
+                    transactions.push(finalizeTransaction(current, meta));
+                    current = {
+                        ...activeDate,
+                        lines: [line],
+                        file: fileName,
+                        owner: meta.owner,
+                        account: meta.account,
+                        period: meta.periodLabel
+                    };
+                    continue;
+                }
+
+                current.lines.push(line);
+            }
+
+            if (current) transactions.push(finalizeTransaction(current, meta));
+            return {
+                transactions: transactions.filter(Boolean),
+                summary: meta.summary
+            };
+        }
+
+        function looksLikeNewTransactionLine(line) {
+            const hasAmount = /(\d{1,3}(?:[,.]\d{3})*(?:[,.]\d{2})|\d+(?:[,.]\d{2}))(?:\s*DB)?/.test(line);
+            const hasKeyword = /\b(TRSF|SWITCHING|TRANSAKSI|KARTU|BIAYA|TARIKAN|SETORAN|QR)\b/i.test(line);
+            return hasAmount && hasKeyword;
+        }
+
+        function getStatementMeta(text, fileName) {
+            const account = (text.match(/NO\.?\s*REKENING\s*:?\s*(\d+)/i) || [])[1] || "";
+            const periodRaw = (text.match(/PERIODE\s*:?\s*([A-Z]+)\s+(\d{4})/i) || []);
+            const monthName = periodRaw[1] || getMonthFromFile(fileName) || "";
+            const year = Number(periodRaw[2] || getYearFromFile(fileName) || new Date().getFullYear());
+            const month = monthNames[monthName.toUpperCase()] ?? 0;
+            const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+            const owner = findOwnerName(lines) || "";
+            const periodLabel = monthName ? `${normalizeMonthName(monthName)} ${year}` : String(year);
+            const monthKey = `${year}-${String(month + 1).padStart(2, "0")}`;
+            const summary = extractStatementSummary(text, fileName, monthKey, periodLabel);
+            return { account, owner, year, month, periodLabel, summary };
+        }
+
+        function extractStatementSummary(text, fileName, monthKey, periodLabel) {
+            const orderedSummary = extractOrderedSummaryValues(text);
+            const crValue = orderedSummary?.cr || findSummaryValue(text, "CR");
+            const dbValue = orderedSummary?.db || findSummaryValue(text, "DB");
+            if (!crValue && !dbValue) return null;
+            return {
+                file: fileName,
+                monthKey,
+                periodLabel,
+                totalIn: parseMoney(crValue || 0),
+                totalOut: parseMoney(dbValue || 0),
+                openingBalance: parseMoney(orderedSummary?.opening || 0),
+                endingBalance: parseMoney(orderedSummary?.ending || 0)
+            };
+        }
+
+        function extractOrderedSummaryValues(text) {
+            const lines = text.split(/\r?\n/);
+            let start = -1;
+            for (let i = lines.length - 1; i >= 0; i--) {
+                if (/SALDO\s+AWAL\s*:/i.test(lines[i])) {
+                    start = i;
+                    break;
+                }
+            }
+            if (start < 0) return null;
+
+            const block = lines.slice(start, Math.min(start + 12, lines.length)).join(" ");
+            const values = [...block.matchAll(/\d{1,3}(?:[,.]\d{3})*(?:[,.]\d{2})|\d+(?:[,.]\d{2})/g)].map(match => match[0]);
+            if (values.length < 4) return null;
+
+            return {
+                opening: values[0],
+                cr: values[1],
+                db: values[2],
+                ending: values[3]
+            };
+        }
+
+        function findSummaryValue(text, kind) {
+            const lines = text.split(/\r?\n/);
+            const re = new RegExp(`MUTASI\\s+${kind}\\s*:?(.*)`, "i");
+            const nextSummaryRe = kind === "CR" ? /MUTASI\s+DB|SALDO\s+AKHIR/i : /SALDO\s+AKHIR|MUTASI\s+CR/i;
+            for (let i = lines.length - 1; i >= 0; i--) {
+                const match = lines[i].match(re);
+                if (!match) continue;
+
+                const current = (match[1] || "").match(/[\d,.]+/);
+                if (current) return current[0];
+
+                for (let j = i + 1; j < Math.min(i + 4, lines.length); j++) {
+                    if (nextSummaryRe.test(lines[j])) break;
+                    const next = lines[j].match(/[\d,.]+/);
+                    if (next) return next[0];
+                }
+            }
+            return "";
+        }
+
+        function getMonthFromFile(fileName) {
+            const upper = fileName.toUpperCase();
+            return Object.keys(monthNames).find(name => upper.includes(name));
+        }
+
+        function getYearFromFile(fileName) {
+            const match = fileName.match(/20\d{2}/);
+            return match ? match[0] : "";
+        }
+
+        function findOwnerName(lines) {
+            const skip = /^(REKENING|KCU|NO\.|HALAMAN|PERIODE|MATA UANG|CATATAN|TANGGAL|INDONESIA|RT|KP|PANARUKAN|SITUBONDO)/i;
+            for (const line of lines.slice(0, 25)) {
+                if (skip.test(line)) continue;
+                if (/^[A-Z][A-Z\s.'-]{5,}$/.test(line) && !/\d/.test(line)) return line;
+            }
+            return "";
+        }
+
+        function normalizeMonthName(name) {
+            if (/^\d{1,2}$/.test(String(name))) {
+                const numericIndex = Number(name) - 1;
+                return monthLabels[numericIndex] || String(name);
+            }
+            const idx = monthNames[name.toUpperCase()];
+            return monthLabels[idx] || name;
+        }
+
+        function finalizeTransaction(current, meta) {
+            const body = current.lines.join(" ").replace(/\s+/g, " ").trim();
+            if (!body) return null;
+            if (/SALDO\s+AWAL/i.test(body)) return null;
+
+            const hasDebitMarker = /\bDB\b/i.test(body);
+            const amountRegex = /(\d{1,3}(?:[,.]\d{3})*(?:[,.]\d{2})|\d+(?:[,.]\d{2}))(?:\s*DB)?/g;
+            const amounts = [...body.matchAll(amountRegex)];
+            if (!amounts.length) return null;
+
+            let amountMatch = amounts[0];
+            if (hasDebitMarker) {
+                amountMatch = amounts.find(match => /\bDB\b/i.test(body.slice(match.index, match.index + match[0].length + 4))) || amountMatch;
+            } else if (amounts.length > 1) {
+                amountMatch = chooseCreditAmount(body, amounts);
+            }
+
+            const amount = parseMoney(amountMatch[1]);
+            const type = hasDebitMarker ? "out" : "in";
+            const date = new Date(current.year, current.month, current.day);
+            const dateKey = `${current.year}-${String(current.month + 1).padStart(2, "0")}-${String(current.day).padStart(2, "0")}`;
+            const cleanDescription = body
+                .replace(amountRegex, " ")
+                .replace(/\bCBG\b|\bMUTASI\b|\bSALDO\b/gi, " ")
+                .replace(/\s+/g, " ")
+                .trim();
+
+            return {
+                date,
+                dateKey,
+                displayDate: `${String(current.day).padStart(2, "0")}/${String(current.month + 1).padStart(2, "0")}/${current.year}`,
+                monthKey: `${current.year}-${String(current.month + 1).padStart(2, "0")}`,
+                monthLabel: `${monthLabels[current.month] || String(current.month + 1)} ${current.year}`,
+                type,
+                amount,
+                description: cleanDescription || body,
+                party: extractParty(cleanDescription || body, type),
+                category: categorize(cleanDescription || body, type),
+                file: current.file,
+                owner: current.owner || meta.owner,
+                account: current.account || meta.account,
+                period: current.period || meta.periodLabel
+            };
+        }
+
+        function chooseCreditAmount(body, amounts) {
+            const text = body.toUpperCase();
+            const first = amounts[0];
+            const second = amounts[1];
+
+            if (/TRSF|BI-FAST|SETORAN|CDM/.test(text)) {
+                return first;
+            }
+
+            return second || first;
+        }
+
+        function extractParty(description, type) {
+            const text = description.replace(/\s+/g, " ").trim();
+            const qris = text.match(/QR\s*\d+\s+0+\.00\s*([A-Z0-9][A-Z0-9 ._-]{2,40})/i);
+            if (qris) return cleanupParty(qris[1]);
+
+            const transfer = text.match(/TRANSFER\s+KE\s+\d+\s+([A-Z][A-Z\s.'-]{3,40})/i);
+            if (transfer) return cleanupParty(transfer[1]);
+
+            const wallets = text.match(/\b(\/?GO-PAY CUSTO|GOPAY|DANA|SHOPEEPAY|SHOPEE|OVO|LINKAJA)\b/i);
+            if (wallets) return cleanupParty(wallets[1]);
+
+            const debitMerchant = text.match(/\b(ALFAMRT|ALFAMART|INDOMARET|EDC Mini-AT|DOMPET ANAK BANGSA)[A-Z0-9\s.-]*/i);
+            if (debitMerchant) return cleanupParty(debitMerchant[0]);
+
+            const words = text.split(" ").filter(part => /[A-Z]/i.test(part) && !/^\d/.test(part));
+            if (words.length >= 2) return cleanupParty(words.slice(-4).join(" "));
+            if (type === "out") return "Pengeluaran lain";
+            return "Pemasukan lain";
+        }
+
+        function cleanupParty(value) {
+            const cleaned = String(value || "")
+                .replace(/^\/+/, "")
+                .replace(/\bTGL:.*$/i, "")
+                .replace(/\bDB\b/gi, "")
+                .replace(/\s+/g, " ")
+                .trim();
+
+            return isUnclearPartyName(cleaned) ? "Nama tidak terbaca" : cleaned || "Tidak terbaca";
+        }
+
+        function isUnclearPartyName(value) {
+            const text = String(value || "").trim();
+            if (!text) return true;
+            if (/^[A-Z](?:\s+[A-Z]){2,}$/i.test(text)) return true;
+
+            const tokens = text.split(/\s+/).filter(Boolean);
+            const letterTokens = tokens.filter(token => /^[A-Z]$/i.test(token));
+            const wordTokens = tokens.filter(token => /[A-Z]/i.test(token) && token.length > 1);
+            return tokens.length >= 3 && letterTokens.length / tokens.length >= .7 && wordTokens.length <= 1;
+        }
+
+        function categorize(description, type) {
+            const text = description.toLowerCase();
+            if (text.includes("qr ")) return "QRIS";
+            if (text.includes("tarikan atm")) return "Tarikan ATM";
+            if (text.includes("biaya adm")) return "Biaya admin";
+            if (text.includes("trsf") || text.includes("transfer")) return type === "in" ? "Transfer masuk" : "Transfer keluar";
+            if (text.includes("transaksi debit") || text.includes("kartu debit")) return "Debit kartu";
+            if (text.includes("dana") || text.includes("gopay") || text.includes("go-pay") || text.includes("shopee") || text.includes("ovo")) return "E-wallet";
+            return type === "in" ? "Pemasukan" : "Pengeluaran";
+        }
+
+        function detectRisk(tx) {
+            const text = `${tx.description} ${tx.party}`.toLowerCase();
+            const reasons = [];
+            let score = 0;
+
+            if (manualLabels[tx.id] === "risk") return { flagged: true, score: 99, reasons: ["Ditandai manual"] };
+            if (manualLabels[tx.id] === "safe") return { flagged: false, score: 0, reasons: ["Diabaikan manual"] };
+
+            if (tx.type !== "out") return { flagged: false, score: 0, reasons };
+
+            const allSafeWords = [...normalMerchantWords, ...customSafeWords];
+            const allRiskWords = [...riskWords, ...customRiskWords];
+            const safeHit = allSafeWords.find(word => word && text.includes(word));
+            if (safeHit && manualLabels[tx.id] !== "risk") {
+                return { flagged: false, score: 0, reasons: [`Whitelist: ${safeHit}`] };
+            }
+
+            if (text.includes("qr ")) {
+                score += 3;
+                reasons.push("Transaksi QRIS");
+            }
+
+            for (const word of allRiskWords) {
+                if (text.includes(word)) {
+                    score += 5;
+                    reasons.push(`Kata risiko: ${word}`);
+                    break;
+                }
+            }
+
+            for (const word of genericMerchantWords) {
+                if (text.includes(word)) {
+                    score += 2;
+                    reasons.push(`Nama merchant generik: ${word}`);
+                    break;
+                }
+            }
+
+            const party = tx.party.toLowerCase();
+            const hasNormal = allSafeWords.some(word => text.includes(word));
+            const consonantHeavy = /[bcdfghjklmnpqrstvwxyz]{5,}/i.test(party.replace(/\s/g, ""));
+            const hasDigits = /\d{4,}/.test(text);
+            const smallRepeated = tx.amount <= 250000 && tx.category === "QRIS";
+
+            if (!hasNormal && tx.category === "QRIS") {
+                score += 2;
+                reasons.push("QRIS bukan merchant umum");
+            }
+            if (consonantHeavy) {
+                score += 2;
+                reasons.push("Nama terlihat acak");
+            }
+            if (hasDigits && tx.category === "QRIS") {
+                score += 1;
+                reasons.push("Ada kode/angka panjang");
+            }
+            if (smallRepeated) {
+                score += 1;
+                reasons.push("Nominal kecil-menengah via QRIS");
+            }
+
+            return { flagged: score >= 5, score, reasons };
+        }
+
+        function parseWordList(value) {
+            return String(value || "")
+                .split(",")
+                .map(word => word.trim().toLowerCase())
+                .filter(Boolean);
+        }
+
+        function applyCustomRules() {
+            customSafeWords = parseWordList(safeWordsInput.value);
+            customRiskWords = parseWordList(riskWordsInput.value);
+            allTransactions = allTransactions.map(tx => ({ ...tx, risk: detectRisk(tx) }));
+            renderDashboard();
+            statusEl.textContent = "Rules deteksi diperbarui.";
+        }
+
+        function buildFilters() {
+            const months = [...new Set(allTransactions.map(tx => tx.monthKey))].sort();
+            monthFilter.innerHTML = `<option value="all">Semua periode</option>` + months.map(key => {
+                const [year, month] = key.split("-");
+                const label = `${monthLabels[Number(month) - 1]} ${year}`;
+                return `<option value="${key}">${label}</option>`;
+            }).join("");
+        }
+
+        function enableFilters(enabled) {
+            monthFilter.disabled = !enabled;
+            typeFilter.disabled = !enabled;
+            searchBox.disabled = !enabled;
+            btnExport.disabled = !enabled;
+            btnPdf.disabled = !enabled;
+        }
+
+        function getFilteredTransactions() {
+            const month = monthFilter.value;
+            const type = typeFilter.value;
+            const q = searchBox.value.trim().toLowerCase();
+
+            return allTransactions.filter(tx => {
+                if (month !== "all" && tx.monthKey !== month) return false;
+                if (type === "in" && tx.type !== "in") return false;
+                if (type === "out" && tx.type !== "out") return false;
+                if (type === "qris" && tx.category !== "QRIS") return false;
+                if (type === "risk" && !tx.risk.flagged) return false;
+                if (q && !`${tx.description} ${tx.party} ${tx.file}`.toLowerCase().includes(q)) return false;
+                return true;
+            });
+        }
+
+        function renderDashboard() {
+            const txs = getFilteredTransactions();
+            const official = getFilteredOfficialTotals();
+            const totalIn = official.hasOfficial ? official.totalIn : sum(txs.filter(tx => tx.type === "in"), "amount");
+            const totalOut = official.hasOfficial ? official.totalOut : sum(txs.filter(tx => tx.type === "out"), "amount");
+            const risks = txs.filter(tx => tx.risk.flagged);
+            const riskTotal = sum(risks, "amount");
+
+            summaryEl.innerHTML = `
+                <div class="stat">
+                    <div class="stat-label">Total Pemasukan</div>
+                    <div class="stat-value green">${fmtIDR(totalIn)}</div>
+                    <div class="stat-note">${official.hasOfficial ? "Sesuai MUTASI CR di PDF" : "Dari detail transaksi"}</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Total Pengeluaran</div>
+                    <div class="stat-value red">${fmtIDR(totalOut)}</div>
+                    <div class="stat-note">${official.hasOfficial ? "Sesuai MUTASI DB di PDF" : "Dari detail transaksi"}</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Estimasi Rugi Judol</div>
+                    <div class="stat-value yellow">${fmtIDR(riskTotal)}</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Jumlah Transaksi</div>
+                    <div class="stat-value">${txs.length.toLocaleString("id-ID")}</div>
+                </div>
+            `;
+
+            contentEl.innerHTML = `
+                ${renderLossDashboard(txs, risks)}
+                ${renderValidationPanel(txs)}
+                ${renderChartPanel(txs)}
+                ${renderSearchInsightPanel(txs)}
+                ${renderTopPanel("Pemasukan dari siapa terbanyak", groupByParty(txs.filter(tx => tx.type === "in")), "in")}
+                ${renderTopPanel("Pengeluaran ke siapa terbanyak", groupByParty(txs.filter(tx => tx.type === "out")), "out")}
+                ${renderMonthlyPanel(txs)}
+                ${renderDailyPanel(txs)}
+                ${renderRiskPanel(risks)}
+                ${renderTablePanel(txs)}
+            `;
+        }
+
+        function sum(items, key) {
+            return items.reduce((total, item) => total + Number(item[key] || 0), 0);
+        }
+
+        function getFilteredOfficialTotals() {
+            const month = monthFilter.value;
+            const type = typeFilter.value;
+            const q = searchBox.value.trim();
+
+            if (type !== "all" || q) {
+                return { hasOfficial: false, totalIn: 0, totalOut: 0 };
+            }
+
+            const summaries = statementSummaries.filter(item => month === "all" || item.monthKey === month);
+            return {
+                hasOfficial: summaries.length > 0,
+                totalIn: sum(summaries, "totalIn"),
+                totalOut: sum(summaries, "totalOut")
+            };
+        }
+
+        function groupByParty(txs) {
+            const map = new Map();
+            for (const tx of txs) {
+                const key = tx.party || "Tidak terbaca";
+                const item = map.get(key) || { name: key, total: 0, count: 0, examples: new Set() };
+                item.total += tx.amount;
+                item.count += 1;
+                item.examples.add(tx.category);
+                map.set(key, item);
+            }
+            return [...map.values()].sort((a, b) => b.total - a.total).slice(0, 8);
+        }
+
+        function renderTopPanel(title, rows, direction) {
+            const max = Math.max(...rows.map(row => row.total), 1);
+            const colorClass = direction === "in" ? "green" : "red";
+            const barClass = direction === "in" ? "in" : "out";
+            const body = rows.length ? rows.map(row => `
+                <div class="rank-row">
+                    <div>
+                        <div class="rank-name">${escapeHtml(row.name)}</div>
+                        <div class="rank-meta">${row.count} transaksi - ${escapeHtml([...row.examples].join(", "))}</div>
+                        <div class="bar"><span class="${barClass}" style="width:${Math.max(4, Math.round(row.total / max * 100))}%"></span></div>
+                    </div>
+                    <div class="rank-amount ${colorClass}">${fmtIDR(row.total)}</div>
+                </div>
+            `).join("") : `<div class="empty">Tidak ada data.</div>`;
+
+            return `
+                <section class="panel">
+                    <div class="section-title"><span>${title}</span></div>
+                    <div class="row-list">${body}</div>
+                </section>
+            `;
+        }
+
+        function renderLossDashboard(txs, risks) {
+            const riskTotal = sum(risks, "amount");
+            const average = risks.length ? riskTotal / risks.length : 0;
+            const byDay = groupRiskBy(risks, "dateKey", tx => tx.displayDate);
+            const byMonth = groupRiskBy(risks, "monthKey", tx => tx.monthLabel);
+            const worstDay = byDay[0];
+            const worstMonth = byMonth[0];
+
+            return `
+                <section class="panel full">
+                    <div class="section-title"><span>Dashboard kerugian judol</span><span class="tag tag-risk">indikasi</span></div>
+                    <div class="summary-grid">
+                        <div class="stat">
+                            <div class="stat-label">Total terindikasi</div>
+                            <div class="stat-value yellow">${fmtIDR(riskTotal)}</div>
+                            <div class="stat-note">${risks.length} transaksi</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Rata-rata transaksi</div>
+                            <div class="stat-value">${fmtIDR(average)}</div>
+                            <div class="stat-note">Dari transaksi terflag</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Hari paling parah</div>
+                            <div class="stat-value">${worstDay ? fmtIDR(worstDay.total) : "Rp 0"}</div>
+                            <div class="stat-note">${worstDay ? worstDay.label : "-"}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Bulan paling parah</div>
+                            <div class="stat-value">${worstMonth ? fmtIDR(worstMonth.total) : "Rp 0"}</div>
+                            <div class="stat-note">${worstMonth ? worstMonth.label : "-"}</div>
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function groupRiskBy(items, key, labelFn) {
+            const map = new Map();
+            for (const tx of items) {
+                const id = tx[key];
+                const row = map.get(id) || { key: id, label: labelFn(tx), total: 0, count: 0 };
+                row.total += tx.amount;
+                row.count += 1;
+                map.set(id, row);
+            }
+            return [...map.values()].sort((a, b) => b.total - a.total);
+        }
+
+        function renderValidationPanel(txs) {
+            const selectedMonth = monthFilter.value;
+            const summaries = statementSummaries.filter(item => selectedMonth === "all" || item.monthKey === selectedMonth);
+            const rows = summaries.map(summary => {
+                const detailRows = txs.filter(tx => tx.monthKey === summary.monthKey);
+                const detailIn = sum(detailRows.filter(tx => tx.type === "in"), "amount");
+                const detailOut = sum(detailRows.filter(tx => tx.type === "out"), "amount");
+                const diffIn = detailIn - summary.totalIn;
+                const diffOut = detailOut - summary.totalOut;
+                const ok = Math.abs(diffIn) < 1 && Math.abs(diffOut) < 1;
+                return `
+                    <tr>
+                        <td>${escapeHtml(summary.periodLabel)}</td>
+                        <td class="money green">${fmtIDR(summary.totalIn)}</td>
+                        <td class="money red">${fmtIDR(summary.totalOut)}</td>
+                        <td class="money">${fmtIDR(detailIn)}</td>
+                        <td class="money">${fmtIDR(detailOut)}</td>
+                        <td>${ok ? `<span class="tag tag-safe">Cocok</span>` : `<span class="tag tag-risk">Detail beda</span>`}</td>
+                    </tr>
+                `;
+            }).join("");
+
+            return `
+                <section class="panel full">
+                    <div class="section-title">
+                        <span>Validasi total resmi BCA</span>
+                        <span class="tag">${summaries.length} statement</span>
+                    </div>
+                    <div class="notice">Total utama memakai kolom resmi MUTASI CR/DB. Jika detail beda, berarti nama/kategori transaksi perlu direview, bukan total banknya.</div>
+                    <div class="table-wrap" style="margin-top:12px">
+                        <table>
+                            <thead><tr><th>Periode</th><th>CR resmi</th><th>DB resmi</th><th>Detail masuk</th><th>Detail keluar</th><th>Status detail</th></tr></thead>
+                            <tbody>${rows || `<tr><td colspan="6" class="empty">Summary resmi belum terbaca dari filter ini.</td></tr>`}</tbody>
+                        </table>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderChartPanel(txs) {
+            const rows = buildMonthlyRows(txs);
+            const max = Math.max(...rows.flatMap(row => [row.in, row.out, row.risk]), 1);
+            const body = rows.map(row => `
+                <div class="chart-row">
+                    <div class="chart-label">${escapeHtml(row.label)}</div>
+                    <div class="chart-bars">
+                        <span class="chart-bar in" style="width:${Math.max(2, row.in / max * 100)}%"></span>
+                        <span class="chart-bar out" style="width:${Math.max(2, row.out / max * 100)}%"></span>
+                        <span class="chart-bar risk" style="width:${Math.max(2, row.risk / max * 100)}%"></span>
+                    </div>
+                    <div class="chart-value">${fmtIDR(row.out)}</div>
+                </div>
+            `).join("");
+
+            return `
+                <section class="panel full">
+                    <div class="section-title">
+                        <span>Grafik bulanan</span>
+                        <span><span class="tag tag-safe">Masuk</span> <span class="tag">Keluar</span> <span class="tag tag-risk">Judol</span></span>
+                    </div>
+                    <div class="chart">${body || `<div class="empty">Tidak ada data grafik.</div>`}</div>
+                </section>
+            `;
+        }
+
+        function buildMonthlyRows(txs) {
+            const rows = new Map();
+            for (const summary of statementSummaries) {
+                rows.set(summary.monthKey, {
+                    key: summary.monthKey,
+                    label: summary.periodLabel,
+                    in: summary.totalIn,
+                    out: summary.totalOut,
+                    risk: 0
+                });
+            }
+            for (const tx of txs) {
+                const row = rows.get(tx.monthKey) || { key: tx.monthKey, label: tx.monthLabel, in: 0, out: 0, risk: 0 };
+                if (!statementSummaries.some(summary => summary.monthKey === tx.monthKey)) {
+                    if (tx.type === "in") row.in += tx.amount;
+                    if (tx.type === "out") row.out += tx.amount;
+                }
+                if (tx.risk.flagged) row.risk += tx.amount;
+                rows.set(tx.monthKey, row);
+            }
+            return [...rows.values()].sort((a, b) => a.key.localeCompare(b.key));
+        }
+
+        function renderSearchInsightPanel(txs) {
+            const query = searchBox.value.trim();
+            if (!query) return "";
+            const inTotal = sum(txs.filter(tx => tx.type === "in"), "amount");
+            const outTotal = sum(txs.filter(tx => tx.type === "out"), "amount");
+            const riskTotal = sum(txs.filter(tx => tx.risk.flagged), "amount");
+
+            return `
+                <section class="panel full">
+                    <div class="section-title"><span>Hasil pencarian: ${escapeHtml(query)}</span></div>
+                    <div class="summary-grid">
+                        <div class="stat"><div class="stat-label">Transaksi cocok</div><div class="stat-value">${txs.length}</div></div>
+                        <div class="stat"><div class="stat-label">Masuk</div><div class="stat-value green">${fmtIDR(inTotal)}</div></div>
+                        <div class="stat"><div class="stat-label">Keluar</div><div class="stat-value red">${fmtIDR(outTotal)}</div></div>
+                        <div class="stat"><div class="stat-label">Terindikasi</div><div class="stat-value yellow">${fmtIDR(riskTotal)}</div></div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderDailyPanel(txs) {
+            const rows = new Map();
+            for (const tx of txs) {
+                const row = rows.get(tx.dateKey) || { date: tx.displayDate, in: 0, out: 0, risk: 0, count: 0 };
+                if (tx.type === "in") row.in += tx.amount;
+                if (tx.type === "out") row.out += tx.amount;
+                if (tx.risk.flagged) row.risk += tx.amount;
+                row.count += 1;
+                rows.set(tx.dateKey, row);
+            }
+            const body = [...rows.entries()].sort((a, b) => b[0].localeCompare(a[0])).slice(0, 14).map(([, row]) => `
+                <tr>
+                    <td>${row.date}</td>
+                    <td class="money green">${fmtIDR(row.in)}</td>
+                    <td class="money red">${fmtIDR(row.out)}</td>
+                    <td class="money yellow">${fmtIDR(row.risk)}</td>
+                    <td class="money">${row.count}</td>
+                </tr>
+            `).join("");
+
+            return `
+                <section class="panel full">
+                    <div class="section-title"><span>Ringkasan harian terakhir</span><span class="tag">maks. 14 hari</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Tanggal</th><th>Masuk</th><th>Keluar</th><th>Dicurigai judol</th><th>Transaksi</th></tr></thead>
+                            <tbody>${body || `<tr><td colspan="5" class="empty">Tidak ada data.</td></tr>`}</tbody>
+                        </table>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderMonthlyPanel(txs) {
+            const rows = new Map();
+            for (const summary of statementSummaries) {
+                const selectedMonth = monthFilter.value;
+                if (selectedMonth !== "all" && summary.monthKey !== selectedMonth) continue;
+                rows.set(summary.monthKey, {
+                    label: summary.periodLabel,
+                    in: summary.totalIn,
+                    out: summary.totalOut,
+                    risk: 0,
+                    count: 0,
+                    official: true
+                });
+            }
+
+            for (const tx of txs) {
+                const row = rows.get(tx.monthKey) || { label: tx.monthLabel, in: 0, out: 0, risk: 0, count: 0, official: false };
+                if (!row.official) {
+                    if (tx.type === "in") row.in += tx.amount;
+                    if (tx.type === "out") row.out += tx.amount;
+                }
+                if (tx.risk.flagged) row.risk += tx.amount;
+                row.count += 1;
+                rows.set(tx.monthKey, row);
+            }
+
+            const body = [...rows.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([, row]) => `
+                <tr>
+                    <td>${row.label}</td>
+                    <td class="money green">${fmtIDR(row.in)}</td>
+                    <td class="money red">${fmtIDR(row.out)}</td>
+                    <td class="money yellow">${fmtIDR(row.risk)}</td>
+                    <td class="money">${fmtIDR(row.in - row.out)}</td>
+                    <td class="money">${row.count}</td>
+                </tr>
+            `).join("");
+
+            return `
+                <section class="panel full">
+                    <div class="section-title"><span>Ringkasan bulanan</span></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Bulan</th><th>Masuk</th><th>Keluar</th><th>Dicurigai judol</th><th>Selisih</th><th>Transaksi</th></tr></thead>
+                            <tbody>${body || `<tr><td colspan="6" class="empty">Tidak ada data.</td></tr>`}</tbody>
+                        </table>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderRiskPanel(risks) {
+            const body = risks.slice(0, 30).map(tx => `
+                <tr>
+                    <td>${tx.displayDate}</td>
+                    <td>
+                        <strong>${escapeHtml(tx.party)}</strong>
+                        <div class="hint">${escapeHtml(tx.description)}</div>
+                    </td>
+                    <td class="money yellow">${fmtIDR(tx.amount)}</td>
+                    <td>${tx.risk.reasons.map(reason => `<span class="tag tag-risk">${escapeHtml(reason)}</span>`).join(" ")}</td>
+                    <td>
+                        <div class="risk-actions">
+                            <button class="mini-btn" type="button" onclick="setManualLabel('${encodeURIComponent(tx.id)}','safe')">Abaikan</button>
+                            <button class="mini-btn" type="button" onclick="setManualLabel('${encodeURIComponent(tx.id)}','risk')">Judol</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join("");
+
+            return `
+                <section class="panel full">
+                    <div class="section-title">
+                        <span>QRIS / transaksi mencurigakan</span>
+                        <span class="tag tag-risk">${risks.length} transaksi</span>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Tanggal</th><th>Nama / keterangan</th><th>Nominal</th><th>Alasan</th><th>Koreksi</th></tr></thead>
+                            <tbody>${body || `<tr><td colspan="5" class="empty">Tidak ada transaksi yang terdeteksi mencurigakan pada filter ini.</td></tr>`}</tbody>
+                        </table>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderTablePanel(txs) {
+            const tabs = [
+                ["all", "Semua"],
+                ["in", "Masuk"],
+                ["out", "Keluar"],
+                ["qris", "QRIS"],
+                ["risk", "Dicurigai"],
+                ["safe", "Diabaikan"]
+            ].map(([key, label]) => `<button type="button" class="tab ${activeTab === key ? "active" : ""}" onclick="setTab('${key}')">${label}</button>`).join("");
+
+            const rows = txs.filter(tx => {
+                if (activeTab === "in") return tx.type === "in";
+                if (activeTab === "out") return tx.type === "out";
+                if (activeTab === "qris") return tx.category === "QRIS";
+                if (activeTab === "risk") return tx.risk.flagged;
+                if (activeTab === "safe") return manualLabels[tx.id] === "safe";
+                return true;
+            }).slice(0, 300);
+
+            const body = rows.map(tx => `
+                <tr>
+                    <td>${tx.displayDate}</td>
+                    <td><span class="tag ${tx.type === "in" ? "tag-safe" : ""}">${tx.type === "in" ? "Masuk" : "Keluar"}</span></td>
+                    <td>${escapeHtml(tx.party)}</td>
+                    <td>${escapeHtml(tx.category)}</td>
+                    <td>${escapeHtml(tx.description)}</td>
+                    <td class="money ${tx.type === "in" ? "green" : "red"}">${tx.type === "in" ? "+" : "-"}${fmtIDR(tx.amount)}</td>
+                    <td>${tx.risk.flagged ? `<span class="tag tag-risk">Cek</span>` : manualLabels[tx.id] === "safe" ? `<span class="tag tag-safe">Aman</span>` : ""}</td>
+                </tr>
+            `).join("");
+
+            return `
+                <section class="panel full">
+                    <div class="section-title">
+                        <span>Detail transaksi</span>
+                        <span class="tag">${rows.length} dari ${txs.length}</span>
+                    </div>
+                    <div class="tabs">${tabs}</div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Tanggal</th><th>Jenis</th><th>Dari/Ke</th><th>Kategori</th><th>Keterangan</th><th>Nominal</th><th>Flag</th></tr></thead>
+                            <tbody>${body || `<tr><td colspan="7" class="empty">Tidak ada data.</td></tr>`}</tbody>
+                        </table>
+                    </div>
+                </section>
+            `;
+        }
+
+        function setTab(tab) {
+            activeTab = tab;
+            renderDashboard();
+        }
+        window.setTab = setTab;
+
+        function setManualLabel(id, label) {
+            id = decodeURIComponent(id);
+            manualLabels[id] = label;
+            allTransactions = allTransactions.map(tx => tx.id === id ? { ...tx, risk: detectRisk({ ...tx, risk: undefined }) } : tx);
+            renderDashboard();
+        }
+        window.setManualLabel = setManualLabel;
+
+        function exportCsv() {
+            const rows = getFilteredTransactions();
+            const headers = ["tanggal", "jenis", "pihak", "kategori", "jumlah", "dicurigai_judol", "alasan", "keterangan", "file"];
+            const csv = [headers.join(",")].concat(rows.map(tx => [
+                tx.displayDate,
+                tx.type === "in" ? "masuk" : "keluar",
+                tx.party,
+                tx.category,
+                tx.amount,
+                tx.risk.flagged ? "ya" : "tidak",
+                tx.risk.reasons.join("; "),
+                tx.description,
+                tx.file
+            ].map(csvCell).join(","))).join("\n");
+
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "analisis-mutasi-bca.csv";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportPdfReport() {
+            if (!allTransactions.length && !statementSummaries.length) {
+                statusEl.textContent = "Belum ada data untuk diexport ke PDF.";
+                return;
+            }
+            printReportEl.innerHTML = buildPrintableReport();
+            setTimeout(() => window.print(), 100);
+        }
+
+        function buildPrintableReport() {
+            const txs = getFilteredTransactions();
+            const official = getFilteredOfficialTotals();
+            const totalIn = official.hasOfficial ? official.totalIn : sum(txs.filter(tx => tx.type === "in"), "amount");
+            const totalOut = official.hasOfficial ? official.totalOut : sum(txs.filter(tx => tx.type === "out"), "amount");
+            const risks = txs.filter(tx => tx.risk.flagged);
+            const riskTotal = sum(risks, "amount");
+            const averageRisk = risks.length ? riskTotal / risks.length : 0;
+            const monthlyRows = buildMonthlyRows(txs);
+            const topRiskParties = groupByParty(risks).slice(0, 10);
+            const topOut = groupByParty(txs.filter(tx => tx.type === "out")).slice(0, 8);
+            const periodText = getReportPeriodText(monthlyRows);
+            const generatedAt = new Date().toLocaleString("id-ID", { dateStyle: "long", timeStyle: "short" });
+            const reportOwner = "Fahmi Fahrezy";
+            const netBalance = totalIn - totalOut;
+            const accountNumber = statementSummaries.find(row => row.account)?.account || txs.find(tx => tx.account)?.account || "1210931399";
+
+            return `
+                <div class="report-shell">
+                    <header class="bank-masthead">
+                        <div class="bca-logo">
+                            <img class="bca-logo-img" src="../assets/images/bca.png" alt="BCA">
+                        </div>
+                        <div class="statement-heading">
+                            <h2>MUTASI TAHAPAN XPRESI</h2>
+                        </div>
+                        <div></div>
+                    </header>
+
+                    <div class="statement-meta">
+                        <div class="meta-panel">
+                            <h3>Ringkasan Pemilik Rekening</h3>
+                            <div class="meta-row">
+                                <div class="meta-label">Nama</div>
+                                <div class="meta-value">${escapeHtml(reportOwner)}</div>
+                            </div>
+                            <div class="meta-row">
+                                <div class="meta-label">No. Rekening</div>
+                                <div class="meta-value">${escapeHtml(accountNumber)}</div>
+                            </div>
+                            <div class="meta-row">
+                                <div class="meta-label">Periode</div>
+                                <div class="meta-value">${escapeHtml(periodText)}</div>
+                            </div>
+                        </div>
+                        <div class="meta-panel">
+                            <h3>Informasi Laporan</h3>
+                            <div class="meta-row">
+                                <div class="meta-label">Jenis</div>
+                                <div class="meta-value">Laporan pribadi</div>
+                            </div>
+                            <div class="meta-row">
+                                <div class="meta-label">Mata Uang</div>
+                                <div class="meta-value">IDR</div>
+                            </div>
+                            <div class="meta-row">
+                                <div class="meta-label">Sumber</div>
+                                <div class="meta-value">Mutasi BCA upload</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="statement-note-card">
+                        <div class="statement-note-title">Catatan:</div>
+                        <div class="statement-note-cell">Apabila saya pernah melakukan kesalahan dalam hidup, laporan ini saya simpan sebagai pengingat untuk terus memperbaiki diri, menjadi lebih jujur, bertanggung jawab, dan tidak mengulangi kesalahan yang sama lagi.</div>
+                        <div class="statement-note-cell">Terima kasih Mama Suhaini yang selalu tetap ada, sabar, dan menjadi alasan saya untuk berubah menjadi pribadi yang lebih baik.</div>
+                    </div>
+
+                    <div class="report-grid">
+                        <div class="report-card emphasis">
+                            <div class="report-label">Periode</div>
+                            <div class="report-value">${escapeHtml(periodText)}</div>
+                        </div>
+                        <div class="report-card">
+                            <div class="report-label">Total Masuk</div>
+                            <div class="report-value green">${fmtIDR(totalIn)}</div>
+                        </div>
+                        <div class="report-card">
+                            <div class="report-label">Total Keluar</div>
+                            <div class="report-value red">${fmtIDR(totalOut)}</div>
+                        </div>
+                        <div class="report-card">
+                            <div class="report-label">Indikasi Judol</div>
+                            <div class="report-value yellow">${fmtIDR(riskTotal)}</div>
+                        </div>
+                        <div class="report-card">
+                            <div class="report-label">Selisih Bersih</div>
+                            <div class="report-value ${netBalance >= 0 ? "green" : "red"}">${fmtIDR(netBalance)}</div>
+                        </div>
+                    </div>
+
+                    <section class="report-section">
+                        <h3>Ringkasan Pemulihan</h3>
+                        <div class="report-grid compact">
+                            <div class="report-card">
+                                <div class="report-label">Transaksi Terflag</div>
+                                <div class="report-value">${risks.length}</div>
+                            </div>
+                            <div class="report-card">
+                                <div class="report-label">Rata-rata Terflag</div>
+                                <div class="report-value">${fmtIDR(averageRisk)}</div>
+                            </div>
+                            <div class="report-card">
+                                <div class="report-label">Jumlah Transaksi</div>
+                                <div class="report-value">${txs.length}</div>
+                            </div>
+                            <div class="report-card">
+                                <div class="report-label">Dibuat</div>
+                                <div class="report-value" style="font-size:12px">${escapeHtml(generatedAt)}</div>
+                            </div>
+                        </div>
+                        <div class="report-note">Angka indikasi adalah hasil deteksi otomatis dari nama merchant, QRIS, dan pola keterangan transaksi. Hasil ini dipakai sebagai bahan review pribadi, bukan bukti final.</div>
+                    </section>
+
+                    <section class="report-section plain-section">
+                        <h3>Ringkasan Bulanan</h3>
+                        <table class="report-table">
+                            <thead><tr><th>Bulan</th><th>Masuk</th><th>Keluar</th><th>Indikasi</th><th>Selisih</th></tr></thead>
+                            <tbody>${monthlyRows.map(row => `
+                                <tr>
+                                    <td>${escapeHtml(row.label)}</td>
+                                    <td>${fmtIDR(row.in)}</td>
+                                    <td>${fmtIDR(row.out)}</td>
+                                    <td>${fmtIDR(row.risk)}</td>
+                                    <td>${fmtIDR(row.in - row.out)}</td>
+                                </tr>
+                            `).join("") || `<tr><td colspan="5">Tidak ada data.</td></tr>`}</tbody>
+                        </table>
+                    </section>
+
+                    <section class="report-section plain-section">
+                        <h3>Top Indikasi Judol / QRIS Mencurigakan</h3>
+                        <table class="report-table">
+                            <thead><tr><th>Nama</th><th>Total</th><th>Frekuensi</th><th>Kategori</th></tr></thead>
+                            <tbody>${topRiskParties.map(row => `
+                                <tr>
+                                    <td>${escapeHtml(row.name)}</td>
+                                    <td>${fmtIDR(row.total)}</td>
+                                    <td>${row.count}</td>
+                                    <td>${escapeHtml([...row.examples].join(", "))}</td>
+                                </tr>
+                            `).join("") || `<tr><td colspan="4">Belum ada transaksi terflag.</td></tr>`}</tbody>
+                        </table>
+                    </section>
+
+                    <section class="report-section plain-section">
+                        <h3>Top Pengeluaran</h3>
+                        <table class="report-table">
+                            <thead><tr><th>Nama</th><th>Total</th><th>Frekuensi</th><th>Kategori</th></tr></thead>
+                            <tbody>${topOut.map(row => `
+                                <tr>
+                                    <td>${escapeHtml(row.name)}</td>
+                                    <td>${fmtIDR(row.total)}</td>
+                                    <td>${row.count}</td>
+                                    <td>${escapeHtml([...row.examples].join(", "))}</td>
+                                </tr>
+                            `).join("") || `<tr><td colspan="4">Tidak ada data.</td></tr>`}</tbody>
+                        </table>
+                    </section>
+
+                    <section class="report-section plain-section">
+                        <h3>Tanda Tangan Komitmen</h3>
+                        <div class="promise-box">
+                            Dengan menandatangani dokumen ini, saya menyatakan akan menjalankan komitmen di atas secara sadar, terbuka kepada keluarga, dan siap dievaluasi secara berkala agar kondisi keuangan kembali sehat.
+                        </div>
+                        <div class="signature-grid">
+                            <div class="signature-card">
+                                <div class="signature-role">Yang Membuat Komitmen</div>
+                                <div class="signature-box">${escapeHtml(reportOwner)}</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="report-footer">
+                        <span>Laporan Pemulihan Keuangan & Perjanjian Anti-Kambuh</span>
+                        <span>${escapeHtml(reportOwner)} - ${escapeHtml(generatedAt)}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getReportPeriodText(rows) {
+            if (!rows.length) return "Belum ada periode";
+            const sorted = [...rows].sort((a, b) => a.key.localeCompare(b.key));
+            const first = sorted[0].label;
+            const last = sorted[sorted.length - 1].label;
+            return first === last ? first : `${first} - ${last}`;
+        }
+
+        function csvCell(value) {
+            const text = String(value ?? "");
+            return `"${text.replace(/"/g, '""')}"`;
+        }
+
+        function resetAll() {
+            files = [];
+            allTransactions = [];
+            statementSummaries = [];
+            manualLabels = {};
+            customSafeWords = [];
+            customRiskWords = [];
+            activeTab = "all";
+            fileInput.value = "";
+            safeWordsInput.value = "";
+            riskWordsInput.value = "";
+            renderFiles();
+            enableFilters(false);
+            monthFilter.innerHTML = `<option value="all">Semua periode</option>`;
+            typeFilter.value = "all";
+            searchBox.value = "";
+            summaryEl.innerHTML = "";
+            contentEl.innerHTML = "";
+            statusEl.textContent = "Belum ada file dianalisis.";
+        }
+
+        renderFiles();
+    </script>
+</body>
+
+</html>
