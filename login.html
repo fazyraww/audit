@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/images/audit.png">
   <title>Login audit</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -108,11 +109,19 @@
 
     .mobile-menu-btn {
       display: none;
-      background: transparent;
-      border: none;
+      background: #f4f4f5;
+      border: 1px solid var(--border-subtle);
+      border-radius: 9999px;
       cursor: pointer;
-      padding: 6px;
+      padding: 8px 9px;
       color: var(--text-main);
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .mobile-menu-btn:hover {
+      background: #e4e4e7;
     }
 
     /* ═════════════════════════════════════════════════════════════════════════
@@ -346,6 +355,17 @@
       cursor: not-allowed;
     }
 
+    .btn-spinner {
+      width: 15px;
+      height: 15px;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      display: inline-block;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
     /* Switcher Footer (Don't have an account?) */
     .auth-switch-text {
       margin-top: 22px;
@@ -433,6 +453,17 @@
       opacity: 1;
     }
 
+    .toast-msg.error {
+      background: #dc2626;
+    }
+
+    .toast-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
     /* ═════════════════════════════════════════════════════════════════════════
        RESPONSIVE ADAPTATIONS (DESKTOP & MOBILE AS IN SCREENSHOT)
        ═════════════════════════════════════════════════════════════════════════ */
@@ -442,7 +473,7 @@
       }
 
       .mobile-menu-btn {
-        display: block;
+        display: flex;
       }
 
       .header-back-link {
@@ -479,7 +510,12 @@
 
   <!-- Toast Feedback -->
   <div id="toast" class="toast-msg">
-    <span id="toastIcon">⚡</span>
+    <span id="toastIcon" class="toast-icon">
+      <svg id="toastIconSvg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </span>
     <span id="toastText">Berhasil masuk! Mengarahkan ke dashboard...</span>
   </div>
 
@@ -498,11 +534,11 @@
       <a href="landing.html" class="header-back-link">
         &larr; Back to homepage
       </a>
-      <button class="mobile-menu-btn" onclick="window.location.href='landing.html'" aria-label="Menu">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-          stroke-linecap="round">
-          <line x1="4" y1="8" x2="20" y2="8"></line>
-          <line x1="4" y1="16" x2="20" y2="16"></line>
+      <button class="mobile-menu-btn" onclick="window.location.href='landing.html'" aria-label="Kembali ke beranda" title="Kembali ke beranda">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
         </svg>
       </button>
     </div>
@@ -598,11 +634,6 @@
         <!-- Submit CTA -->
         <button type="submit" class="btn-submit-auth" id="submitBtn">
           <span id="submitBtnText">Login now</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
         </button>
 
         <!-- Switch mode: Login <-> Signup -->
@@ -729,16 +760,22 @@
       }
     }
 
-    function showToast(msg, icon = '⚡') {
+    function showToast(msg, type = 'success') {
       const toast = document.getElementById('toast');
       const toastText = document.getElementById('toastText');
-      const toastIcon = document.getElementById('toastIcon');
+      const iconEl = document.getElementById('toastIcon');
+      if (!toast || !toastText) return;
       toastText.textContent = msg;
-      toastIcon.textContent = icon;
+      toast.classList.remove('error', 'success');
+      toast.classList.add(type === 'error' ? 'error' : 'success');
+      if (iconEl) {
+        iconEl.innerHTML = type === 'error'
+          ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>'
+          : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      }
       toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => { toast.classList.remove('show'); }, 3000);
     }
 
     function handleAuthSubmit(e) {
@@ -754,33 +791,33 @@
       const VALID_PASS = 'fahmi2406';
 
       submitBtn.disabled = true;
-      submitBtnText.innerHTML = '<span style="display:inline-block; animation:spin 0.8s linear infinite;">⏳</span> Memvalidasi...';
+      submitBtnText.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span> Memvalidasi...';
 
       setTimeout(() => {
         if (isSignUpMode) {
           // Mode Sign Up
           if (email === VALID_EMAIL && password === VALID_PASS) {
             saveSession(remember);
-            showToast('Akun berhasil didaftarkan! Mengarahkan...', '✨');
+            showToast('Akun berhasil didaftarkan! Mengarahkan...');
             setTimeout(() => { window.location.href = 'index.html'; }, 800);
           } else {
             // Bisa daftarkan akun baru
             saveSession(remember);
-            showToast('Pendaftaran berhasil! Mengarahkan...', '✨');
+            showToast('Pendaftaran berhasil! Mengarahkan...');
             setTimeout(() => { window.location.href = 'index.html'; }, 800);
           }
         } else {
           // Mode Login: Wajib email dan password yang ditentukan
           if (email === VALID_EMAIL && password === VALID_PASS) {
             saveSession(remember);
-            showToast('Berhasil login! Mengarahkan ke dashboard...', '⚡');
+            showToast('Berhasil login! Mengarahkan ke dashboard...');
             setTimeout(() => {
               window.location.href = 'index.html';
             }, 700);
           } else {
             submitBtn.disabled = false;
             submitBtnText.textContent = 'Login now';
-            showToast('Email atau password salah! Silakan periksa kembali.', '⚠️');
+            showToast('Email atau password salah. Silakan periksa kembali.', 'error');
 
             // Visual feedback error pada input
             const emailInput = document.getElementById('email');

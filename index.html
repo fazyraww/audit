@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="assets/images/audit.png">
   <title>Audit & Financial Dashboard </title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,6 +62,8 @@
 
       --badge-blue-bg: #eff6ff;
       --shadow-color: rgba(12, 16, 23, 0.08);
+      --nav-active-bg: #e9ebf1;
+      --nav-active-text: #0c1017;
 
       --color-success: #10b981;
       --color-danger: #ef4444;
@@ -72,47 +75,49 @@
     }
 
     :root[data-theme="dark"] {
-      --bg-page: #0b0e14;
-      --bg-sidebar: #0f131c;
-      --bg-main: #131824;
-      --bg-card: #181f2e;
-      --bg-input: #1a2233;
-      --bg-hover: #1e273b;
-      --bg-surface: #181f2e;
-      --bg-card-stack: #131824;
+      --bg-page: #0b0b0d;
+      --bg-sidebar: #101013;
+      --bg-main: #131316;
+      --bg-card: #17171b;
+      --bg-input: #1d1d23;
+      --bg-hover: #232329;
+      --bg-surface: #17171b;
+      --bg-card-stack: #131316;
 
-      --border-color: #242e42;
-      --border-subtle: #1c2436;
-      --border-card: #2a364d;
+      --border-color: #25252c;
+      --border-subtle: #1d1d23;
+      --border-card: #2d2d35;
 
-      --text-main: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
+      --text-main: #f4f4f6;
+      --text-secondary: #c9c9d1;
+      --text-muted: #8f8f9a;
+      --text-dim: #61616b;
 
-      --accent-blue: #38bdf8;
-      --accent-blue-light: rgba(56, 189, 248, 0.12);
-      --accent-blue-pill: #0284c7;
+      --accent-blue: #818cf8;
+      --accent-blue-light: rgba(129, 140, 248, 0.14);
+      --accent-blue-pill: #6366f1;
 
-      --badge-blue-bg: rgba(2, 132, 199, 0.15);
-      --shadow-color: rgba(0, 0, 0, 0.3);
+      --badge-blue-bg: rgba(99, 102, 241, 0.16);
+      --shadow-color: rgba(0, 0, 0, 0.5);
+      --nav-active-bg: #26262d;
+      --nav-active-text: #f4f4f6;
 
       --color-success: #34d399;
       --color-danger: #f87171;
       --color-warning: #fbbf24;
 
       --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.4);
-      --shadow-bankcard: 0 16px 32px -8px rgba(0, 0, 0, 0.6);
-      --shadow-hover: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
+      --shadow-bankcard: 0 16px 32px -8px rgba(0, 0, 0, 0.65);
+      --shadow-hover: 0 20px 40px -10px rgba(0, 0, 0, 0.85);
 
-      --glass-bg-top: rgba(40, 48, 68, 0.66);
-      --glass-bg-bottom: rgba(22, 27, 40, 0.5);
-      --glass-border: rgba(255, 255, 255, 0.14);
-      --glass-highlight: rgba(255, 255, 255, 0.12);
-      --glass-inset: rgba(255, 255, 255, 0.08);
-      --glass-field: rgba(255, 255, 255, 0.07);
-      --glass-blur: 36px;
-      --glass-saturate: 160%;
+      --glass-bg-top: rgba(28, 28, 34, 0.72);
+      --glass-bg-bottom: rgba(18, 18, 22, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-highlight: rgba(255, 255, 255, 0.06);
+      --glass-inset: rgba(255, 255, 255, 0.04);
+      --glass-field: rgba(255, 255, 255, 0.055);
+      --glass-blur: 30px;
+      --glass-saturate: 125%;
     }
 
     html,
@@ -223,6 +228,13 @@
       border-radius: 12px;
     }
 
+    .avatar-area {
+      position: relative;
+      flex-shrink: 0;
+      width: 38px;
+      height: 38px;
+    }
+
     .user-avatar-circle {
       width: 38px;
       height: 38px;
@@ -236,6 +248,70 @@
       font-size: 13.5px;
       box-shadow: 0 4px 10px rgba(59, 130, 246, 0.25);
       flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .avatar-initials {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      line-height: 1;
+    }
+
+    .avatar-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: none;
+    }
+
+    .avatar-tool {
+      position: absolute;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+      box-shadow: var(--shadow-subtle);
+      transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+      z-index: 2;
+    }
+
+    .avatar-tool:hover {
+      background: var(--bg-hover);
+      color: var(--text-main);
+      transform: scale(1.1);
+    }
+
+    .avatar-tool-add {
+      right: -3px;
+      bottom: -3px;
+    }
+
+    .avatar-tool-del {
+      left: -3px;
+      top: -3px;
+      background: var(--bg-card);
+      color: var(--color-danger);
+    }
+
+    .avatar-tool-del:hover {
+      background: #fee2e2;
+      color: #dc2626;
     }
 
     .user-info-text {
@@ -280,17 +356,18 @@
       align-items: center;
       gap: 10px;
       width: 100%;
-      padding: 7px 10px;
-      border-radius: 10px;
+      padding: 8px 11px;
+      border-radius: 9px;
       border: none;
       background: transparent;
       color: var(--text-secondary);
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 600;
+      letter-spacing: -0.1px;
       cursor: pointer;
       text-align: left;
       font-family: inherit;
-      transition: all 0.15s ease;
+      transition: background-color 0.15s ease, color 0.15s ease;
       margin-bottom: 2px;
     }
 
@@ -300,32 +377,20 @@
     }
 
     .nav-item-btn.active {
-      background: var(--bg-main);
-      color: var(--text-main);
-      font-weight: 800;
-      box-shadow: var(--shadow-subtle);
-      border: 1px solid var(--border-color);
-    }
-
-    .nav-item-btn.active::before {
-      content: '';
-      position: absolute;
-      left: -1px;
-      top: 22%;
-      height: 56%;
-      width: 3px;
-      border-radius: 99px;
-      background: linear-gradient(180deg, #60a5fa, #2563eb);
+      background: var(--nav-active-bg);
+      color: var(--nav-active-text);
+      font-weight: 700;
     }
 
     .nav-item-btn svg {
       flex-shrink: 0;
       opacity: 0.75;
+      color: currentColor;
     }
 
     .nav-item-btn.active svg {
       opacity: 1;
-      color: var(--accent-blue-pill);
+      color: inherit;
     }
 
     .nav-pill-count {
@@ -682,7 +747,7 @@
 
     /* 1. BCA Blue Card */
     .card-theme-bca {
-      background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #38bdf8 100%);
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #60a5fa 100%);
     }
 
     /* 2. 1xBet Black Stealth Card */
@@ -1558,287 +1623,209 @@
     }
 
     /* ═══════════════════════════════════════════════════════════════════
-       AI SCANNER HUD (VIEWFINDER + THERMAL RECEIPT RESULT)
+       SCANNER — CLEAN MODERN UI
        ═══════════════════════════════════════════════════════════════════ */
-    .scan-viewport {
-      position: relative;
-      overflow: hidden;
+    .scan-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 16px;
+      background: var(--bg-input);
+      border-radius: 10px;
+      padding: 3px;
+    }
+
+    .scan-tab-btn {
+      flex: 1;
+      padding: 7px 10px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+
+    .scan-tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .scan-tab-btn.active {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .scan-preview-frame {
+      border: 1px solid var(--border-color);
       border-radius: 12px;
+      overflow: hidden;
       background: var(--bg-card-stack);
     }
 
-    .scan-viewport img {
+    .scan-preview-frame img {
       display: block;
       width: 100%;
       max-height: 220px;
       object-fit: contain;
     }
 
-    .scan-corner {
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      border: 2px solid rgba(56, 189, 248, 0.9);
-      opacity: 0;
-      pointer-events: none;
-      z-index: 3;
-      transition: opacity 0.2s ease;
-    }
-
-    .scan-corner.tl {
-      top: 10px;
-      left: 10px;
-      border-right: none;
-      border-bottom: none;
-      border-top-left-radius: 7px;
-    }
-
-    .scan-corner.tr {
-      top: 10px;
-      right: 10px;
-      border-left: none;
-      border-bottom: none;
-      border-top-right-radius: 7px;
-    }
-
-    .scan-corner.bl {
-      bottom: 10px;
-      left: 10px;
-      border-right: none;
-      border-top: none;
-      border-bottom-left-radius: 7px;
-    }
-
-    .scan-corner.br {
-      bottom: 10px;
-      right: 10px;
-      border-left: none;
-      border-top: none;
-      border-bottom-right-radius: 7px;
-    }
-
-    .scan-hud {
-      position: absolute;
-      z-index: 4;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px;
-      letter-spacing: 1.2px;
-      font-weight: 600;
-      color: #7dd3fc;
-      background: rgba(2, 6, 23, 0.55);
-      padding: 3px 7px;
-      border-radius: 4px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-    }
-
-    .scan-hud.tl {
-      top: 10px;
-      left: 10px;
-    }
-
-    .scan-hud.br {
-      bottom: 10px;
-      right: 10px;
-      color: #34d399;
-    }
-
-    .scan-cursor {
-      display: inline-block;
-      width: 6px;
-      height: 9px;
-      background: #7dd3fc;
-      margin-left: 5px;
-      vertical-align: -1px;
-      animation: scanBlink 1s steps(1) infinite;
-    }
-
-    .scan-line {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 6%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.9) 50%, transparent);
-      box-shadow: 0 0 14px rgba(56, 189, 248, 0.85);
-      opacity: 0;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .scan-viewport.scanning .scan-corner,
-    .scan-viewport.scanning .scan-hud {
-      opacity: 1;
-    }
-
-    .scan-viewport.scanning .scan-line {
-      opacity: 1;
-      animation: scanDrop 1.5s ease-in-out infinite;
-    }
-
-    @keyframes scanDrop {
-      0% {
-        top: 4%;
-        opacity: 0;
-      }
-
-      10% {
-        opacity: 1;
-      }
-
-      90% {
-        opacity: 1;
-      }
-
-      100% {
-        top: 93%;
-        opacity: 0;
-      }
-    }
-
-    @keyframes scanBlink {
-      50% {
-        opacity: 0;
-      }
-    }
-
-    @keyframes scanPulseReceipt {
-
-      0%,
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-
-      50% {
-        opacity: 0.35;
-        transform: scale(0.8);
-      }
-    }
-
-    .scan-receipt-panel {
+    .scan-result-list {
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      background: var(--bg-surface);
+      border-radius: 12px;
       overflow: hidden;
     }
 
-    .receipt-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 11px 14px;
-      border-bottom: 1px dashed var(--border-color);
-    }
-
-    .receipt-monoline {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 1.6px;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .receipt-cr {
-      color: var(--color-success);
-    }
-
-    .receipt-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--color-success);
-      display: inline-block;
-      margin-right: 8px;
-      animation: scanPulseReceipt 1.4s ease-in-out infinite;
-    }
-
-    .receipt-row {
+    .scan-result-row {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
       gap: 12px;
-      padding: 11px 14px;
-      border-bottom: 1px dashed var(--border-color);
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .receipt-row:last-child {
+    .scan-result-row:last-child {
       border-bottom: none;
     }
 
-    .receipt-row-left {
+    .scan-result-left {
       min-width: 0;
       flex: 1;
     }
 
-    .receipt-desc {
-      font-size: 12.5px;
-      font-weight: 700;
+    .scan-result-desc {
+      font-size: 13px;
+      font-weight: 600;
       color: var(--text-main);
       line-height: 1.35;
     }
 
-    .receipt-date {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
+    .scan-result-date {
+      font-size: 11.5px;
       color: var(--text-muted);
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
-    .receipt-amount {
+    .scan-result-amount {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       white-space: nowrap;
       flex-shrink: 0;
     }
 
-    .receipt-amount.in {
+    .scan-result-amount.in {
       color: var(--color-success);
     }
 
-    .receipt-amount.out {
+    .scan-result-amount.out {
       color: var(--color-danger);
     }
 
-    .receipt-totals {
-      padding: 10px 14px;
-      border-top: 1px dashed var(--border-color);
+    .scan-result-summary {
       background: var(--bg-card-stack);
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      border-top: 1px solid var(--border-color);
     }
 
-    .receipt-total-row {
+    .scan-summary-row {
       display: flex;
       justify-content: space-between;
+      font-size: 12px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      padding: 3px 0;
+    }
+
+    .scan-summary-label {
+      color: var(--text-muted);
+    }
+
+    .scan-summary-value {
+      font-weight: 600;
       color: var(--text-main);
     }
 
-    .receipt-total-row .muted {
-      color: var(--text-muted);
-      font-size: 10.5px;
-      letter-spacing: 0.8px;
+    .scan-destination-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: var(--badge-blue-bg);
+      color: var(--accent-blue);
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 8px;
     }
 
-    .receipt-target {
-      padding: 9px 14px;
-      background: rgba(37, 99, 235, 0.08);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 1px;
-      font-weight: 600;
-      color: #2563eb;
-      border-top: 1px dashed var(--border-color);
+    .scan-destination-badge svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .voice-wave {
       display: flex;
       align-items: center;
+      gap: 3px;
+      height: 20px;
     }
 
-    .receipt-target svg {
-      margin-right: 6px;
-      flex-shrink: 0;
+    .voice-wave span {
+      display: block;
+      width: 3px;
+      background: var(--accent-blue);
+      border-radius: 99px;
+      animation: waveAnim 0.6s ease-in-out infinite alternate;
+    }
+
+    .voice-wave span:nth-child(1) { height: 6px; animation-delay: 0s; }
+    .voice-wave span:nth-child(2) { height: 12px; animation-delay: 0.1s; }
+    .voice-wave span:nth-child(3) { height: 8px; animation-delay: 0.2s; }
+    .voice-wave span:nth-child(4) { height: 16px; animation-delay: 0.3s; }
+    .voice-wave span:nth-child(5) { height: 10px; animation-delay: 0.4s; }
+    .voice-wave span:nth-child(6) { height: 14px; animation-delay: 0.5s; }
+    .voice-wave span:nth-child(7) { height: 7px; animation-delay: 0.6s; }
+
+    @keyframes waveAnim {
+      0% { transform: scaleY(0.4); }
+      100% { transform: scaleY(1); }
+    }
+
+    .btn-record {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+
+    .btn-record:hover {
+      border-color: var(--accent-blue-pill);
+    }
+
+    .btn-record.recording {
+      background: var(--color-danger);
+      border-color: var(--color-danger);
+      color: #fff;
+    }
+
+    .btn-record.recording .voice-wave span {
+      background: #fff;
     }
 
     /* ═════════════════════════════════════════════════════════════════════
@@ -2055,6 +2042,11 @@
       display: none;
     }
 
+    /* Mobile greeting - hidden on desktop, shown on mobile */
+    .mobile-greeting {
+      display: none;
+    }
+
     /* Floating scan button - hidden on desktop */
     .scan-fab {
       display: none;
@@ -2177,6 +2169,15 @@
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
       }
 
+      .mobile-greeting {
+        display: block;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+        letter-spacing: -0.2px;
+      }
+
       /* Floating scan button (mobile only) */
       .scan-fab {
         display: flex;
@@ -2222,6 +2223,26 @@
 
       .hamburger-btn:hover {
         background: var(--bg-hover);
+      }
+
+      .logout-icon-btn {
+        width: 36px;
+        height: 36px;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: color 0.18s ease, background 0.18s ease;
+        flex-shrink: 0;
+        border-radius: 8px;
+      }
+
+      .logout-icon-btn:hover {
+        background: var(--bg-hover);
+        color: var(--color-danger);
       }
 
       /* Main viewport takes full width */
@@ -2575,6 +2596,14 @@
   <!-- Mobile Top Bar (only visible on mobile) -->
   <div class="mobile-topbar" id="mobileTopbar">
     <div class="mobile-topbar-right">
+      <button class="logout-icon-btn" onclick="handleLogout()" title="Keluar" aria-label="Keluar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+      </button>
       <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileSidebar()" aria-label="Menu">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
           stroke-linecap="round">
@@ -2623,7 +2652,29 @@
 
       <!-- User Profile: Mark Williams -> Fahmi Fahrezy -->
       <div class="user-profile-row">
-        <div class="user-avatar-circle">FF</div>
+        <div class="avatar-area">
+          <div class="user-avatar-circle" id="avatarCircle" title="Tambah / ganti foto profil"
+            onclick="triggerAvatarUpload()">
+            <span class="avatar-initials" id="avatarInitials">FF</span>
+            <img class="avatar-photo" id="avatarPhoto" alt="Foto Profil" draggable="false" style="display:none;">
+          </div>
+          <button type="button" class="avatar-tool avatar-tool-add" id="avatarAddTool"
+            title="Tambah / ganti foto" onclick="triggerAvatarUpload()" aria-label="Tambah foto profil">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+              stroke-linecap="round">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </button>
+          <button type="button" class="avatar-tool avatar-tool-del" id="avatarDelTool" title="Hapus foto"
+            style="display:none;" onclick="removeAvatarPhoto()" aria-label="Hapus foto profil">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+              stroke-linecap="round">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+          <input type="file" id="avatarFileInput" accept="image/*" style="display:none;"
+            onchange="handleAvatarFile(event)">
+        </div>
         <div class="user-info-text">
           <div class="user-display-name">Fahmi Fahrezy</div>
           <div class="user-handle-tag">Bismillah </div>
@@ -2764,6 +2815,7 @@
                 </svg>
               </div>
               <div>
+                <div class="mobile-greeting">Welcome back, Fahmi</div>
                 <span class="hero-badge-pill">Audit Finansial</span>
                 <h1 class="hero-main-title">Ringkasan Arus Kas &<br>Beban Finansial.</h1>
               </div>
@@ -3552,18 +3604,18 @@
     <div class="modal-card wide">
       <div class="modal-title-row">
         <div>
-          <div class="modal-heading-title">Upload & Auto-Scan Mutasi Dokumen</div>
-          <div class="modal-heading-sub">Unggah PDF mutasi bank BCA, CSV, atau file teks catatan transaksi</div>
+          <div class="modal-heading-title">Scanner & Impor Data</div>
+          <div class="modal-heading-sub">Upload file, tempel teks, foto struk, atau dikte suara</div>
         </div>
         <button class="btn-close-modal" onclick="closeScannerModal()">&times;</button>
       </div>
 
-      <!-- Mode Selector -->
-      <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
-        <button class="day-pill-btn active" id="tabScanFile" onclick="setScannerTab('file')">Upload Berkas</button>
-        <button class="day-pill-btn" id="tabScanPaste" onclick="setScannerTab('paste')">Paste Teks</button>
-        <button class="day-pill-btn" id="tabScanImage" onclick="setScannerTab('image')">Kamera / Struk</button>
-        <button class="day-pill-btn" id="tabScanVoice" onclick="setScannerTab('voice')">Dikte / Suara</button>
+      <!-- Mode Selector: Segmented Tabs -->
+      <div class="scan-tabs">
+        <button class="scan-tab-btn active" id="tabScanFile" onclick="setScannerTab('file')">Upload</button>
+        <button class="scan-tab-btn" id="tabScanPaste" onclick="setScannerTab('paste')">Teks</button>
+        <button class="scan-tab-btn" id="tabScanImage" onclick="setScannerTab('image')">Kamera</button>
+        <button class="scan-tab-btn" id="tabScanVoice" onclick="setScannerTab('voice')">Suara</button>
       </div>
 
       <!-- Mode 1: File Dropzone -->
@@ -3579,8 +3631,8 @@
           </div>
         </div>
         <div class="upload-meta-row">
-          <span>Supported types: PDF, CSV, TXT, JSON</span>
-          <span>Max size: 25 MB</span>
+          <span>PDF, CSV, TXT, JSON</span>
+          <span>Max 25 MB</span>
         </div>
         <input type="file" id="universalFileInput" accept=".pdf,.csv,.txt,.json" multiple style="display:none;"
           onchange="handleUniversalFileUpload(event)">
@@ -3595,11 +3647,8 @@
           Ekstraksi Teks</button>
       </div>
 
-      <!-- Mode 3: Camera / Foto Struk (OCR Gemini) -->
+      <!-- Mode 3: Camera / Foto Struk -->
       <div id="scannerImageView" style="display:none;">
-        <div style="font-size:12px; font-weight:600; color:var(--text-muted); margin-bottom:6px;">Ambil foto struk,
-          bukti
-          bayar kos, atau mutasi. AI akan membaca otomatis.</div>
         <div style="display:flex; gap:8px; margin-bottom:12px;">
           <button class="btn-clean-primary" style="flex:1;" onclick="document.getElementById('scanImageInput').click()">
             Pilih Gambar</button>
@@ -3612,41 +3661,33 @@
         <!-- Camera live -->
         <div id="scanCameraWrap" style="display:none;">
           <video id="scanCameraVideo" autoplay playsinline
-            style="width:100%; border-radius:12px; background:#000; max-height:260px;"></video>
+            style="width:100%; border-radius:12px; background:#000; max-height:300px; object-fit:contain;"></video>
           <div style="display:flex; gap:8px; margin-top:8px;">
-            <button class="btn-clean-primary" style="flex:1;" onclick="captureScanFrame()">Tangkap</button>
+            <button class="btn-clean-primary" style="flex:1;" onclick="captureScanFrame()">Tangkap Foto</button>
             <button class="btn-clean-secondary" style="flex:1;" onclick="stopScanCamera()">Tutup Kamera</button>
           </div>
         </div>
 
         <div id="scanImagePreview" style="display:none; margin-top:10px;">
-          <div id="scanViewport" class="scan-viewport">
-            <img id="scanImageThumb" alt="Preview struk">
-            <div class="scan-line"></div>
-            <div class="scan-corner tl"></div>
-            <div class="scan-corner tr"></div>
-            <div class="scan-corner bl"></div>
-            <div class="scan-corner br"></div>
-            <div class="scan-hud tl"><span id="scanHudLabel">READING - OCR GEMINI</span><span
-                class="scan-cursor"></span></div>
-            <div class="scan-hud br"><span id="scanSegCounter">SEG 00/12</span></div>
+          <div class="scan-preview-frame">
+            <img id="scanImageThumb" alt="Preview">
           </div>
         </div>
 
-        <!-- Jenis struk & tujuan -->
+        <!-- Jenis & tujuan -->
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;">
           <div>
-            <label class="form-label-clean">Jenis Struk</label>
+            <label class="form-label-clean">Jenis Dokumen</label>
             <select id="scanReceiptType" class="form-input-clean">
               <option value="otomatis">Deteksi otomatis</option>
               <option value="pembelian">Struk Pembelian</option>
               <option value="kos">Bayar Kos / Sewa</option>
-              <option value="pemasukan">Pemasukan / Uang Masuk</option>
+              <option value="pemasukan">Pemasukan</option>
               <option value="mutasi">Mutasi Bank</option>
             </select>
           </div>
           <div>
-            <label class="form-label-clean">Tujuan</label>
+            <label class="form-label-clean">Simpan ke</label>
             <select id="scanDestination" class="form-input-clean">
               <option value="both">Catatan Kos + Buku Besar</option>
               <option value="kos">Catatan Kos saja</option>
@@ -3655,93 +3696,68 @@
           </div>
         </div>
 
-        <button class="btn-clean-primary" style="margin-top:12px; width:100%;" onclick="processScanImage()">Baca &
-          Deteksi AI</button>
-        <div id="scanImageStatus" class="mono"
-          style="font-size:11px; color:var(--text-muted); letter-spacing:0.5px; margin-top:8px; text-align:center;">
-        </div>
+        <button class="btn-clean-primary" style="margin-top:12px; width:100%;" onclick="processScanImage()">Proses
+          dengan AI</button>
+        <div id="scanImageStatus" style="font-size:11px; color:var(--text-muted); margin-top:8px; text-align:center; min-height:18px;"></div>
 
-        <!-- AI Settings -->
-        <div
-          style="display:flex; align-items:center; justify-content:space-between; margin-top:12px; padding-top:12px; border-top:1px solid var(--border-color); flex-wrap:wrap; gap:8px;">
-          <span style="font-size:11.5px; color:var(--text-muted);">OCR AI: <b id="scanAiModelLabel">Gemini (Google AI
-              Studio)</b></span>
-          <button class="day-pill-btn" onclick="toggleAiSettings()">Atur API Key</button>
-        </div>
-        <div id="scanAiSettings"
-          style="display:none; margin-top:10px; padding:12px; background:var(--glass-field); border:1px solid var(--border-color); border-radius:12px;">
-          <label class="form-label-clean">Google AI Studio API Key</label>
-          <input type="password" id="scanAiApiKey" class="form-input-clean" placeholder="AIza...">
-          <button class="btn-clean-primary" style="margin-top:8px; width:100%;" onclick="saveScanAiSettings()">Simpan
-            API Key</button>
-          <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Key disimpan hanya di browser
-            (localStorage). Dapat API key gratis di <b>aistudio.google.com</b> → Get API key.</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:12px; padding-top:12px; border-top:1px solid var(--border-color);">
+          <span style="font-size:11.5px; color:var(--text-muted);">AI: <b>Gemini</b></span>
+          <button class="scan-tab-btn" onclick="toggleAiSettings()" style="font-size:11px; padding:4px 10px;">Atur API Key</button>
         </div>
       </div>
 
-      <!-- Mode 4: Voice Dictation (Speech → AI) -->
+      <!-- Mode 4: Voice Dictation -->
       <div id="scannerVoiceView" style="display:none;">
-        <div style="font-size:12px; font-weight:600; color:var(--text-muted); margin-bottom:6px;">Diktekan transaksimu,
-          AI yang akan menempatkan datanya ke tempat yang tepat.</div>
-        <div style="display:flex; gap:8px; align-items:center; margin-bottom:10px;">
-          <button class="btn-clean-primary" id="voiceMicBtn"
-            style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px;"
-            onclick="toggleVoiceRecognition()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
+        <div style="display:flex; gap:8px; margin-bottom:10px;">
+          <button class="btn-record" id="voiceMicBtn" style="flex:1;" onclick="toggleVoiceRecognition()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
               <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
               <line x1="12" y1="19" x2="12" y2="23" />
             </svg>
             <span id="voiceMicLabel">Mulai Bicara</span>
+            <span class="voice-wave" id="voiceWave" style="display:none;">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </span>
           </button>
           <button class="btn-clean-secondary" onclick="clearVoiceTranscript()">Hapus</button>
         </div>
-        <div id="voiceRecStatus" class="mono"
-          style="font-size:11px; color:var(--text-muted); letter-spacing:0.5px; margin-bottom:6px; min-height:14px;">
-          &nbsp;</div>
+        <div id="voiceRecStatus" style="font-size:11px; color:var(--text-muted); margin-bottom:6px; min-height:18px;"></div>
         <textarea id="voiceTranscriptInput" class="form-textarea-clean"
           style="height:130px; font-family:'JetBrains Mono',monospace;"
           placeholder="Hasil dikte akan muncul di sini...&#10;Contoh:&#10;&quot;Tadi tanggal 5 Januari bayar QRIS di warung 50 ribu&quot;&#10;&quot;10 Januari terima transfer gaji dua juta&quot;"></textarea>
         <div style="display:flex; gap:8px; margin-top:10px;">
-          <button class="btn-clean-primary"
-            style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px;"
-            onclick="processVoiceText()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="17 8 12 3 7 8" />
-              <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
+          <button class="btn-clean-primary" style="flex:1;" onclick="processVoiceText()">
             Konversi ke Catatan Keuangan
           </button>
         </div>
-        <div id="voiceAiSettingsRow"
-          style="display:flex; align-items:center; justify-content:flex-end; margin-top:8px; flex-wrap:wrap; gap:8px;">
-          <span style="font-size:11.5px; color:var(--text-muted);">Dikonversi oleh <b>Gemini (Google AI
-              Studio)</b></span>
-          <button class="day-pill-btn" onclick="toggleAiSettings()">Atur API Key</button>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px; padding-top:8px; border-top:1px solid var(--border-color);">
+          <span style="font-size:11.5px; color:var(--text-muted);">AI: <b>Gemini</b></span>
+          <button class="scan-tab-btn" onclick="toggleAiSettings()" style="font-size:11px; padding:4px 10px;">Atur API Key</button>
         </div>
       </div>
 
+      <!-- AI Settings (shared) -->
+      <div id="scanAiSettings" style="display:none; margin-top:10px; padding:12px; background:var(--glass-field); border:1px solid var(--border-color); border-radius:12px;">
+        <label class="form-label-clean">Google AI Studio API Key</label>
+        <input type="password" id="scanAiApiKey" class="form-input-clean" placeholder="AIza...">
+        <button class="btn-clean-primary" style="margin-top:8px; width:100%;" onclick="saveScanAiSettings()">Simpan API Key</button>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Key disimpan di browser (localStorage). Dapatkan API key gratis di <b>aistudio.google.com</b>.</div>
+      </div>
 
       <!-- Live Preview Area -->
       <div id="scannerResultArea" style="display:none; margin-top:14px;">
-        <div class="mono"
-          style="font-size:11px; letter-spacing:1.6px; font-weight:700; color:var(--color-success); text-transform:uppercase; display:flex; align-items:center;"
-          id="scanDetectedType"><span class="receipt-dot"></span>Berkas Terdeteksi</div>
-        <div id="scanHeroStats"
-          style="display:none; margin-top:8px; padding:10px 14px; background:var(--glass-field); border:1px dashed var(--border-color); border-radius:12px;">
-        </div>
-        <div id="scannerFilesProgressContainer" style="margin-top:10px;"></div>
+        <div style="font-size:12px; font-weight:700; color:var(--color-success); margin-bottom:8px;" id="scanDetectedType">Berkas Terdeteksi</div>
+        <div id="scanHeroStats" style="display:none; margin-bottom:8px;"></div>
+        <div id="scannerFilesProgressContainer" style="margin-top:0;"></div>
         <div class="modal-action-footer">
           <button class="btn-clean-secondary" onclick="closeScannerModal()">Batal</button>
-          <button class="btn-clean-primary" onclick="mergeScannedData()">Gabungkan ke Dashboard Sekarang</button>
+          <button class="btn-clean-primary" onclick="mergeScannedData()">Gabungkan ke Dashboard</button>
         </div>
       </div>
 
-      <div style="font-size:11.5px; color:var(--text-muted); margin-top:14px; text-align:center;">
-        Your financial files are secure and processed locally on your device.
+      <div style="font-size:11px; color:var(--text-muted); margin-top:14px; text-align:center;">
+        Data diproses secara lokal di perangkat Anda.
       </div>
     </div>
   </div>
@@ -3950,18 +3966,18 @@
         <button class="btn-clean-primary" onclick="saveNewReminder()">Simpan Pengingat</button>
       </div>
     </div>
+  </div>
 
+  <!-- Toast Popup -->
+  <div id="toastPopup" class="toast-popup">
+    <span id="toastIcon">✅</span>
+    <span id="toastMsg">Berhasil</span>
+  </div>
 
-    <!-- Toast Popup -->
-    <div id="toastPopup" class="toast-popup">
-      <span id="toastIcon">✅</span>
-      <span id="toastMsg">Berhasil</span>
-    </div>
+  <input type="file" id="bcaFileInput" accept="application/pdf,.pdf" multiple style="display:none;"
+    onchange="handleBcaFileUpload(event)">
 
-    <input type="file" id="bcaFileInput" accept="application/pdf,.pdf" multiple style="display:none;"
-      onchange="handleBcaFileUpload(event)">
-
-    <script>
+  <script>
       /* ─── State ─── */
       let activeTabName = 'overview';
       let currentTheme = localStorage.getItem('AUDIT_THEME') || 'light';
@@ -5301,8 +5317,12 @@
       function openScannerModal() {
         pendingScannedTransactions = [];
         lastScanFromImage = false;
+        _pendingScanImage = null;
+        stopVoiceRecognition();
+        stopScanCamera();
         document.getElementById('scannerResultArea').style.display = 'none';
         document.getElementById('scannerPasteInput').value = '';
+        clearVoiceTranscript();
         setScanningState(false);
         const heroStats = document.getElementById('scanHeroStats');
         if (heroStats) heroStats.style.display = 'none';
@@ -5310,38 +5330,31 @@
       }
 
       function closeScannerModal() {
+        stopVoiceRecognition();
+        stopScanCamera();
         document.getElementById('scannerModal').classList.remove('open');
       }
 
       function setScannerTab(mode) {
-        const tabFile = document.getElementById('tabScanFile');
-        const tabPaste = document.getElementById('tabScanPaste');
-        const tabImage = document.getElementById('tabScanImage');
-        const tabVoice = document.getElementById('tabScanVoice');
-        const viewFile = document.getElementById('scannerFileView');
-        const viewPaste = document.getElementById('scannerPasteView');
-        const viewImage = document.getElementById('scannerImageView');
-        const viewVoice = document.getElementById('scannerVoiceView');
+        const tabMap = { file: 'tabScanFile', paste: 'tabScanPaste', image: 'tabScanImage', voice: 'tabScanVoice' };
+        const viewMap = { file: 'scannerFileView', paste: 'scannerPasteView', image: 'scannerImageView', voice: 'scannerVoiceView' };
+
+        const activeTabEl = document.querySelector('#scannerModal .scan-tab-btn.active');
+        const prevMode = activeTabEl ? activeTabEl.id.replace('tabScan', '').toLowerCase() : '';
+        if (prevMode === 'voice' && mode !== 'voice') stopVoiceRecognition();
+        if (prevMode === 'image' && mode !== 'image') stopScanCamera();
+
+        Object.keys(tabMap).forEach(k => {
+          const t = document.getElementById(tabMap[k]);
+          if (t) t.classList.toggle('active', k === mode);
+          const v = document.getElementById(viewMap[k]);
+          if (v) v.style.display = (k === mode) ? 'block' : 'none';
+        });
+
         const resultArea = document.getElementById('scannerResultArea');
-
-        const tabs = [tabFile, tabPaste, tabImage, tabVoice];
-        const views = [viewFile, viewPaste, viewImage, viewVoice];
-        tabs.forEach(t => { if (t) t.classList.remove('active'); });
-        views.forEach(v => { if (v) v.style.display = 'none'; });
-
-        if (mode === 'voice') { stopVoiceRecognition(); stopScanCamera(); }
-        else if (mode === 'image') { stopScanCamera(); }
-        else if (mode === 'paste') { stopScanCamera(); }
-
-        let activeTab, activeView;
-        if (mode === 'file') { activeTab = tabFile; activeView = viewFile; }
-        else if (mode === 'paste') { activeTab = tabPaste; activeView = viewPaste; stopScanCamera(); }
-        else if (mode === 'voice') { activeTab = tabVoice; activeView = viewVoice; stopScanCamera(); }
-        else { activeTab = tabImage; activeView = viewImage; stopScanCamera(); }
-
-        if (activeTab) activeTab.classList.add('active');
-        if (activeView) activeView.style.display = 'block';
         if (resultArea) resultArea.style.display = 'none';
+        const aiSettings = document.getElementById('scanAiSettings');
+        if (aiSettings) aiSettings.style.display = 'none';
       }
 
       async function handleUniversalFileUpload(e) {
@@ -5412,28 +5425,29 @@
 
       /* ===== Voice Dictation (Speech → Text → AI) ===== */
       let _voiceRec = null;
-      let _voiceFinal = '';
+      let _voiceSegments = new Map();
+      let _voiceBaseIdx = 0;
+      let _voiceMaxIdx = -1;
+      let _voiceRestarting = false;
+      let _voiceUserStopped = false;
 
       function setVoiceStatus(msg) {
         const el = document.getElementById('voiceRecStatus');
         if (el) el.textContent = msg || '';
       }
 
+      function setVoiceWave(active) {
+        const wave = document.getElementById('voiceWave');
+        if (wave) wave.style.display = active ? 'flex' : 'none';
+      }
+
       function updateVoiceMicUI(active) {
         const btn = document.getElementById('voiceMicBtn');
         const label = document.getElementById('voiceMicLabel');
         if (!btn) return;
-        if (active) {
-          btn.classList.add('recording');
-          btn.style.background = 'var(--color-danger)';
-          btn.style.borderColor = 'var(--color-danger)';
-          if (label) label.textContent = 'Berhenti';
-        } else {
-          btn.classList.remove('recording');
-          btn.style.background = '';
-          btn.style.borderColor = '';
-          if (label) label.textContent = 'Mulai Bicara';
-        }
+        btn.classList.toggle('recording', active);
+        setVoiceWave(active);
+        if (label) label.textContent = active ? 'Berhenti' : 'Mulai Bicara';
       }
 
       function getSpeechRecognition() {
@@ -5443,11 +5457,101 @@
       }
 
       function stopVoiceRecognition() {
+        _voiceUserStopped = true;
+        _voiceRestarting = false;
         if (_voiceRec) {
           try { _voiceRec.stop(); } catch (e) { }
           _voiceRec = null;
         }
         updateVoiceMicUI(false);
+      }
+
+      function startVoiceRecognition() {
+        const SR = getSpeechRecognition();
+        if (!SR) {
+          setVoiceStatus('Browser tidak mendukung dikte suara (butuh Chrome/Edge & mikrofon).');
+          return;
+        }
+        if (_voiceRec) return;
+
+        _voiceUserStopped = false;
+        const rec = new SR();
+        _voiceRec = rec;
+        rec.lang = 'id-ID';
+        rec.continuous = true;
+        rec.interimResults = true;
+        rec.maxAlternatives = 1;
+
+        const txt = document.getElementById('voiceTranscriptInput');
+
+        rec.onstart = () => {
+          _voiceRestarting = false;
+          updateVoiceMicUI(true);
+          setVoiceStatus('Mendengarkan... Bicarakan transaksimu.');
+        };
+
+        rec.onresult = (e) => {
+          for (let i = 0; i < e.results.length; i++) {
+            _voiceSegments.set(_voiceBaseIdx + i, e.results[i]);
+            _voiceMaxIdx = Math.max(_voiceMaxIdx, _voiceBaseIdx + i);
+          }
+          const finals = Array.from(_voiceSegments.entries())
+            .filter(([idx, r]) => r[0].isFinal)
+            .sort((a, b) => a[0] - b[0]);
+          let finalText = finals.map(([idx, r]) => r[0].transcript).join(' ');
+          let interim = '';
+          for (let i = 0; i < e.results.length; i++) {
+            if (!e.results[i][0].isFinal) interim += e.results[i][0].transcript;
+          }
+          txt.value = (finalText + ' ' + interim).replace(/\s+/g, ' ').trim() + ' ';
+          txt.scrollTop = txt.scrollHeight;
+          setVoiceStatus(finalText ? 'Mendengar suara...' : 'Dengar suara...');
+        };
+
+        rec.onerror = (e) => {
+          if (_voiceUserStopped) return;
+          if (e.error === 'no-speech') {
+            setVoiceStatus('Tidak mendengar suara. Coba lagi...');
+          } else if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+            _voiceUserStopped = true;
+            setVoiceStatus('Akses mikrofon ditolak. Izinkan mikrofon di browser lalu coba lagi.');
+          } else if (e.error === 'network') {
+            setVoiceStatus('Koneksi terputus. Mencoba kembali...');
+          } else if (e.error === 'aborted') {
+            return;
+          } else {
+            setVoiceStatus('Kesalahan dikte: ' + (e.error || 'unknown'));
+          }
+        };
+
+        rec.onend = () => {
+          const wasUserStopped = _voiceUserStopped;
+          _voiceRec = null;
+          if (wasUserStopped) {
+            updateVoiceMicUI(false);
+            setVoiceStatus(txt.value.trim() ? 'Selesai. Tekan "Konversi ke Catatan Keuangan".' : 'Dikte berhenti.');
+            return;
+          }
+          // Continuous mode: auto-restart so long dictations keep working
+          if (!_voiceRestarting) {
+            _voiceRestarting = true;
+            _voiceBaseIdx = _voiceMaxIdx + 1;
+            updateVoiceMicUI(true);
+            setVoiceStatus('Mengatur ulang mikrofon...');
+            setTimeout(() => {
+              _voiceRestarting = false;
+              if (_voiceUserStopped) return;
+              startVoiceRecognition();
+            }, 350);
+          }
+        };
+
+        try {
+          rec.start();
+        } catch (e) {
+          setVoiceStatus('Gagal memulai mikrofon.');
+          _voiceRec = null;
+        }
       }
 
       function toggleVoiceRecognition() {
@@ -5457,58 +5561,17 @@
           return;
         }
         if (_voiceRec) { stopVoiceRecognition(); setVoiceStatus('Dikte dihentikan.'); return; }
-
-        const rec = new SR();
-        _voiceRec = rec;
-        rec.lang = 'id-ID';
-        rec.continuous = true;
-        rec.interimResults = true;
-
-        const txt = document.getElementById('voiceTranscriptInput');
-        let firstResult = true;
-
-        rec.onstart = () => {
-          updateVoiceMicUI(true);
-          setVoiceStatus('LISTENING ...');
-        };
-        rec.onresult = (e) => {
-          let interim = '';
-          for (let i = e.resultIndex; i < e.results.length; i++) {
-            const res = e.results[i];
-            if (res.isFinal) {
-              _voiceFinal += res[0].transcript + ' ';
-            } else {
-              interim += res[0].transcript;
-            }
-          }
-          txt.value = _voiceFinal + interim;
-          txt.scrollTop = txt.scrollHeight;
-          if (firstResult) { firstResult = false; setVoiceStatus('Dengar suara...'); }
-        };
-        rec.onerror = (e) => {
-          setVoiceStatus('Kesalahan dikte: ' + (e.error || 'unknown'));
-          updateVoiceMicUI(false);
-          _voiceRec = null;
-        };
-        rec.onend = () => {
-          updateVoiceMicUI(false);
-          _voiceRec = null;
-          if (txt.value && txt.value.trim()) {
-            setVoiceStatus('Dikte selesai. Tekan "Konversi ke Catatan Keuangan".');
-          } else {
-            setVoiceStatus('Dikte berhenti.');
-          }
-        };
-
-        try { rec.start(); } catch (e) { setVoiceStatus('Gagal memulai mikrofon.'); _voiceRec = null; }
+        startVoiceRecognition();
       }
 
       function clearVoiceTranscript() {
         stopVoiceRecognition();
-        _voiceFinal = '';
+        _voiceSegments.clear();
+        _voiceBaseIdx = 0;
+        _voiceMaxIdx = -1;
         const txt = document.getElementById('voiceTranscriptInput');
         if (txt) txt.value = '';
-        setVoiceStatus('&nbsp;');
+        setVoiceStatus('');
       }
 
       async function processVoiceText() {
@@ -5519,7 +5582,7 @@
         const key = getScanAiKey();
         if (!key) { setVoiceStatus('API Key belum diatur. Klik "Atur API Key".'); return; }
 
-        setVoiceStatus('AI MENGANALISIS ...');
+        setVoiceStatus('Menganalisis dikte dengan AI...');
         try {
           const items = await callGeminiTranscript(text, key);
           if (!items || !items.length) {
@@ -5528,11 +5591,11 @@
           }
           stopVoiceRecognition();
           playCashierBeep();
-          showScanResult(items);
-          setVoiceStatus(items.length + ' ITEM DIKENALI &bull; AI MENEMPATKAN OTOMATIS');
+          showScanResult(items, 'voice');
+          setVoiceStatus(items.length + ' item dikenali. Periksa hasil di bawah, lalu gabungkan.');
           document.getElementById('scannerResultArea').style.display = 'block';
         } catch (err) {
-          setVoiceStatus('GAGAL: ' + (err && err.message ? err.message : err));
+          setVoiceStatus('Gagal: ' + (err && err.message ? err.message : err));
         }
       }
 
@@ -5566,16 +5629,40 @@
         return extractGeminiJson(out);
       }
 
+      function prepareScanImage(dataUrl, mime, fileName) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            const MAX = 1600;
+            let w = img.width;
+            let h = img.height;
+            if (w > MAX || h > MAX) {
+              const ratio = Math.min(MAX / w, MAX / h);
+              w = Math.round(w * ratio);
+              h = Math.round(h * ratio);
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            const outData = canvas.toDataURL('image/jpeg', 0.9);
+            resolve({ dataUrl: outData, mime: 'image/jpeg', fileName: fileName || 'gambar' });
+          };
+          img.onerror = () => resolve({ dataUrl, mime, fileName: fileName || 'gambar' });
+          img.src = dataUrl;
+        });
+      }
+
       function handleScanImageFile(e) {
         const file = e.target.files && e.target.files[0];
         if (!file || !file.type.startsWith('image/')) return;
         const reader = new FileReader();
-        reader.onload = () => {
-          _pendingScanImage = { dataUrl: reader.result, mime: file.type || 'image/jpeg', fileName: file.name };
+        reader.onload = async () => {
+          _pendingScanImage = await prepareScanImage(reader.result, file.type || 'image/jpeg', file.name);
           setScanningState(false);
-          document.getElementById('scanImageThumb').src = reader.result;
+          document.getElementById('scanImageThumb').src = _pendingScanImage.dataUrl;
           document.getElementById('scanImagePreview').style.display = 'block';
-          setScanImageStatus('Gambar siap. Tekan "Baca & Deteksi AI".');
+          setScanImageStatus('Gambar siap. Tekan "Proses dengan AI".');
         };
         reader.readAsDataURL(file);
       }
@@ -5589,7 +5676,7 @@
             _scanStream = stream;
             document.getElementById('scanCameraVideo').srcObject = stream;
             document.getElementById('scanCameraWrap').style.display = 'block';
-            setScanImageStatus('Kamera aktif. Arahkan ke struk lalu Tangkap.');
+            setScanImageStatus('Kamera aktif. Arahkan ke struk lalu Tangkap Foto.');
           })
           .catch(() => setScanImageStatus('Gagal akses kamera. Pakai Pilih Gambar.'));
       }
@@ -5608,44 +5695,34 @@
         canvas.height = video.videoHeight || 960;
         canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
         const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
-        _pendingScanImage = { dataUrl, mime: 'image/jpeg', fileName: 'camera-capture' };
-        setScanningState(false);
-        document.getElementById('scanImageThumb').src = dataUrl;
-        document.getElementById('scanImagePreview').style.display = 'block';
-        setScanImageStatus('Foto tertangkap. Tekan "Baca & Deteksi AI".');
+        prepareScanImage(dataUrl, 'image/jpeg', 'camera-capture').then(prepared => {
+          _pendingScanImage = prepared;
+          setScanningState(false);
+          document.getElementById('scanImageThumb').src = prepared.dataUrl;
+          document.getElementById('scanImagePreview').style.display = 'block';
+          setScanImageStatus('Foto tertangkap. Tekan "Proses dengan AI".');
+        });
         stopScanCamera();
       }
 
-      let _scanSegTimer = null;
+      let _scanBusy = false;
 
       function setScanningState(active, okLabel) {
-        const vp = document.getElementById('scanViewport');
-        const segEl = document.getElementById('scanSegCounter');
-        const labelEl = document.getElementById('scanHudLabel');
-        if (_scanSegTimer) { clearInterval(_scanSegTimer); _scanSegTimer = null; }
-        if (segEl) segEl.textContent = 'SEG 00/12';
-        if (!active) {
-          if (vp) vp.classList.remove('scanning');
-          if (labelEl) labelEl.innerHTML = (okLabel || 'READING - OCR GEMINI') + '<span class="scan-cursor"></span>';
-          return;
+        _scanBusy = active;
+        if (active) {
+          setScanImageStatus('Membaca dokumen...');
+        } else {
+          setScanImageStatus(okLabel || '');
         }
-        if (vp) vp.classList.add('scanning');
-        if (labelEl) labelEl.innerHTML = 'READING - OCR GEMINI<span class="scan-cursor"></span>';
-        let seg = 0;
-        _scanSegTimer = setInterval(() => {
-          seg = Math.min(12, seg + 1);
-          if (segEl) segEl.textContent = 'SEG ' + String(seg).padStart(2, '0') + '/12';
-          if (seg === 12) { clearInterval(_scanSegTimer); _scanSegTimer = null; }
-        }, 260);
       }
 
       async function processScanImage() {
+        if (_scanBusy) return;
         if (!_pendingScanImage) { setScanImageStatus('Pilih gambar atau ambil kamera dulu.'); return; }
         const key = getScanAiKey();
         if (!key) { setScanImageStatus('API Key belum diatur. Klik "Atur API Key".'); return; }
         const receiptType = document.getElementById('scanReceiptType').value;
         setScanningState(true);
-        setScanImageStatus('MEMBACA STRUK ...');
         try {
           const items = await callGeminiOcr(_pendingScanImage, receiptType, key);
           if (!items || !items.length) {
@@ -5653,13 +5730,12 @@
             setScanImageStatus('AI tidak menemukan data transaksi yang jelas.');
             return;
           }
-          setScanningState(false, 'OK - SCAN COMPLETE');
+          setScanningState(false, items.length + ' transaksi terbaca. Periksa hasil di bawah.');
           playCashierBeep();
-          showScanResult(items);
-          setScanImageStatus(items.length + ' ITEM TERBACA &bull; SCAN COMPLETE');
+          showScanResult(items, 'image');
         } catch (err) {
           setScanningState(false);
-          setScanImageStatus('GAGAL: ' + (err && err.message ? err.message : err));
+          setScanImageStatus('Gagal: ' + (err && err.message ? err.message : err));
         }
       }
 
@@ -5726,7 +5802,7 @@
         } catch (e) { /* audio optional */ }
       }
 
-      function showScanResult(items) {
+      function showScanResult(items, sourceMode) {
         const now = new Date();
         pendingScannedTransactions = items.map((it, i) => {
           const jenis = String(it.jenis || '').toLowerCase();
@@ -5758,35 +5834,38 @@
         const container = document.getElementById('scannerFilesProgressContainer');
         const heroStats = document.getElementById('scanHeroStats');
 
-        typeLabel.innerHTML = '<span class="receipt-dot"></span>SCAN COMPLETE - ' +
-          pendingScannedTransactions.length + ' ITEM TERBACA';
+        const isVoiceMode = sourceMode === 'voice';
+        typeLabel.textContent = (isVoiceMode ? 'Dikte suara ' : 'Foto ') + 'terdeteksi: ' +
+          pendingScannedTransactions.length + ' transaksi';
 
         const sumIn = pendingScannedTransactions.filter(t => t.type === 'in').reduce((s, t) => s + t.amount, 0);
         const sumOut = pendingScannedTransactions.filter(t => t.type === 'out').reduce((s, t) => s + t.amount, 0);
         const net = sumIn - sumOut;
         heroStats.innerHTML = `
-          <div class="receipt-total-row"><span class="muted">TOTAL MASUK</span><span style="color:var(--color-success);">+${fmtIDR(sumIn)}</span></div>
-          <div class="receipt-total-row"><span class="muted">TOTAL KELUAR</span><span style="color:var(--color-danger);">-${fmtIDR(sumOut)}</span></div>
-          <div class="receipt-total-row"><span class="muted">SELISIH</span><span style="font-weight:700;">${net >= 0 ? '+' : '-'}${fmtIDR(Math.abs(net))}</span></div>`;
+          <div class="scan-result-list">
+            <div class="scan-result-summary">
+              <div class="scan-summary-row"><span class="scan-summary-label">Total masuk</span><span class="scan-summary-value" style="color:var(--color-success);">+${fmtIDR(sumIn)}</span></div>
+              <div class="scan-summary-row"><span class="scan-summary-label">Total keluar</span><span class="scan-summary-value" style="color:var(--color-danger);">-${fmtIDR(sumOut)}</span></div>
+              <div class="scan-summary-row"><span class="scan-summary-label">Selisih</span><span class="scan-summary-value">${net >= 0 ? '+' : '-'}${fmtIDR(Math.abs(net))}</span></div>
+            </div>
+          </div>`;
         heroStats.style.display = 'block';
 
         const destLabel = lastScanDestination === 'both' ? 'Catatan Kos + Buku Besar' :
           (lastScanDestination === 'kos' ? 'Catatan Kos saja' : 'Buku Besar saja');
         container.innerHTML = `
-          <div class="scan-receipt-panel">
+          <div class="scan-result-list">
             ${pendingScannedTransactions.map(t => `
-            <div class="receipt-row">
-              <div class="receipt-row-left">
-                <div class="receipt-desc">${escapeHtml(t.description)}</div>
-                <div class="receipt-date">${t.displayDate} | ${escapeHtml(t.category)}</div>
+            <div class="scan-result-row">
+              <div class="scan-result-left">
+                <div class="scan-result-desc">${escapeHtml(t.description)}</div>
+                <div class="scan-result-date">${t.displayDate} &bull; ${escapeHtml(t.category)}</div>
               </div>
-              <div class="receipt-amount ${t.type === 'in' ? 'in' : 'out'}">${t.type === 'in' ? '+' : '-'}${fmtIDR(t.amount)}</div>
+              <div class="scan-result-amount ${t.type === 'in' ? 'in' : 'out'}">${t.type === 'in' ? '+' : '-'}${fmtIDR(t.amount)}</div>
             </div>`).join('')}
-            <div class="receipt-target">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 2L11 13" /><path d="M22 2l-7 20-4-9-9-4 20-7z" />
-              </svg>
-              TARGET &gt;&gt; ${destLabel.toUpperCase()}
+            <div class="scan-destination-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              Akan disimpan ke: ${destLabel}
             </div>
           </div>`;
         resultArea.style.display = 'block';
@@ -6504,12 +6583,78 @@
         if (slider) slider.scrollBy({ left: dir * 265, behavior: 'smooth' });
       }
 
+      /* ─── Foto Profil (Avatar) : Tambah / Ganti / Hapus ─── */
+      const AVATAR_STORAGE_KEY = 'AUDIT_USER_AVATAR';
+
+      function applyAvatarPhoto() {
+        const dataUrl = localStorage.getItem(AVATAR_STORAGE_KEY);
+        const img = document.getElementById('avatarPhoto');
+        const initials = document.getElementById('avatarInitials');
+        const delTool = document.getElementById('avatarDelTool');
+        if (dataUrl && img) {
+          img.src = dataUrl;
+          img.style.display = 'block';
+          if (initials) initials.style.display = 'none';
+          if (delTool) delTool.style.display = 'flex';
+        } else {
+          if (img) { img.removeAttribute('src'); img.style.display = 'none'; }
+          if (initials) initials.style.display = 'flex';
+          if (delTool) delTool.style.display = 'none';
+        }
+      }
+
+      function triggerAvatarUpload() {
+        document.getElementById('avatarFileInput').click();
+      }
+
+      function handleAvatarFile(e) {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+          showToast('Pilih file gambar (JPG/PNG).', '⚠️');
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            const SZ = 256;
+            let w = img.width, h = img.height;
+            if (w > h) { if (w > SZ) { h = Math.round(h * SZ / w); w = SZ; } }
+            else { if (h > SZ) { w = Math.round(w * SZ / h); h = SZ; } }
+            const canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            try {
+              localStorage.setItem(AVATAR_STORAGE_KEY, canvas.toDataURL('image/jpeg', 0.85));
+            } catch (err) {
+              showToast('Foto terlalu besar untuk disimpan.', '⚠️');
+              return;
+            }
+            applyAvatarPhoto();
+            showToast('Foto profil diperbarui.', '✓');
+          };
+          img.onerror = () => showToast('Gagal membaca gambar.', '⚠️');
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+        e.target.value = '';
+      }
+
+      function removeAvatarPhoto() {
+        localStorage.removeItem(AVATAR_STORAGE_KEY);
+        applyAvatarPhoto();
+        showToast('Foto profil dihapus.', '✓');
+      }
+
       window.addEventListener('DOMContentLoaded', () => {
         checkAuth();
         initApp();
         initCardsDraggableCarousel();
         renderJadwalView();
         renderSimpanUangView();
+        applyAvatarPhoto();
       });
     </script>
 </body>
