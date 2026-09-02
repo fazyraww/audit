@@ -6000,12 +6000,64 @@
             _scanStream = stream;
             document.getElementById('scanCameraVideo').srcObject = stream;
             document.getElementById('scanCameraWrap').style.display = 'block';
-            setScanImageStatus('Kamera aktif. Arahkan ke struk lalu Tangkap Foto.');
+            setScanImageStatus('Memindai otomatis... arahkan struk ke kamera', true);
+            _autoScanTimer = setTimeout(() => {
+              if (_scanStream) startAutoScan();
+            }, 600);
           })
           .catch(() => setScanImageStatus('Gagal akses kamera. Pakai Pilih Gambar.'));
       }
 
+      let _autoScanTimer = null;
+      let _autoScanning = false;
+
+      function stopAutoScan() {
+        _autoScanning = false;
+        if (_autoScanTimer) { clearTimeout(_autoScanTimer); _autoScanTimer = null; }
+      }
+
+      function startAutoScan() {
+        if (_autoScanning || !_scanStream) return;
+        _autoScanning = true;
+        let attemptCount = 0;
+        const attempt = async () => {
+          if (!_autoScanning || !_scanStream) { _autoScanning = false; return; }
+          const video = document.getElementById('scanCameraVideo');
+          if (!video || video.readyState < 2) {
+            _autoScanTimer = setTimeout(attempt, 800);
+            return;
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.min(video.videoWidth || 1280, 960);
+          canvas.height = Math.min(video.videoHeight || 720, 720);
+          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          const prepared = await prepareScanImage(dataUrl, 'image/jpeg', 'auto-scan');
+          _pendingScanImage = prepared;
+          document.getElementById('scanImageThumb').src = prepared.dataUrl;
+          document.getElementById('scanImagePreview').style.display = 'block';
+          attemptCount++;
+          setScanImageStatus('Memindai otomatis... (' + attemptCount + ')', true);
+          try {
+            const items = await ocrScanImage(prepared);
+            if (items && items.length) {
+              stopAutoScan();
+              stopScanCamera();
+              setScanImageStatus(items.length + ' transaksi terbaca otomatis!');
+              playCashierBeep();
+              showScanResult(items, 'image');
+              return;
+            }
+          } catch (e) { /* lanjut scan */ }
+          if (_autoScanning && _scanStream) {
+            _autoScanTimer = setTimeout(attempt, 1500);
+          }
+        };
+        _autoScanTimer = setTimeout(attempt, 300);
+      }
+
       function stopScanCamera() {
+        stopAutoScan();
         if (_scanStream) { _scanStream.getTracks().forEach(t => t.stop()); _scanStream = null; }
         const wrap = document.getElementById('scanCameraWrap');
         if (wrap) wrap.style.display = 'none';
@@ -6108,9 +6160,53 @@
 
         let amount = 0;
         let desc = '';
-        let foundItems = [];
 
-        // 1) Prioritaskan baris berlabel TOTAL / JUMLAH
+        // ── 1) Nama toko (baris awal yang masuk akal, bukan header/angka) ──
+        let store = '';
+        for (const line of lines.slice(0, 6)) {
+          const t = line.trim();
+          if (!t) continue;
+          if (/^(no|tanggal|waktu|jam|kasir|transaksi|id|bill|nota|struk|tel|hp|jl|jalan|alamat)\b/i.test(t)) continue;
+          if (/^\d[\d.,:\/\-\s]*$/.test(t)) continue;
+          if (t.length < 3 || t.length > 50) continue;
+          if (/(total|subtotal|bayar|qty|item)/i.test(t)) continue;
+          store = t;
+          break;
+        }
+
+        // ── 2) Tanggal ──
+        let date = iso;
+        const DATE_RE = /(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})/;
+        const dm = text.match(DATE_RE);
+        if (dm) {
+          let d = Number(dm[1]), mo = Number(dm[2]), y = Number(dm[3]);
+          if (y < 100) y += 2000;
+          if (mo >= 1 && mo <= 12 && d >= 1 && d <= 31) {
+            const dt = new Date(y, mo - 1, d);
+            date = dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+          }
+        } else {
+          const monMap = { 'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'mei': 5, 'may': 5, 'jun': 6, 'jul': 7, 'agu': 8, 'aug': 8, 'sep': 9, 'okt': 10, 'oct': 10, 'nov': 11, 'des': 12, 'dec': 12 };
+          const dm2 = text.match(/(\d{1,2})\s+(jan|feb|mar|apr|mei|may|jun|jul|agu|aug|sep|okt|oct|nov|des|dec)[a-z]*\.?\s+(\d{2,4})/i);
+          if (dm2) {
+            const mo = monMap[dm2[2].toLowerCase()];
+            if (mo) {
+              let y = Number(dm2[3]);
+              if (y < 100) y += 2000;
+              const dt = new Date(y, mo - 1, Number(dm2[1]));
+              date = dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+            }
+          }
+        }
+
+        // ── 3) Jam ──
+        let time = '';
+        const tm = text.match(/(\d{1,2})[:\.](\d{2})(?::(\d{2}))?/);
+        if (tm && Number(tm[1]) <= 23) {
+          time = String(tm[1]).padStart(2, '0') + ':' + tm[2];
+        }
+
+        // ── 4) Total ──
         for (const line of lines) {
           if (!TOTAL_RE.test(line)) continue;
           const m = line.match(/(?:rp|rp\.)\s*([\d.,]+)/i) || line.match(/([\d.,]+)\s*$/);
@@ -6118,8 +6214,6 @@
           const a = amt(m[1]);
           if (a >= MIN_AMOUNT && a > amount) { amount = a; desc = line; }
         }
-
-        // 2) Kalau tidak ada baris TOTAL, ambil nominal Rp terbesar
         if (!amount) {
           for (const line of lines) {
             if (SKIP_RE.test(line)) continue;
@@ -6131,8 +6225,6 @@
             }
           }
         }
-
-        // 3) Terakhir, ambil angka terbesar (minimal 1000) yang bukan kuantitas
         if (!amount) {
           for (const line of lines) {
             if (SKIP_RE.test(line)) continue;
@@ -6144,16 +6236,15 @@
             }
           }
         }
-
         if (!amount) return [];
 
-        // Ekstrak daftar barang yang dibeli
+        // ── 5) Daftar barang yang dibeli ──
         const itemLines = [];
         for (const line of lines) {
           if (SKIP_RE.test(line)) continue;
           if (TOTAL_RE.test(line)) continue;
           if (line.length < 4) continue;
-          if (/^(toko|jl|tel|no|tanggal|terima kasih|barang|qty|harga|diskon|ppn|pajak|tunai|kembali|kartu|debit|kredit|struk)/i.test(line)) continue;
+          if (/^(toko|jl|tel|no|tanggal|waktu|jam|kasir|terima kasih|barang|qty|harga|diskon|ppn|pajak|tunai|kembali|kartu|debit|kredit|struk|nota|id)/i.test(line)) continue;
           const rp = line.match(/(.+?)\s+(?:rp|rp\.)\s*([\d.,]+)/i);
           if (rp) {
             const name = rp[1].trim();
@@ -6164,6 +6255,10 @@
           }
         }
 
+        // ── 6) Susun info lengkap ──
+        const metaParts = [];
+        if (store) metaParts.push('Toko: ' + store);
+        if (time) metaParts.push('Jam: ' + time);
         const itemsDesc = itemLines.length
           ? itemLines.map(it => it.name + ' ' + fmtIDR(it.price)).join(', ')
           : (desc || 'Pembelian struk');
@@ -6171,14 +6266,16 @@
         return [{
           id: 'STRUK-' + Date.now(),
           source: 'Foto Struk',
-          date: iso,
-          displayDate: now.toLocaleDateString('id-ID'),
+          date: date,
+          displayDate: (date.split('-').reverse().join('/')) + (time ? ' ' + time : ''),
           type: 'out',
           amount: Math.round(amount),
           category: cat,
-          party: (desc || 'Pembelian').substring(0, 40),
+          store: store || null,
+          time: time || null,
+          party: (store || desc || 'Pembelian').substring(0, 40),
           description: itemsDesc,
-          year: now.getFullYear(),
+          year: Number(date.slice(0, 4)) || now.getFullYear(),
           items: itemLines.length ? itemLines : null
         }];
       }
