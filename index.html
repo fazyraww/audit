@@ -3928,11 +3928,20 @@
 
         <!-- Camera live -->
         <div id="scanCameraWrap" style="display:none;">
-          <video id="scanCameraVideo" autoplay playsinline
-            style="width:100%; border-radius:12px; background:#000; max-height:300px; object-fit:contain;"></video>
+          <div style="position:relative; border-radius:12px; overflow:hidden; background:#000;">
+            <video id="scanCameraVideo" autoplay playsinline
+              style="width:100%; display:block; max-height:300px; object-fit:contain;"></video>
+            <div id="scanFrameGuide"
+              style="position:absolute; inset:12%; border:2px solid rgba(255,255,255,0.5); border-radius:10px; pointer-events:none; transition:border-color 0.2s ease;">
+            </div>
+            <div id="scanAutoBadge"
+              style="position:absolute; top:8px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.55); color:#fff; font-size:11px; font-weight:700; padding:4px 12px; border-radius:999px; white-space:nowrap;">
+              Memindai otomatis...
+            </div>
+          </div>
           <div style="display:flex; gap:8px; margin-top:8px;">
-            <button class="btn-clean-primary" style="flex:1;" onclick="captureScanFrame()">Tangkap Foto</button>
             <button class="btn-clean-secondary" style="flex:1;" onclick="stopScanCamera()">Tutup Kamera</button>
+            <button class="btn-clean-primary" style="flex:1;" onclick="captureScanFrame()">Tangkap Sekarang</button>
           </div>
         </div>
 
@@ -6016,10 +6025,22 @@
         if (_autoScanTimer) { clearTimeout(_autoScanTimer); _autoScanTimer = null; }
       }
 
+      function setScanBadge(text, ok) {
+        const b = document.getElementById('scanAutoBadge');
+        const g = document.getElementById('scanFrameGuide');
+        if (b) {
+          b.textContent = text;
+          b.style.background = ok ? 'rgba(16,185,129,0.85)' : 'rgba(0,0,0,0.55)';
+        }
+        if (g) g.style.borderColor = ok ? '#10b981' : 'rgba(255,255,255,0.5)';
+      }
+
       function startAutoScan() {
         if (_autoScanning || !_scanStream) return;
         _autoScanning = true;
         let attemptCount = 0;
+        const MAX_ATTEMPTS = 14;
+        setScanBadge('Memindai otomatis...');
         const attempt = async () => {
           if (!_autoScanning || !_scanStream) { _autoScanning = false; return; }
           const video = document.getElementById('scanCameraVideo');
@@ -6027,33 +6048,41 @@
             _autoScanTimer = setTimeout(attempt, 800);
             return;
           }
+          attemptCount++;
+          setScanBadge('Memindai... arahkan struk ke dalam bingkai (' + attemptCount + ')');
           const canvas = document.createElement('canvas');
-          canvas.width = Math.min(video.videoWidth || 1280, 960);
-          canvas.height = Math.min(video.videoHeight || 720, 720);
+          canvas.width = Math.min(video.videoWidth || 1280, 1100);
+          canvas.height = Math.min(video.videoHeight || 720, 1100);
           canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
           const prepared = await prepareScanImage(dataUrl, 'image/jpeg', 'auto-scan');
           _pendingScanImage = prepared;
           document.getElementById('scanImageThumb').src = prepared.dataUrl;
           document.getElementById('scanImagePreview').style.display = 'block';
-          attemptCount++;
-          setScanImageStatus('Memindai otomatis... (' + attemptCount + ')', true);
+          setScanImageStatus('Membaca teks... (' + attemptCount + ')', true);
           try {
             const items = await ocrScanImage(prepared);
             if (items && items.length) {
+              setScanBadge('Struk terbaca!', true);
+              playCashierBeep();
               stopAutoScan();
               stopScanCamera();
               setScanImageStatus(items.length + ' transaksi terbaca otomatis!');
-              playCashierBeep();
               showScanResult(items, 'image');
               return;
             }
           } catch (e) { /* lanjut scan */ }
+          if (attemptCount >= MAX_ATTEMPTS) {
+            setScanBadge('Gagal membaca');
+            stopAutoScan();
+            setScanImageStatus('Struk belum terbaca. Coba posisikan lebih terang/tegak, atau tekan "Tangkap Sekarang".');
+            return;
+          }
           if (_autoScanning && _scanStream) {
-            _autoScanTimer = setTimeout(attempt, 1500);
+            _autoScanTimer = setTimeout(attempt, 1600);
           }
         };
-        _autoScanTimer = setTimeout(attempt, 300);
+        _autoScanTimer = setTimeout(attempt, 400);
       }
 
       function stopScanCamera() {
@@ -6241,17 +6270,26 @@
         // ── 5) Daftar barang yang dibeli ──
         const itemLines = [];
         for (const line of lines) {
-          if (SKIP_RE.test(line)) continue;
           if (TOTAL_RE.test(line)) continue;
           if (line.length < 4) continue;
-          if (/^(toko|jl|tel|no|tanggal|waktu|jam|kasir|terima kasih|barang|qty|harga|diskon|ppn|pajak|tunai|kembali|kartu|debit|kredit|struk|nota|id)/i.test(line)) continue;
-          const rp = line.match(/(.+?)\s+(?:rp|rp\.)\s*([\d.,]+)/i);
-          if (rp) {
-            const name = rp[1].trim();
-            const price = amt(rp[2]);
-            if (price >= MIN_AMOUNT && name.length <= 40) {
-              itemLines.push({ name: name, price: price });
-            }
+          if (/^(toko|jl|tel|no|tanggal|waktu|jam|kasir|terima kasih|harga|diskon|ppn|pajak|tunai|kembali|kartu|debit|kredit|struk|nota|id)\b/i.test(line)) continue;
+          if (SKIP_RE.test(line)) continue;
+
+          // Pisahkan kuantitas di depan: "2 x Nasi Goreng 15.000" / "2x Nasi 15000"
+          let qty = 1;
+          let rest = line;
+          const qm = line.match(/^(\d{1,3})\s*[xX@*]\s*/);
+          if (qm) { qty = Number(qm[1]); rest = line.slice(qm[0].length); }
+
+          // Tangkap nama + harga terakhir (bisa pakai Rp atau tanpa Rp)
+          const priceMatch = rest.match(/(?:rp|rp\.)\s*([\d.,]+)\s*$/i) || rest.match(/([\d.,]+)\s*$/);
+          if (!priceMatch) continue;
+          const name = rest.slice(0, priceMatch.index).replace(/[\s\-_]+$/g, '').trim();
+          const price = amt(priceMatch[1]);
+          if (!name || name.length < 2 || name.length > 40) continue;
+          if (/^[\d.,\s]+$/.test(name)) continue; // nama harus mengandung huruf
+          if (price >= MIN_AMOUNT) {
+            itemLines.push({ name: name, price: Math.round(price), qty: qty });
           }
         }
 
@@ -6353,13 +6391,17 @@
         container.innerHTML = `
           <div class="scan-result-list">
             ${pendingScannedTransactions.map(t => `
-            <div class="scan-result-row">
-              <div class="scan-result-left">
-                <div class="scan-result-desc">${escapeHtml(t.description)}</div>
-                ${t.items ? '<div style="font-size:11px;color:var(--text-muted);margin-top:3px;">' + t.items.map(it => escapeHtml(it.name) + ' ' + fmtIDR(it.price)).join(' &middot; ') + '</div>' : ''}
-                <div class="scan-result-date">${t.displayDate} &bull; ${escapeHtml(t.category)}</div>
+            <div class="scan-result-row" style="flex-direction:column; align-items:stretch; gap:6px;">
+              ${t.store ? '<div style="font-weight:800; font-size:14px; color:var(--text-main);">' + escapeHtml(t.store) + '</div>' : ''}
+              <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted);">
+                <span>${t.displayDate}</span>
+                <span>${escapeHtml(t.category)}</span>
               </div>
-              <div class="scan-result-amount ${t.type === 'in' ? 'in' : 'out'}">${t.type === 'in' ? '+' : '-'}${fmtIDR(t.amount)}</div>
+              ${t.items && t.items.length ? '<div style="border-top:1px dashed var(--border-color); padding-top:6px; margin-top:2px;">' + t.items.map(it => '<div style="display:flex; justify-content:space-between; font-size:12.5px; padding:2px 0;"><span>' + escapeHtml(it.name) + '</span><span class="mono" style="font-weight:600;">' + fmtIDR(it.price) + '</span></div>').join('') + '</div>' : ''}
+              <div class="scan-result-desc" style="font-size:11px; color:var(--text-muted);">${escapeHtml(t.description)}</div>
+              <div style="display:flex; justify-content:flex-end; border-top:2px solid var(--border-color); padding-top:6px; margin-top:2px;">
+                <span class="mono" style="font-size:16px; font-weight:800; color:${t.type === 'in' ? 'var(--color-success)' : 'var(--text-main)'};">${t.type === 'in' ? '+' : '-'}${fmtIDR(t.amount)}</span>
+              </div>
             </div>`).join('')}
             <div class="scan-destination-badge">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
