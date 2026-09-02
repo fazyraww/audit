@@ -5394,14 +5394,13 @@
       }
 
       /* ── AI OCR KAMERA / STRUK (Gemini - Google AI Studio) ── */
-      const DEFAULT_AI_KEY = 'AIzaSyD5p2TB9NtoxYuF5wQsZc8TxmTYHOfuDdY';
       let _scanStream = null;
       let _pendingScanImage = null;
       let lastScanDestination = 'both';
       let lastScanFromImage = false;
 
       function getScanAiKey() {
-        return (localStorage.getItem('SCAN_AI_KEY') || '').trim() || DEFAULT_AI_KEY;
+        return (localStorage.getItem('SCAN_AI_KEY') || '').trim();
       }
 
       function toggleAiSettings() {
