@@ -6087,7 +6087,6 @@
           return items.map(t => Object.assign(t, { source: 'Foto Mutasi', type: t.type === 'in' ? 'in' : 'out' }));
         }
 
-        // Format struk belanja: ambil baris TOTAL / nominal terbesar
         const now = new Date();
         const iso = now.toISOString().split('T')[0];
         const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
@@ -6100,18 +6099,77 @@
         else if (/(alfamart|indomaret|minimarket|sembako|belanja|swalayan)/.test(low)) cat = 'Belanja / Merchant';
         else if (/(kos|sewa|kontrak)/.test(low)) cat = 'Sewa Kos';
 
+        const SKIP_RE = /^\d{1,2}\s*(x|@|pcs|kg|gr|ml|liter|qty)|(qty|x|@|pcs|kg)\s*\d{1,2}/i;
+        const TOTAL_RE = /total|jumlah|subtotal|grand ?total|jumlah ?bayar|bayar/i;
+        const RP_RE = /(?:rp|rp\.)\s*([\d.,]+)/i;
+        const PRICE_RE = /([\d.,]+)\s*$/;
+
         let amount = 0;
         let desc = '';
-        let totalLine = lines.find(l => /total|jumlah bayar|bayar/i.test(l));
-        const pick = totalLine ? [totalLine] : lines;
-        for (const line of pick) {
-          const m = line.match(/(\d[\d.,]*)\s*(?:rp|,-)?/i);
+        let foundItems = [];
+        let totalLine = lines.find(l => TOTAL_RE.test(l));
+
+        if (totalLine) {
+          const m = totalLine.match(RP_RE) || totalLine.match(PRICE_RE);
           if (m) {
-            const a = parseFloat(m[1].replace(/\./g, '').replace(',', '.')) || 0;
-            if (a > amount) { amount = a; desc = line; }
+            amount = parseFloat(m[1].replace(/\./g, '').replace(',', '.')) || 0;
+            desc = totalLine;
           }
         }
+
+        if (!amount) {
+          for (const line of lines) {
+            if (SKIP_RE.test(line)) continue;
+            if (TOTAL_RE.test(line)) {
+              const m = line.match(RP_RE) || line.match(PRICE_RE);
+              if (m) {
+                const a = parseFloat(m[1].replace(/\./g, '').replace(',', '.')) || 0;
+                if (a > amount) { amount = a; desc = line; }
+              }
+            }
+          }
+        }
+
+        if (!amount) {
+          for (const line of lines) {
+            if (SKIP_RE.test(line)) continue;
+            if (line.length < 3) continue;
+            const rp = line.match(RP_RE);
+            if (rp) {
+              const a = parseFloat(rp[1].replace(/\./g, '').replace(',', '.')) || 0;
+              if (a >= 500 && a > amount) { amount = a; desc = line; }
+              continue;
+            }
+            const price = line.match(PRICE_RE);
+            if (price) {
+              const a = parseFloat(price[1].replace(/\./g, '').replace(',', '.')) || 0;
+              if (a >= 500 && a > amount) { amount = a; desc = line; }
+            }
+          }
+        }
+
         if (!amount) return [];
+
+        // Ekstrak daftar barang yang dibeli
+        const itemLines = [];
+        for (const line of lines) {
+          if (SKIP_RE.test(line)) continue;
+          if (TOTAL_RE.test(line)) continue;
+          if (line.length < 4) continue;
+          if (/^(toko|jl|tel|no|tanggal|terima kasih|barang|total|qty|harga|diskon|ppn|pajak|tunai|kembali|kartu|debit|kredit|membersih|struk)/i.test(line)) continue;
+          const rp = line.match(/(.+?)\s+(?:rp|rp\.)\s*([\d.,]+)/i);
+          if (rp) {
+            const name = rp[1].trim();
+            const price = parseFloat(rp[2].replace(/\./g, '').replace(',', '.')) || 0;
+            if (price >= 500 && name.length <= 40) {
+              itemLines.push({ name: name, price: price });
+            }
+          }
+        }
+
+        const itemsDesc = itemLines.length
+          ? itemLines.map(it => it.name + ' ' + fmtIDR(it.price)).join(', ')
+          : (desc || 'Pembelian struk');
 
         return [{
           id: 'STRUK-' + Date.now(),
@@ -6122,8 +6180,9 @@
           amount: Math.round(amount),
           category: cat,
           party: (desc || 'Pembelian').substring(0, 40),
-          description: desc || 'Pembelian struk',
-          year: now.getFullYear()
+          description: itemsDesc,
+          year: now.getFullYear(),
+          items: itemLines.length ? itemLines : null
         }];
       }
 
@@ -6203,6 +6262,7 @@
             <div class="scan-result-row">
               <div class="scan-result-left">
                 <div class="scan-result-desc">${escapeHtml(t.description)}</div>
+                ${t.items ? '<div style="font-size:11px;color:var(--text-muted);margin-top:3px;">' + t.items.map(it => escapeHtml(it.name) + ' ' + fmtIDR(it.price)).join(' &middot; ') + '</div>' : ''}
                 <div class="scan-result-date">${t.displayDate} &bull; ${escapeHtml(t.category)}</div>
               </div>
               <div class="scan-result-amount ${t.type === 'in' ? 'in' : 'out'}">${t.type === 'in' ? '+' : '-'}${fmtIDR(t.amount)}</div>
