@@ -6099,51 +6099,48 @@
         else if (/(alfamart|indomaret|minimarket|sembako|belanja|swalayan)/.test(low)) cat = 'Belanja / Merchant';
         else if (/(kos|sewa|kontrak)/.test(low)) cat = 'Sewa Kos';
 
-        const SKIP_RE = /^\d{1,2}\s*(x|@|pcs|kg|gr|ml|liter|qty)|(qty|x|@|pcs|kg)\s*\d{1,2}/i;
-        const TOTAL_RE = /total|jumlah|subtotal|grand ?total|jumlah ?bayar|bayar/i;
-        const RP_RE = /(?:rp|rp\.)\s*([\d.,]+)/i;
-        const PRICE_RE = /([\d.,]+)\s*$/;
+        // Baris jumlah barang/kuantitas harus dilewati (bukan harga)
+        const SKIP_RE = /(^|\s)(qty|quantity|jumlah|banyak|jml|pcs|kg|gr|ml|liter|x|@)\s*[:=]?\s*\d{1,3}(\s|$)/i;
+        const TOTAL_RE = /total|jumlah bayar|subtotal|grand ?total|jumlah|bayar/i;
+        const MIN_AMOUNT = 1000;
+
+        function amt(s) { return parseMoney(s); }
 
         let amount = 0;
         let desc = '';
         let foundItems = [];
-        let totalLine = lines.find(l => TOTAL_RE.test(l));
 
-        if (totalLine) {
-          const m = totalLine.match(RP_RE) || totalLine.match(PRICE_RE);
-          if (m) {
-            amount = parseFloat(m[1].replace(/\./g, '').replace(',', '.')) || 0;
-            desc = totalLine;
-          }
+        // 1) Prioritaskan baris berlabel TOTAL / JUMLAH
+        for (const line of lines) {
+          if (!TOTAL_RE.test(line)) continue;
+          const m = line.match(/(?:rp|rp\.)\s*([\d.,]+)/i) || line.match(/([\d.,]+)\s*$/);
+          if (!m) continue;
+          const a = amt(m[1]);
+          if (a >= MIN_AMOUNT && a > amount) { amount = a; desc = line; }
         }
 
-        if (!amount) {
-          for (const line of lines) {
-            if (SKIP_RE.test(line)) continue;
-            if (TOTAL_RE.test(line)) {
-              const m = line.match(RP_RE) || line.match(PRICE_RE);
-              if (m) {
-                const a = parseFloat(m[1].replace(/\./g, '').replace(',', '.')) || 0;
-                if (a > amount) { amount = a; desc = line; }
-              }
-            }
-          }
-        }
-
+        // 2) Kalau tidak ada baris TOTAL, ambil nominal Rp terbesar
         if (!amount) {
           for (const line of lines) {
             if (SKIP_RE.test(line)) continue;
             if (line.length < 3) continue;
-            const rp = line.match(RP_RE);
-            if (rp) {
-              const a = parseFloat(rp[1].replace(/\./g, '').replace(',', '.')) || 0;
-              if (a >= 500 && a > amount) { amount = a; desc = line; }
-              continue;
+            const m = line.match(/(?:rp|rp\.)\s*([\d.,]+)/i);
+            if (m) {
+              const a = amt(m[1]);
+              if (a >= MIN_AMOUNT && a > amount) { amount = a; desc = line; }
             }
-            const price = line.match(PRICE_RE);
-            if (price) {
-              const a = parseFloat(price[1].replace(/\./g, '').replace(',', '.')) || 0;
-              if (a >= 500 && a > amount) { amount = a; desc = line; }
+          }
+        }
+
+        // 3) Terakhir, ambil angka terbesar (minimal 1000) yang bukan kuantitas
+        if (!amount) {
+          for (const line of lines) {
+            if (SKIP_RE.test(line)) continue;
+            if (line.length < 3) continue;
+            const m = line.match(/([\d.,]+)\s*$/);
+            if (m) {
+              const a = amt(m[1]);
+              if (a >= MIN_AMOUNT && a > amount) { amount = a; desc = line; }
             }
           }
         }
@@ -6156,12 +6153,12 @@
           if (SKIP_RE.test(line)) continue;
           if (TOTAL_RE.test(line)) continue;
           if (line.length < 4) continue;
-          if (/^(toko|jl|tel|no|tanggal|terima kasih|barang|total|qty|harga|diskon|ppn|pajak|tunai|kembali|kartu|debit|kredit|membersih|struk)/i.test(line)) continue;
+          if (/^(toko|jl|tel|no|tanggal|terima kasih|barang|qty|harga|diskon|ppn|pajak|tunai|kembali|kartu|debit|kredit|struk)/i.test(line)) continue;
           const rp = line.match(/(.+?)\s+(?:rp|rp\.)\s*([\d.,]+)/i);
           if (rp) {
             const name = rp[1].trim();
-            const price = parseFloat(rp[2].replace(/\./g, '').replace(',', '.')) || 0;
-            if (price >= 500 && name.length <= 40) {
+            const price = amt(rp[2]);
+            if (price >= MIN_AMOUNT && name.length <= 40) {
               itemLines.push({ name: name, price: price });
             }
           }
