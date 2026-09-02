@@ -5518,11 +5518,46 @@
         if (el) el.innerHTML = busy ? '<span class="mini-spinner"></span>' + (msg || '') : (msg || '');
       }
 
-      /* ── Shared Fast Gemini Call (model fallback + timeout + JSON mode) ── */
+      /* ── Shared Fast Gemini Call (proxy dulu, fallback direct) ── */
       const GEMINI_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-flash-latest'];
       const GEMINI_AI_TIMEOUT = 30000;
 
-      async function callGeminiFast(promptText, apiKey, imageInfo) {
+      async function callGeminiFast(promptText, localKey, imageInfo) {
+        localKey = (localKey || '').trim();
+        if (localKey) {
+          return callGeminiDirect(promptText, localKey, imageInfo);
+        }
+        return callGeminiProxy(promptText, imageInfo);
+      }
+
+      async function callGeminiProxy(promptText, imageInfo) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), GEMINI_AI_TIMEOUT);
+        try {
+          const resp = await fetch('/api/gemini', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              prompt: promptText,
+              image: imageInfo && imageInfo.base64 ? imageInfo.base64 : null,
+              mime: imageInfo ? imageInfo.mime : null
+            }),
+            signal: controller.signal
+          });
+          const data = await resp.json();
+          if (!resp.ok) throw new Error(data.error || ('HTTP ' + resp.status));
+          const parsed = extractGeminiJson(data.text || '');
+          if (Array.isArray(parsed)) return parsed;
+          throw new Error('Respons AI bukan array JSON yang valid.');
+        } catch (err) {
+          if (err && err.name === 'AbortError') throw new Error('Waktu habis (30 dtk). Coba lagi atau atur koneksi.');
+          throw err;
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
+      async function callGeminiDirect(promptText, apiKey, imageInfo) {
         let lastErr = null;
         for (const model of GEMINI_MODELS) {
           const controller = new AbortController();
@@ -5738,13 +5773,10 @@
         const text = (txt.value || '').trim();
         if (!text) { setVoiceStatus('Belum ada hasil dikte. Coba tekan "Mulai Bicara" dulu.'); return; }
 
-        const key = getScanAiKey();
-        if (!key) { setVoiceStatus('API Key belum diatur. Klik "Atur API Key".'); return; }
-
         stopVoiceRecognition();
         setVoiceStatus('Menganalisis dikte dengan AI...', true);
         try {
-          const items = await callGeminiTranscript(text, key);
+          const items = await callGeminiTranscript(text, getScanAiKey());
           if (!items || !items.length) {
             setVoiceStatus('AI tidak menemukan data transaksi yang jelas dari ucapannya.');
             return;
@@ -5861,12 +5893,10 @@
       async function processScanImage() {
         if (_scanBusy) return;
         if (!_pendingScanImage) { setScanImageStatus('Pilih gambar atau ambil kamera dulu.'); return; }
-        const key = getScanAiKey();
-        if (!key) { setScanImageStatus('API Key belum diatur. Klik "Atur API Key".'); return; }
         const receiptType = document.getElementById('scanReceiptType').value;
         setScanningState(true);
         try {
-          const items = await callGeminiOcr(_pendingScanImage, receiptType, key);
+          const items = await callGeminiOcr(_pendingScanImage, receiptType, getScanAiKey());
           if (!items || !items.length) {
             setScanningState(false);
             setScanImageStatus('AI tidak menemukan data transaksi yang jelas.');
