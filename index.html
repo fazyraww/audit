@@ -3822,7 +3822,7 @@
         <label class="form-label-clean">Google AI Studio API Key</label>
         <input type="password" id="scanAiApiKey" class="form-input-clean" placeholder="AIza...">
         <button class="btn-clean-primary" style="margin-top:8px; width:100%;" onclick="saveScanAiSettings()">Simpan API Key</button>
-        <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Key disimpan di browser (localStorage). Dapatkan API key gratis di <b>aistudio.google.com</b>.</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Di Vercel: key aman di server (env var). Isi di sini hanya untuk <b>fallback</b> jika server tidak dikonfigurasi. Dapatkan API key gratis di <b>aistudio.google.com</b>.</div>
       </div>
 
       <!-- Live Preview Area -->
@@ -5520,19 +5520,23 @@
 
       /* ── Shared Fast Gemini Call (proxy dulu, fallback direct) ── */
       const GEMINI_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-flash-latest'];
-      const GEMINI_AI_TIMEOUT = 30000;
+      const GEMINI_PROXY_TIMEOUT = 55000;
+      const GEMINI_DIRECT_TIMEOUT = 40000;
 
       async function callGeminiFast(promptText, localKey, imageInfo) {
-        localKey = (localKey || '').trim();
-        if (localKey) {
-          return callGeminiDirect(promptText, localKey, imageInfo);
+        try {
+          return await callGeminiProxy(promptText, imageInfo);
+        } catch (proxyErr) {
+          if ((localKey || '').trim()) {
+            return callGeminiDirect(promptText, localKey, imageInfo);
+          }
+          throw proxyErr;
         }
-        return callGeminiProxy(promptText, imageInfo);
       }
 
       async function callGeminiProxy(promptText, imageInfo) {
         const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), GEMINI_AI_TIMEOUT);
+        const timer = setTimeout(() => controller.abort(), GEMINI_PROXY_TIMEOUT);
         try {
           const resp = await fetch('/api/gemini', {
             method: 'POST',
@@ -5550,7 +5554,7 @@
           if (Array.isArray(parsed)) return parsed;
           throw new Error('Respons AI bukan array JSON yang valid.');
         } catch (err) {
-          if (err && err.name === 'AbortError') throw new Error('Waktu habis (30 dtk). Coba lagi atau atur koneksi.');
+          if (err && err.name === 'AbortError') throw new Error('Waktu habis (55 dtk). Coba lagi.');
           throw err;
         } finally {
           clearTimeout(timer);
@@ -5561,7 +5565,7 @@
         let lastErr = null;
         for (const model of GEMINI_MODELS) {
           const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), GEMINI_AI_TIMEOUT);
+          const timer = setTimeout(() => controller.abort(), GEMINI_DIRECT_TIMEOUT);
           try {
             const parts = imageInfo && imageInfo.base64
               ? [{ text: promptText }, { inlineData: { mimeType: imageInfo.mime, data: imageInfo.base64 } }]
@@ -5604,7 +5608,7 @@
             throw lastErr;
           } catch (err) {
             if (err && err.name === 'AbortError') {
-              lastErr = new Error('Waktu habis (' + (GEMINI_AI_TIMEOUT / 1000) + ' dtk). Koneksi AI lambat, coba lagi.');
+              lastErr = new Error('Waktu habis (' + (GEMINI_DIRECT_TIMEOUT / 1000) + ' dtk). Koneksi AI lambat, coba lagi.');
             } else {
               lastErr = err;
             }
