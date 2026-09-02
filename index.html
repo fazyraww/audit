@@ -6029,8 +6029,7 @@
       async function getTesseractWorker() {
         if (_tesseractWorker) return _tesseractWorker;
         if (!window.Tesseract) throw new Error('Tesseract belum termuat. Periksa koneksi internet.');
-        _tesseractWorker = await Tesseract.createWorker();
-        await _tesseractWorker.setLanguage('ind+eng');
+        _tesseractWorker = await Tesseract.createWorker('ind+eng');
         return _tesseractWorker;
       }
 
@@ -6224,17 +6223,13 @@
       async function ocrScanImage(image) {
         const worker = await getTesseractWorker();
         if (!worker) throw new Error('Mesin OCR belum siap.');
-        const { data: { text } } = await worker.recognize(
-          image.dataUrl,
-          {},
-          {
-            logger: m => {
-              if (m.status === 'recognizing text') {
-                setScanImageStatus('Membaca teks... ' + Math.round((m.progress || 0) * 100) + '%', true);
-              }
+        const { data: { text } } = await worker.recognize(image.dataUrl, {
+          logger: m => {
+            if (m.status === 'recognizing text') {
+              setScanImageStatus('Membaca teks... ' + Math.round((m.progress || 0) * 100) + '%', true);
             }
           }
-        );
+        });
         return parseOcrToTx(text || '');
       }
 
