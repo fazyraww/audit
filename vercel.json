@@ -1,17 +1,7 @@
 {
   "version": 2,
   "name": "finaudit-dashboard",
-  "builds": [
-    {
-      "src": "landing.html",
-      "use": "@vercel/static"
-    }
-  ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    },
     {
       "src": "/",
       "dest": "/landing.html"
