@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>audit — Era Baru Manajemen & Audit Finansial Digital</title>
+  <title>Audit Financial</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -1372,13 +1372,385 @@
       text-decoration: none;
     }
 
-    .pricing-bottom-contact a:hover {
-      text-decoration: underline;
+    /* Mobile Menu Toggle Button */
+    .mobile-menu-toggle {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      color: var(--text-main);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease;
+      flex-shrink: 0;
     }
 
+    .mobile-menu-toggle:hover {
+      background: var(--btn-secondary-bg);
+    }
+
+    /* Mobile Menu Drawer Overlay */
+    .landing-mobile-drawer {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      background: rgba(9, 9, 11, 0.4);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .landing-mobile-drawer.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-drawer-sheet {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      padding: 20px 24px 32px;
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      transform: translateY(-100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .landing-mobile-drawer.open .mobile-drawer-sheet {
+      transform: translateY(0);
+    }
+
+    .mobile-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f4f4f5;
+    }
+
+    .mobile-drawer-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: #f4f4f5;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .mobile-drawer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .mobile-drawer-link {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      text-decoration: none;
+      padding: 8px 0;
+      border-bottom: 1px solid #f4f4f5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mobile-drawer-link span.arrow {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .mobile-drawer-auth {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .mobile-drawer-auth .btn-hero-primary,
+    .mobile-drawer-auth .btn-hero-secondary {
+      width: 100%;
+      text-align: center;
+      padding: 12px 20px;
+      font-size: 14px;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════
+       RESPONSIVE BREAKPOINTS FOR LANDING PAGE
+       ═════════════════════════════════════════════════════════════════════════ */
     @media (max-width: 860px) {
+      .site-nav-container {
+        padding: 16px 20px;
+      }
+
+      .nav-links-group {
+        display: none;
+      }
+
+      .nav-auth-actions {
+        display: none;
+      }
+
+      .mobile-menu-toggle {
+        display: flex;
+      }
+
+      .landing-mobile-drawer {
+        display: block;
+      }
+
+      .badge-update-pill {
+        white-space: nowrap;
+        font-size: 11px;
+        padding: 3px 8px;
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Hero Mobile */
+      .hero-wrapper {
+        margin: 36px auto 30px;
+        padding: 0 18px;
+      }
+
+      .hero-headline {
+        font-size: clamp(30px, 7.5vw, 44px);
+        letter-spacing: -1px;
+        line-height: 1.15;
+        margin-bottom: 16px;
+      }
+
+      .hero-subtext {
+        font-size: 15px;
+        line-height: 1.55;
+        margin-bottom: 24px;
+        padding: 0 6px;
+      }
+
+      .hero-cta-row {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        max-width: 340px;
+        margin: 0 auto 22px;
+      }
+
+      .btn-hero-primary,
+      .btn-hero-secondary {
+        width: 100%;
+        text-align: center;
+        padding: 13px 20px;
+        font-size: 14px;
+      }
+
+      .hero-check-benefits {
+        flex-direction: column;
+        gap: 8px;
+        font-size: 12px;
+      }
+
+      /* Interactive Preview Frame Mobile */
+      .preview-card-section {
+        margin: 20px auto 60px;
+        padding: 0 16px;
+      }
+
+      .preview-browser-frame {
+        border-radius: 18px;
+      }
+
+      .browser-header-dots {
+        padding: 10px 14px;
+      }
+
+      .browser-url-bar {
+        width: auto;
+        max-width: 170px;
+        font-size: 10px;
+        padding: 3px 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .preview-body-content {
+        grid-template-columns: 1fr;
+        padding: 24px 18px 28px;
+        gap: 28px;
+      }
+
+      .preview-left-info h3 {
+        font-size: 20px;
+        line-height: 1.25;
+      }
+
+      .preview-left-info p {
+        font-size: 13.5px;
+      }
+
+      .preview-left-info .btn-hero-primary {
+        width: 100%;
+        max-width: 320px;
+      }
+
+      .glass-cards-canvas {
+        min-height: 240px;
+        border-radius: 20px;
+        padding: 20px 10px;
+      }
+
+      .glass-cards-scene {
+        width: 100%;
+        max-width: 260px;
+        height: 180px;
+      }
+
+      .frosted-glass-card {
+        width: 230px;
+        height: 144px;
+        padding: 14px 16px;
+        border-radius: 16px;
+      }
+
+      .card-brand-text {
+        font-size: 16px;
+      }
+
+      .card-type-tag {
+        font-size: 8px;
+        padding: 2px 6px;
+      }
+
+      .card-emv-chip svg {
+        width: 28px;
+        height: 22px;
+      }
+
+      .card-pan-number {
+        font-size: 11px;
+        letter-spacing: 1px;
+      }
+
+      .card-val-text {
+        font-size: 8.5px;
+      }
+
+      .card-layer-back {
+        transform: rotate(-7deg) translate(-10px, 10px) scale(0.92);
+      }
+
+      .card-layer-front {
+        transform: rotate(-2deg) translate(8px, -4px);
+      }
+
+      /* Features Grid Mobile */
+      .features-section {
+        margin: 0 auto 60px;
+        padding: 0 18px;
+      }
+
+      .features-heading-area {
+        margin-bottom: 32px;
+      }
+
+      .features-heading-area h2 {
+        font-size: 24px;
+        letter-spacing: -0.6px;
+      }
+
+      .features-heading-area p {
+        font-size: 14px;
+      }
+
+      .features-grid-3 {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .feature-box-card {
+        padding: 24px 20px;
+        border-radius: 16px;
+      }
+
+      /* Pricing Section Mobile */
+      .pricing-section {
+        margin: 40px auto 60px;
+        padding: 0 18px;
+      }
+
+      .pricing-header-area h2 {
+        font-size: 26px;
+        letter-spacing: -0.8px;
+      }
+
+      .pricing-header-area p {
+        font-size: 14px;
+        margin-bottom: 24px;
+      }
+
+      .pricing-toggle-wrap {
+        margin-bottom: 32px;
+        width: 100%;
+        max-width: 320px;
+        justify-content: center;
+      }
+
+      .billing-toggle-btn {
+        padding: 7px 14px;
+        font-size: 12px;
+      }
+
       .pricing-grid-3 {
         grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .pricing-card {
+        padding: 28px 20px;
+        border-radius: 18px;
+      }
+
+      .price-number {
+        font-size: 34px;
+      }
+
+      /* Footer Mobile */
+      .landing-footer {
+        padding: 40px 20px 28px;
+        margin-top: 40px;
+      }
+
+      .footer-top-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .footer-bottom-bar {
+        flex-direction: column;
+        text-align: center;
+        gap: 14px;
       }
     }
   </style>
@@ -1582,7 +1954,60 @@
         Sign up &rarr;
       </a>
     </div>
+
+    <!-- Mobile Hamburger Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleLandingDrawer()" aria-label="Buka Menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+        stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </button>
   </nav>
+
+  <!-- Mobile Menu Drawer Backdrop & Sheet -->
+  <div class="landing-mobile-drawer" id="landingMobileDrawer" onclick="if(event.target===this) closeLandingDrawer()">
+    <div class="mobile-drawer-sheet">
+      <div class="mobile-drawer-header">
+        <a href="landing.html" class="brand-logo" onclick="closeLandingDrawer()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
+          audit
+        </a>
+        <button class="mobile-drawer-close" onclick="closeLandingDrawer()">&times;</button>
+      </div>
+
+      <div class="mobile-drawer-links">
+        <a href="#about" class="mobile-drawer-link" onclick="closeLandingDrawer()">
+          <span>Tentang Platform</span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a href="#features" class="mobile-drawer-link" onclick="closeLandingDrawer()">
+          <span>Fitur Utama</span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a href="#pricing" class="mobile-drawer-link" onclick="closeLandingDrawer()">
+          <span>Plan &amp; Pricing</span>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a href="index.html" class="mobile-drawer-link" onclick="closeLandingDrawer()">
+          <span>Buka Dashboard Finansial</span>
+          <span class="arrow">&rarr;</span>
+        </a>
+      </div>
+
+      <div class="mobile-drawer-auth">
+        <a href="login.html?mode=signup" class="btn-hero-primary" onclick="closeLandingDrawer()">
+          Mulai Sekarang &rarr;
+        </a>
+        <a href="login.html?mode=signin" class="btn-hero-secondary" onclick="closeLandingDrawer()">
+          Masuk ke Akun
+        </a>
+      </div>
+    </div>
+  </div>
 
 
 
@@ -2078,6 +2503,23 @@
             el.style.opacity = '1';
           }, 150);
         });
+      }
+    }
+
+    // Landing Page Mobile Menu Controls
+    function toggleLandingDrawer() {
+      const drawer = document.getElementById('landingMobileDrawer');
+      if (drawer) {
+        drawer.classList.toggle('open');
+        document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+      }
+    }
+
+    function closeLandingDrawer() {
+      const drawer = document.getElementById('landingMobileDrawer');
+      if (drawer) {
+        drawer.classList.remove('open');
+        document.body.style.overflow = '';
       }
     }
   </script>

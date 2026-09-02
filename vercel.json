@@ -3,7 +3,7 @@
   "name": "finaudit-dashboard",
   "builds": [
     {
-      "src": "*",
+      "src": "landing.html",
       "use": "@vercel/static"
     }
   ],
@@ -11,6 +11,10 @@
     {
       "src": "/(.*)",
       "dest": "/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/landing.html"
     }
   ]
 }

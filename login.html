@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login &mdash; audit</title>
+  <title>Login audit</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -121,9 +121,9 @@
     .auth-main-wrapper {
       flex: 1;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      padding: 32px 20px;
+      padding: 0px 0px;
     }
 
     .auth-card {
@@ -450,6 +450,7 @@
       }
 
       .auth-main-wrapper {
+        align-items: center;
         padding: 20px 16px;
       }
 
@@ -690,7 +691,7 @@
       const githubBtnText = document.getElementById('githubBtnText');
 
       if (isSignUpMode) {
-        document.title = 'Sign Up — audit';
+        document.title = 'Sign Up Audit';
         title.textContent = 'Create your account';
         subtext.textContent = 'Start tracking and auditing your financial portfolio today.';
         nameGroup.style.display = 'block';
@@ -700,7 +701,7 @@
         googleBtnText.textContent = 'Sign up with Google';
         githubBtnText.textContent = 'Sign up with GitHub';
       } else {
-        document.title = 'Login — audit';
+        document.title = 'Login Audit';
         title.textContent = 'Login to your account';
         subtext.textContent = 'Continue tracking your progress after logging in to your account.';
         nameGroup.style.display = 'none';
