@@ -5970,7 +5970,7 @@
         return new Promise((resolve) => {
           const img = new Image();
           img.onload = () => {
-            const MAX = 1280;
+            const MAX = 900;
             let w = img.width;
             let h = img.height;
             if (w > MAX || h > MAX) {
@@ -6021,37 +6021,19 @@
           .catch(() => setScanImageStatus('Gagal akses kamera. Pakai Pilih Gambar.'));
       }
 
-      /* ── Kamera: sharpness gating + stability check + worker Tesseract ── */
+      /* ── Kamera: stability detection (pixel diff) → OCR sekali ── */
       let _autoScanTimer = null;
       let _autoScanning = false;
       let _tesseractWorker = null;
+      let _prevFrame = null; // untuk stability detection
+      let _stableCount = 0;
 
       async function getTesseractWorker() {
         if (_tesseractWorker) return _tesseractWorker;
         if (!window.Tesseract) throw new Error('Tesseract belum termuat. Periksa koneksi internet.');
         _tesseractWorker = await Tesseract.createWorker('ind+eng');
+        await _tesseractWorker.setParameters({ tessedit_pagesegmentation_mode: '6' });
         return _tesseractWorker;
-      }
-
-      function computeSharpness(canvas) {
-        const ctx = canvas.getContext('2d');
-        const w = canvas.width, h = canvas.height;
-        const imageData = ctx.getImageData(0, 0, w, h);
-        const d = imageData.data;
-        let sum = 0, count = 0;
-        for (let y = 1; y < h - 1; y++) {
-          for (let x = 1; x < w - 1; x++) {
-            const i = (y * w + x) * 4;
-            const g = d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114;
-            const gL = d[(y * w + (x - 1)) * 4] * 0.299 + d[(y * w + (x - 1)) * 4 + 1] * 0.587 + d[(y * w + (x - 1)) * 4 + 2] * 0.114;
-            const gR = d[(y * w + (x + 1)) * 4] * 0.299 + d[(y * w + (x + 1)) * 4 + 1] * 0.587 + d[(y * w + (x + 1)) * 4 + 2] * 0.114;
-            const gT = d[((y - 1) * w + x) * 4] * 0.299 + d[((y - 1) * w + x) * 4 + 1] * 0.587 + d[((y - 1) * w + x) * 4 + 2] * 0.114;
-            const gB = d[((y + 1) * w + x) * 4] * 0.299 + d[((y + 1) * w + x) * 4 + 1] * 0.587 + d[((y + 1) * w + x) * 4 + 2] * 0.114;
-            sum += Math.abs(4 * g - gL - gR - gT - gB);
-            count++;
-          }
-        }
-        return count > 0 ? sum / count : 0;
       }
 
       function preprocessToGrayscale(canvas) {
@@ -6067,6 +6049,8 @@
 
       function stopAutoScan() {
         _autoScanning = false;
+        _prevFrame = null;
+        _stableCount = 0;
         if (_autoScanTimer) { clearTimeout(_autoScanTimer); _autoScanTimer = null; }
       }
 
@@ -6089,79 +6073,99 @@
       function startAutoScan() {
         if (_autoScanning || !_scanStream) return;
         _autoScanning = true;
+        _prevFrame = null;
+        _stableCount = 0;
+        const MAX_ATTEMPTS = 60; // ~30 detik
         let attemptCount = 0;
-        const MAX_ATTEMPTS = 14;
-        const SHARPNESS_THRESHOLD = 6;
-        let stableTotal = 0;
-        let stableCount = 0;
+        const STABLE_THRESHOLD = 10; // pixel diff rata-rata
+        const STABLE_NEEDED = 3;
 
-        setScanBadge('Fokuskan struk...');
-        const attempt = async () => {
+        setScanBadge('Menunggu struk diam...');
+        const attempt = () => {
           if (!_autoScanning || !_scanStream) { _autoScanning = false; return; }
           const video = document.getElementById('scanCameraVideo');
           if (!video || video.readyState < 2) {
-            _autoScanTimer = setTimeout(attempt, 600);
-            return;
-          }
-          attemptCount++;
-
-          // 1) Uji ketajaman dari frame kecil (100px)
-          const sharpCanvas = document.createElement('canvas');
-          const sw = 100, sh = Math.round(100 * (video.videoHeight || 720) / (video.videoWidth || 1280));
-          sharpCanvas.width = sw; sharpCanvas.height = sh;
-          sharpCanvas.getContext('2d').drawImage(video, 0, 0, sw, sh);
-          const sharpness = computeSharpness(sharpCanvas);
-          if (sharpness < SHARPNESS_THRESHOLD) {
-            setScanBadge('Fokuskan struk... (' + attemptCount + ')');
             _autoScanTimer = setTimeout(attempt, 500);
             return;
           }
+          attemptCount++;
+          setScanBadge('Menunggu struk diam... (' + attemptCount + ')');
 
-          // 2) Frame tajam → capture resolusi sedang, grayscale, lalu OCR
-          setScanBadge('Memindai... (' + attemptCount + ')');
+          // Ambil frame kecil (60x45) untuk perbandingan
+          const sw = 60, sh = Math.round(60 * (video.videoHeight || 720) / (video.videoWidth || 1280));
+          const small = document.createElement('canvas');
+          small.width = sw; small.height = sh;
+          small.getContext('2d').drawImage(video, 0, 0, sw, sh);
+          const ctx = small.getContext('2d');
+          const imageData = ctx.getImageData(0, 0, sw, sh);
+          const d = imageData.data;
+          const gray = new Uint8Array(sw * sh);
+          for (let i = 0; i < gray.length; i++) {
+            const j = i * 4;
+            gray[i] = d[j] * 0.299 + d[j + 1] * 0.587 + d[j + 2] * 0.114;
+          }
+
+          if (_prevFrame) {
+            let diff = 0;
+            for (let i = 0; i < gray.length; i++) {
+              diff += Math.abs(gray[i] - _prevFrame[i]);
+            }
+            diff /= gray.length;
+
+            if (diff < STABLE_THRESHOLD) {
+              _stableCount++;
+              if (_stableCount >= STABLE_NEEDED) {
+                // Struk stabil → OCR SEKALI
+                setScanBadge('Struk stabil! OCR...', true);
+                _autoScanning = false;
+                doOcrOnce(video);
+                return;
+              }
+            } else {
+              _stableCount = 0;
+            }
+          }
+          _prevFrame = gray;
+
+          if (attemptCount >= MAX_ATTEMPTS) {
+            setScanBadge('Gagal membaca');
+            _autoScanning = false;
+            setScanImageStatus('Struk belum terdeteksi. Coba posisikan lebih terang/tegak, atau tekan "Tangkap Sekarang".');
+            return;
+          }
+          _autoScanTimer = setTimeout(attempt, 400);
+        };
+        _autoScanTimer = setTimeout(attempt, 400);
+      }
+
+      async function doOcrOnce(video) {
+        try {
+          setScanImageStatus('Membaca teks... (mungkin 10-30 detik)', true);
           const canvas = document.createElement('canvas');
-          canvas.width = Math.min(video.videoWidth || 1280, 1100);
-          canvas.height = Math.min(video.videoHeight || 720, 1100);
+          canvas.width = Math.min(video.videoWidth || 1280, 800);
+          canvas.height = Math.min(video.videoHeight || 720, 800);
           const ctx = canvas.getContext('2d');
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           preprocessToGrayscale(canvas);
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
           const prepared = await prepareScanImage(dataUrl, 'image/jpeg', 'auto-scan');
           _pendingScanImage = prepared;
           document.getElementById('scanImageThumb').src = prepared.dataUrl;
           document.getElementById('scanImagePreview').style.display = 'block';
-          setScanImageStatus('Membaca teks... (' + attemptCount + ')', true);
-
-          try {
-            const items = await ocrScanImage(prepared);
-            if (items && items.length) {
-              const total = items[0].amount || 0;
-              // 3) Stability check: butuh 2 frame berturut-turut dengan total yang sama
-              if (stableCount > 0 && Math.abs(total - stableTotal) / (stableTotal || 1) < 0.05) {
-                setScanBadge('Struk terbaca!', true);
-                playCashierBeep();
-                stopAutoScan();
-                stopScanCamera();
-                setScanImageStatus(items.length + ' transaksi terbaca otomatis!');
-                showScanResult(items, 'image');
-                return;
-              }
-              stableTotal = total;
-              stableCount = 1;
-            }
-          } catch (e) { /* lanjut scan */ }
-
-          if (attemptCount >= MAX_ATTEMPTS) {
-            setScanBadge('Gagal membaca');
-            stopAutoScan();
-            setScanImageStatus('Struk belum terbaca. Coba posisikan lebih terang/tegak, atau tekan "Tangkap Sekarang".');
-            return;
+          const items = await ocrScanImage(prepared);
+          stopScanCamera();
+          if (items && items.length) {
+            setScanBadge('Struk terbaca!', true);
+            playCashierBeep();
+            setScanImageStatus(items.length + ' transaksi terbaca otomatis!');
+            showScanResult(items, 'image');
+          } else {
+            setScanImageStatus('Tidak ada transaksi terbaca. Coba foto lebih jelas atau tekan "Tangkap Sekarang".');
           }
-          if (_autoScanning && _scanStream) {
-            _autoScanTimer = setTimeout(attempt, 1200);
-          }
-        };
-        _autoScanTimer = setTimeout(attempt, 400);
+        } catch (err) {
+          stopScanCamera();
+          setScanImageStatus('Gagal: ' + (err && err.message ? err.message : err));
+        }
       }
 
       function stopScanCamera() {
