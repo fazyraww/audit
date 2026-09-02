@@ -15,6 +15,7 @@
   <script src="assets/vendor/pdfjs/pdf.min.js"></script>
   <script src="assets/js/pdf_bundle.js"></script>
   <script src="assets/js/xbet_data.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
     /* ═════════════════════════════════════════════════════════════════════════
@@ -3941,36 +3942,22 @@
           </div>
         </div>
 
-        <!-- Jenis & tujuan -->
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;">
-          <div>
-            <label class="form-label-clean">Jenis Dokumen</label>
-            <select id="scanReceiptType" class="form-input-clean">
-              <option value="otomatis">Deteksi otomatis</option>
-              <option value="pembelian">Struk Pembelian</option>
-              <option value="kos">Bayar Kos / Sewa</option>
-              <option value="pemasukan">Pemasukan</option>
-              <option value="mutasi">Mutasi Bank</option>
-            </select>
-          </div>
-          <div>
-            <label class="form-label-clean">Simpan ke</label>
-            <select id="scanDestination" class="form-input-clean">
-              <option value="both">Catatan Kos + Buku Besar</option>
-              <option value="kos">Catatan Kos saja</option>
-              <option value="ledger">Buku Besar saja</option>
-            </select>
-          </div>
+        <!-- Tujuan simpan -->
+        <div style="margin-top:12px;">
+          <label class="form-label-clean">Simpan ke</label>
+          <select id="scanDestination" class="form-input-clean">
+            <option value="both">Catatan Kos + Buku Besar</option>
+            <option value="kos">Catatan Kos saja</option>
+            <option value="ledger">Buku Besar saja</option>
+          </select>
         </div>
 
-        <button class="btn-clean-primary" style="margin-top:12px; width:100%;" onclick="processScanImage()">Proses
-          dengan AI</button>
+        <button class="btn-clean-primary" style="margin-top:12px; width:100%;" onclick="processScanImage()">Baca
+          Struk / Deteksi</button>
         <div id="scanImageStatus" style="font-size:11px; color:var(--text-muted); margin-top:8px; text-align:center; min-height:18px;"></div>
 
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:12px; padding-top:12px; border-top:1px solid var(--border-color);">
-          <span style="font-size:11.5px; color:var(--text-muted);">AI: <b>Gemini</b></span>
-          <button class="scan-tab-btn" onclick="toggleAiSettings()" style="font-size:11px; padding:4px 10px;">Atur API Key</button>
-        </div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:10px; text-align:center;">Dibaca langsung di
+          perangkat (OCR lokal), tanpa koneksi AI.</div>
       </div>
 
       <!-- Mode 4: Voice Dictation -->
@@ -3998,18 +3985,8 @@
             Konversi ke Catatan Keuangan
           </button>
         </div>
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px; padding-top:8px; border-top:1px solid var(--border-color);">
-          <span style="font-size:11.5px; color:var(--text-muted);">AI: <b>Gemini</b></span>
-          <button class="scan-tab-btn" onclick="toggleAiSettings()" style="font-size:11px; padding:4px 10px;">Atur API Key</button>
-        </div>
-      </div>
-
-      <!-- AI Settings (shared) -->
-      <div id="scanAiSettings" style="display:none; margin-top:10px; padding:12px; background:var(--glass-field); border:1px solid var(--border-color); border-radius:12px;">
-        <label class="form-label-clean">Google AI Studio API Key</label>
-        <input type="password" id="scanAiApiKey" class="form-input-clean" placeholder="AIza...">
-        <button class="btn-clean-primary" style="margin-top:8px; width:100%;" onclick="saveScanAiSettings()">Simpan API Key</button>
-        <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Di Vercel: key aman di server (env var). Isi di sini hanya untuk <b>fallback</b> jika server tidak dikonfigurasi. Dapatkan API key gratis di <b>aistudio.google.com</b>.</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:8px; text-align:center;">Dikenali otomatis di
+          perangkat (tanpa AI), hasilnya bisa diedit.</div>
       </div>
 
       <!-- Live Preview Area -->
@@ -5662,8 +5639,6 @@
 
         const resultArea = document.getElementById('scannerResultArea');
         if (resultArea) resultArea.style.display = 'none';
-        const aiSettings = document.getElementById('scanAiSettings');
-        if (aiSettings) aiSettings.style.display = 'none';
       }
 
       async function handleUniversalFileUpload(e) {
@@ -5702,139 +5677,18 @@
         showScannerPreview(parsed, 'Auto-Scan Teks Mutasi Copas');
       }
 
-      /* ── AI OCR KAMERA / STRUK (Gemini - Google AI Studio) ── */
+      /* ── OCR KAMERA / STRUK (Tesseract.js lokal) ── */
       let _scanStream = null;
       let _pendingScanImage = null;
       let lastScanDestination = 'both';
       let lastScanFromImage = false;
-
-      function getScanAiKey() {
-        return (localStorage.getItem('SCAN_AI_KEY') || '').trim();
-      }
-
-      function toggleAiSettings() {
-        const wrap = document.getElementById('scanAiSettings');
-        const shown = wrap.style.display !== 'none';
-        wrap.style.display = shown ? 'none' : 'block';
-        if (!shown && !document.getElementById('scanAiApiKey').value) {
-          document.getElementById('scanAiApiKey').value = getScanAiKey();
-        }
-      }
-      function saveScanAiSettings() {
-        localStorage.setItem('SCAN_AI_KEY', document.getElementById('scanAiApiKey').value.trim());
-        document.getElementById('scanAiSettings').style.display = 'none';
-        showToast('API Key tersimpan di browser.', '✓');
-      }
 
       function setScanImageStatus(msg, busy) {
         const el = document.getElementById('scanImageStatus');
         if (el) el.innerHTML = busy ? '<span class="mini-spinner"></span>' + (msg || '') : (msg || '');
       }
 
-      /* ── Shared Fast Gemini Call (proxy dulu, fallback direct) ── */
-      const GEMINI_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-flash-latest'];
-      const GEMINI_PROXY_TIMEOUT = 55000;
-      const GEMINI_DIRECT_TIMEOUT = 40000;
-
-      async function callGeminiFast(promptText, localKey, imageInfo) {
-        try {
-          return await callGeminiProxy(promptText, imageInfo);
-        } catch (proxyErr) {
-          if ((localKey || '').trim()) {
-            return callGeminiDirect(promptText, localKey, imageInfo);
-          }
-          throw proxyErr;
-        }
-      }
-
-      async function callGeminiProxy(promptText, imageInfo) {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), GEMINI_PROXY_TIMEOUT);
-        try {
-          const resp = await fetch('/api/gemini', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              prompt: promptText,
-              image: imageInfo && imageInfo.base64 ? imageInfo.base64 : null,
-              mime: imageInfo ? imageInfo.mime : null
-            }),
-            signal: controller.signal
-          });
-          const data = await resp.json();
-          if (!resp.ok) throw new Error(data.error || ('HTTP ' + resp.status));
-          const parsed = extractGeminiJson(data.text || '');
-          if (Array.isArray(parsed)) return parsed;
-          throw new Error('Respons AI bukan array JSON yang valid.');
-        } catch (err) {
-          if (err && err.name === 'AbortError') throw new Error('Waktu habis (55 dtk). Coba lagi.');
-          throw err;
-        } finally {
-          clearTimeout(timer);
-        }
-      }
-
-      async function callGeminiDirect(promptText, apiKey, imageInfo) {
-        let lastErr = null;
-        for (const model of GEMINI_MODELS) {
-          const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), GEMINI_DIRECT_TIMEOUT);
-          try {
-            const parts = imageInfo && imageInfo.base64
-              ? [{ text: promptText }, { inlineData: { mimeType: imageInfo.mime, data: imageInfo.base64 } }]
-              : [{ text: promptText }];
-            const body = {
-              contents: [{ role: 'user', parts }],
-              generationConfig: {
-                temperature: 0.1,
-                maxOutputTokens: 2048,
-                responseMimeType: 'application/json'
-              }
-            };
-            const resp = await fetch(
-              'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + encodeURIComponent(apiKey),
-              {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body),
-                signal: controller.signal
-              }
-            );
-            if (!resp.ok) {
-              let msg = 'HTTP ' + resp.status;
-              try { const e = await resp.json(); msg = (e.error && e.error.message) || msg; } catch (_) { }
-              lastErr = new Error(msg);
-              if (/not found|model/i.test(msg) && model !== GEMINI_MODELS[GEMINI_MODELS.length - 1]) continue;
-              throw lastErr;
-            }
-            const data = await resp.json();
-            const text = (data && data.candidates && data.candidates[0] && data.candidates[0].content &&
-              data.candidates[0].content.parts.map(p => p.text || '').join('')) || '';
-            if (!text) {
-              lastErr = new Error('AI tidak mengembalikan hasil.');
-              continue;
-            }
-            const parsed = extractGeminiJson(text);
-            if (Array.isArray(parsed)) return parsed;
-            lastErr = new Error('Respons AI bukan array JSON yang valid.');
-            if (model !== GEMINI_MODELS[GEMINI_MODELS.length - 1]) continue;
-            throw lastErr;
-          } catch (err) {
-            if (err && err.name === 'AbortError') {
-              lastErr = new Error('Waktu habis (' + (GEMINI_DIRECT_TIMEOUT / 1000) + ' dtk). Koneksi AI lambat, coba lagi.');
-            } else {
-              lastErr = err;
-            }
-            if (model !== GEMINI_MODELS[GEMINI_MODELS.length - 1]) continue;
-            throw lastErr;
-          } finally {
-            clearTimeout(timer);
-          }
-        }
-        throw lastErr || new Error('Gagal memanggil AI Gemini.');
-      }
-
-      /* ===== Voice Dictation (Speech → Text → AI) ===== */
+      /* ===== Voice Dictation (Speech → Text → Parser Lokal) ===== */
       let _voiceRec = null;
       let _voiceSegments = new Map();
       let _voiceBaseIdx = 0;
@@ -5991,33 +5845,112 @@
         if (!text) { setVoiceStatus('Belum ada hasil dikte. Coba tekan "Mulai Bicara" dulu.'); return; }
 
         stopVoiceRecognition();
-        setVoiceStatus('Menganalisis dikte dengan AI...', true);
+        setVoiceStatus('Mengenali transaksi dari suara...', true);
         try {
-          const items = await callGeminiTranscript(text, getScanAiKey());
+          const items = parseVoiceToTx(text);
           if (!items || !items.length) {
-            setVoiceStatus('AI tidak menemukan data transaksi yang jelas dari ucapannya.');
+            setVoiceStatus('Belum bisa dikenali. Sebutkan nominal seperti "bayar 50 ribu" / "terima 2 juta".');
             return;
           }
           playCashierBeep();
           showScanResult(items, 'voice');
-          setVoiceStatus(items.length + ' item dikenali. Periksa hasil di bawah, lalu gabungkan.');
+          setVoiceStatus(items.length + ' transaksi dikenali (tanpa AI). Periksa & edit, lalu gabungkan.');
           document.getElementById('scannerResultArea').style.display = 'block';
         } catch (err) {
           setVoiceStatus('Gagal: ' + (err && err.message ? err.message : err));
         }
       }
 
-      async function callGeminiTranscript(text, apiKey) {
-        const prompt = [
-          'Kamu adalah asisten keuangan. Pengguna mendiktekan transaksi keuangan dengan suara (ucapan natural Bahasa Indonesia, bisa campur angka, "rupiah", "ribu", "juta").',
-          'Ubah menjadi transaksi keuangan yang rapi.',
-          'Kembalikan HANYA array JSON (tanpa teks lain). Setiap elemen berbentuk:',
-          '{"tanggal":"YYYY-MM-DD","jenis":"pemasukan" ATAU "pengeluaran","nominal":ANGKA_BULAT_RUPIAH,"keterangan":"deskripsi singkat","kategori":"salah satu dari Makan, Laundry, Transport, Kebutuhan Harian, Sewa Kos, Lain-lain, QRIS, Transfer, Mutasi"}',
-          'Tangkap sebanyak mungkin transaksi yang disebut. jika tanggal tidak disebut gunakan tanggal hari ini.',
-          'Konversi sebutan nominal seperti "lima puluh ribu" = 50000, "dua juta" = 2000000.',
-          'Teks pengguna: "', text, '"'
-        ].join(' ');
-        return callGeminiFast(prompt, apiKey);
+      /* ── Parser Suara (regex lokal, tanpa AI) ── */
+      const _IDR_WORDS = {
+        'nol': 0, 'satu': 1, 'dua': 2, 'tiga': 3, 'empat': 4, 'lima': 5, 'enam': 6, 'tujuh': 7, 'delapan': 8, 'sembilan': 9,
+        'sepuluh': 10, 'sebelas': 11,
+        'dua belas': 12, 'tiga belas': 13, 'empat belas': 14, 'lima belas': 15, 'enam belas': 16, 'tujuh belas': 17, 'delapan belas': 18, 'sembilan belas': 19,
+        'dua puluh': 20, 'tiga puluh': 30, 'empat puluh': 40, 'lima puluh': 50, 'enam puluh': 60, 'tujuh puluh': 70, 'delapan puluh': 80, 'sembilan puluh': 90,
+        'seratus': 100, 'dua ratus': 200, 'tiga ratus': 300, 'empat ratus': 400, 'lima ratus': 500, 'enam ratus': 600, 'tujuh ratus': 700, 'delapan ratus': 800, 'sembilan ratus': 900,
+        'seribu': 1000, 'sejuta': 1000000
+      };
+
+      function parseVoiceAmount(text) {
+        const t = ' ' + text.toLowerCase().replace(/[.,]+/g, ' ') + ' ';
+        // Angka numerik + skala: "500 ribu", "2 juta", "25 000"
+        const numRe = /(\d{1,3}(?:\s\d{3})*|\d+)\s*(ribu|juta|miliar|milyar)?/g;
+        let m;
+        while ((m = numRe.exec(t)) !== null) {
+          let n = parseFloat(m[1].replace(/\s/g, ''));
+          if (m[2]) n *= { ribu: 1000, juta: 1000000, miliar: 1000000000, milyar: 1000000000 }[m[2]];
+          if (n > 0 && n < 1e12) return Math.round(n);
+        }
+        // Kata: cari pola "dua ratus lima puluh ribu"
+        let value = 0;
+        let found = false;
+        const keys = Object.keys(_IDR_WORDS).sort((a, b) => b.length - a.length);
+        let rest = t;
+        for (const k of keys) {
+          const re = new RegExp('(^|\\s)' + k.split(' ').join('\\s') + '(?=\\s|$)', 'g');
+          rest = rest.replace(re, (mm) => { value += _IDR_WORDS[k]; found = true; return ' '; });
+        }
+        if (!found) return 0;
+        // deteksi skala
+        let scale = 1;
+        if (/miliar|milyar/.test(t)) scale = 1000000000;
+        else if (/juta/.test(t)) scale = 1000000;
+        else if (/ribu/.test(t)) scale = 1000;
+        return value * scale;
+      }
+
+      function parseVoiceToTx(text) {
+        const t = (text || '').trim();
+        if (!t) return [];
+        const now = new Date();
+        const amount = parseVoiceAmount(t);
+        if (!amount) return [];
+
+        // Tanggal
+        let date = now.toISOString().split('T')[0];
+        const monMap = { 'januari': 1, 'februari': 2, 'februari': 2, 'maret': 3, 'april': 4, 'mei': 5, 'juni': 6, 'juli': 7, 'agustus': 8, 'september': 9, 'oktober': 10, 'november': 11, 'desember': 12 };
+        const dm = t.toLowerCase().match(/(\d{1,2})\s+(januari|februari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember)/);
+        if (dm) {
+          const day = Number(dm[1]);
+          const mon = monMap[dm[2]];
+          if (day >= 1 && day <= 31 && mon) {
+            const d = new Date(now.getFullYear(), mon - 1, day);
+            date = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+          }
+        }
+
+        const low = ' ' + t.toLowerCase() + ' ';
+        const isIn = /(menerima|terima (transfer|uang|gaji)|masuk|pemasukan|dana masuk|cair|top ?up|isi saldo|gaji|uang bulanan|refund|cashback|pendapatan|kredit)/.test(low) &&
+          !/(bayar|bayarkan|keluar|beli|belanja|pakai|keluarkan)/.test(low);
+
+        let cat = isIn ? 'Pemasukan' : 'Pengeluaran Lain';
+        if (/qr|qris|warung|alfamart|indomaret|minimarket|sembako|makan|nasi|bakso|sate|mie|kopi|ayam|gorengan|minuman/.test(low)) cat = 'Makan';
+        else if (/laundry|cuci/.test(low)) cat = 'Laundry';
+        else if (/bensin|pertamina|grab|gojek|ojek|transport|kereta|bus|pulsa|token|listrik|air|wifi/.test(low)) cat = 'Transport';
+        else if (/kos|sewa|kontrak/.test(low)) cat = 'Sewa Kos';
+        else if (/transfer|kirim|bi.?fast/.test(low)) cat = 'Transfer';
+        else if (/judol|judi|slot|bet/.test(low)) cat = 'Judol';
+        else if (/spaylater|spay|pinjol|angsuran/.test(low)) cat = 'Shopee Pinjol';
+        else if (/spp|ukt|kuliah|daftar ulang|dpp/.test(low)) cat = 'Biaya Kuliah';
+
+        const desc = t
+          .replace(/\b(ribu|juta|miliar|milyar|rupiah|perak|sama dengan)\b/gi, ' ')
+          .replace(/[^\w\s]/g, ' ')
+          .replace(/\s+/g, ' ').trim();
+        const party = desc.split(' ').slice(0, 6).join(' ') || cat;
+
+        return [{
+          id: 'VOICE-' + Date.now(),
+          source: 'Suara',
+          date: date,
+          displayDate: date.split('-').reverse().join('/'),
+          type: isIn ? 'in' : 'out',
+          amount: amount,
+          category: cat,
+          party: party.substring(0, 40),
+          description: desc || 'Transaksi',
+          year: Number(date.slice(0, 4))
+        }];
       }
 
       function prepareScanImage(dataUrl, mime, fileName) {
@@ -6053,7 +5986,7 @@
           setScanningState(false);
           document.getElementById('scanImageThumb').src = _pendingScanImage.dataUrl;
           document.getElementById('scanImagePreview').style.display = 'block';
-          setScanImageStatus('Gambar siap. Tekan "Proses dengan AI".');
+          setScanImageStatus('Gambar siap. Tekan "Baca Struk / Deteksi".');
         };
         reader.readAsDataURL(file);
       }
@@ -6091,7 +6024,7 @@
           setScanningState(false);
           document.getElementById('scanImageThumb').src = prepared.dataUrl;
           document.getElementById('scanImagePreview').style.display = 'block';
-          setScanImageStatus('Foto tertangkap. Tekan "Proses dengan AI".');
+          setScanImageStatus('Foto tertangkap. Tekan "Baca Struk / Deteksi".');
         });
         stopScanCamera();
       }
@@ -6101,7 +6034,7 @@
       function setScanningState(active, okLabel) {
         _scanBusy = active;
         if (active) {
-          setScanImageStatus('Mengirim ke AI & membaca dokumen...', true);
+          setScanImageStatus('Membaca teks dari gambar (OCR lokal)...', true);
         } else {
           setScanImageStatus(okLabel || '');
         }
@@ -6110,16 +6043,15 @@
       async function processScanImage() {
         if (_scanBusy) return;
         if (!_pendingScanImage) { setScanImageStatus('Pilih gambar atau ambil kamera dulu.'); return; }
-        const receiptType = document.getElementById('scanReceiptType').value;
         setScanningState(true);
         try {
-          const items = await callGeminiOcr(_pendingScanImage, receiptType, getScanAiKey());
+          const items = await ocrScanImage(_pendingScanImage);
           if (!items || !items.length) {
             setScanningState(false);
-            setScanImageStatus('AI tidak menemukan data transaksi yang jelas.');
+            setScanImageStatus('Tidak ada angka transaksi terbaca. Coba foto lebih jelas & tegak.');
             return;
           }
-          setScanningState(false, items.length + ' transaksi terbaca. Periksa hasil di bawah.');
+          setScanningState(false, items.length + ' transaksi terbaca (tanpa AI). Periksa hasil di bawah.');
           playCashierBeep();
           showScanResult(items, 'image');
         } catch (err) {
@@ -6128,27 +6060,71 @@
         }
       }
 
-      async function callGeminiOcr(image, receiptType, apiKey) {
-        const prompt = [
-          'Kamu adalah OCR pembaca struk dan mutasi keuangan personal.',
-          'Jenis dokumen: ' + receiptType + '.',
-          'Baca semua teks pada gambar, lalu ekstrak transaksi keuangan.',
-          'Kembalikan HANYA array JSON (tanpa teks lain). Setiap elemen berbentuk:', '{"tanggal":"YYYY-MM-DD","jenis":"pemasukan" ATAU "pengeluaran","nominal":ANGKA_BULAT_RUPIAH,"keterangan":"deskripsi singkat","kategori":"salah satu dari Makan, Laundry, Transport, Kebutuhan Harian, Sewa Kos, Lain-lain, QRIS, Transfer, Mutasi"}',
-          'Jika tanggal tidak terlihat gunakan tanggal hari ini. Nominal tanpa titik/koma.'
-        ].join(' ');
-        const base64 = image.dataUrl.split(',')[1];
-        return callGeminiFast(prompt, apiKey, { mime: image.mime, base64 });
+      async function ocrScanImage(image) {
+        if (!window.Tesseract) throw new Error('Mesin OCR belum termuat. Periksa koneksi internet lalu muat ulang.');
+        const res = await Tesseract.recognize(
+          image.dataUrl,
+          'ind+eng',
+          {
+            logger: m => {
+              if (m.status === 'recognizing text') {
+                setScanImageStatus('Membaca teks... ' + Math.round((m.progress || 0) * 100) + '%', true);
+              }
+            }
+          }
+        );
+        const text = (res && res.data && res.data.text) || '';
+        return parseOcrToTx(text);
       }
 
-      function extractGeminiJson(text) {
-        if (!text) return null;
-        let m = text.match(/\[[\s\S]*\]/);
-        if (!m) m = text.match(/\{[\s\S]*\}/);
-        if (!m) return null;
-        try {
-          const arr = JSON.parse(m[0]);
-          return Array.isArray(arr) ? arr : [arr];
-        } catch (e) { return null; }
+      /* ── Parser Hasil OCR Struk / Mutasi (lokal, tanpa AI) ── */
+      function parseOcrToTx(text) {
+        if (!text || !text.trim()) return [];
+
+        // Coba format mutasi bank dulu (tanggal + nominal + CR/DB)
+        let items = parseGenericTextStatement(text, 'Foto Mutasi');
+        if (items && items.length) {
+          return items.map(t => Object.assign(t, { source: 'Foto Mutasi', type: t.type === 'in' ? 'in' : 'out' }));
+        }
+
+        // Format struk belanja: ambil baris TOTAL / nominal terbesar
+        const now = new Date();
+        const iso = now.toISOString().split('T')[0];
+        const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        const low = ' ' + text.toLowerCase() + ' ';
+
+        let cat = 'Lain-lain';
+        if (/(makan|nasi|bakso|sate|mie|kopi|ayam|gorengan|warung|resto|kafe|minuman)/.test(low)) cat = 'Makan';
+        else if (/(laundry|cuci)/.test(low)) cat = 'Laundry';
+        else if (/(bensin|pertamina|grab|gojek|ojek|transport|bengkel|spbu)/.test(low)) cat = 'Transport';
+        else if (/(alfamart|indomaret|minimarket|sembako|belanja|swalayan)/.test(low)) cat = 'Belanja / Merchant';
+        else if (/(kos|sewa|kontrak)/.test(low)) cat = 'Sewa Kos';
+
+        let amount = 0;
+        let desc = '';
+        let totalLine = lines.find(l => /total|jumlah bayar|bayar/i.test(l));
+        const pick = totalLine ? [totalLine] : lines;
+        for (const line of pick) {
+          const m = line.match(/(\d[\d.,]*)\s*(?:rp|,-)?/i);
+          if (m) {
+            const a = parseFloat(m[1].replace(/\./g, '').replace(',', '.')) || 0;
+            if (a > amount) { amount = a; desc = line; }
+          }
+        }
+        if (!amount) return [];
+
+        return [{
+          id: 'STRUK-' + Date.now(),
+          source: 'Foto Struk',
+          date: iso,
+          displayDate: now.toLocaleDateString('id-ID'),
+          type: 'out',
+          amount: Math.round(amount),
+          category: cat,
+          party: (desc || 'Pembelian').substring(0, 40),
+          description: desc || 'Pembelian struk',
+          year: now.getFullYear()
+        }];
       }
 
       function playCashierBeep() {
@@ -6179,7 +6155,7 @@
           const category = it.kategori || (isIn ? 'Pemasukan' : 'Pengeluaran Lain');
           return {
             id: 'AI-' + Date.now() + '-' + i,
-            source: 'AI Scan (Gemini)',
+            source: 'OCR Lokal',
             date: tanggal,
             displayDate: tanggal,
             type: isIn ? 'in' : 'out',
