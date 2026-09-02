@@ -6147,17 +6147,19 @@
       function showScanResult(items, sourceMode) {
         const now = new Date();
         pendingScannedTransactions = items.map((it, i) => {
-          const jenis = String(it.jenis || '').toLowerCase();
-          const isIn = jenis.includes('masuk') || jenis === 'in' || jenis === 'cr' || it.jenis === 'pemasukan';
-          const tanggal = it.tanggal || now.toISOString().split('T')[0];
-          const nominal = Number(it.nominal) || 0;
-          const desc = it.keterangan || it.nama || 'Struk ' + (it.kategori || '');
-          const category = it.kategori || (isIn ? 'Pemasukan' : 'Pengeluaran Lain');
+          // Terima dua format: Gemini ({nominal, jenis, keterangan}) dan parser lokal ({amount, type, description})
+          const jenis = String(it.jenis || it.type || '').toLowerCase();
+          const isIn = jenis.includes('masuk') || jenis === 'in' || jenis === 'cr' || jenis === 'pemasukan' ||
+            it.type === 'in';
+          const tanggal = it.tanggal || it.date || now.toISOString().split('T')[0];
+          const nominal = Number(it.nominal) || Number(it.amount) || 0;
+          const desc = it.keterangan || it.description || it.nama || 'Struk ' + (it.kategori || it.category || '');
+          const category = it.kategori || it.category || (isIn ? 'Pemasukan' : 'Pengeluaran Lain');
           return {
-            id: 'AI-' + Date.now() + '-' + i,
-            source: 'OCR Lokal',
+            id: (it.id || 'AI-') + i,
+            source: it.source || 'OCR Lokal',
             date: tanggal,
-            displayDate: tanggal,
+            displayDate: it.displayDate || tanggal,
             type: isIn ? 'in' : 'out',
             amount: nominal,
             category,
