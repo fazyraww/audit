@@ -272,46 +272,47 @@
       display: none;
     }
 
-    .avatar-tool {
-      position: absolute;
-      width: 17px;
-      height: 17px;
+    .avatar-menu-preview {
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
-      border: 1px solid var(--border-color);
-      background: var(--bg-card);
-      color: var(--text-secondary);
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      padding: 0;
-      line-height: 1;
-      box-shadow: var(--shadow-subtle);
-      transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
-      z-index: 2;
+      font-weight: 800;
+      font-size: 24px;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+      margin: 0 auto 14px;
     }
 
-    .avatar-tool:hover {
-      background: var(--bg-hover);
-      color: var(--text-main);
-      transform: scale(1.1);
+    .avatar-menu-preview img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    .avatar-tool-add {
-      right: -3px;
-      bottom: -3px;
+    .avatar-menu-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
     }
 
-    .avatar-tool-del {
-      left: -3px;
-      top: -3px;
-      background: var(--bg-card);
-      color: var(--color-danger);
-    }
-
-    .avatar-tool-del:hover {
-      background: #fee2e2;
+    .avatar-menu-actions .btn-danger {
       color: #dc2626;
+      border: 1px solid #fecaca;
+      background: #fff;
+    }
+
+    .avatar-menu-actions .btn-danger:hover {
+      background: #fef2f2;
     }
 
     .user-info-text {
@@ -1862,6 +1863,159 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
+    /* ─── Panel Catatan Keuangan Kos (Ringkas, tanpa kotak KPI generik) ─── */
+    .kos-summary-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px 22px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .kos-summary-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .kos-summary-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+    }
+
+    .kos-summary-sub {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .kos-month-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-chevron {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-chevron:hover {
+      background: var(--bg-hover);
+      color: var(--text-main);
+      border-color: var(--text-dim);
+    }
+
+    .kos-month-picker {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+      max-width: 100%;
+    }
+
+    .kos-month-picker .day-pill-btn {
+      padding: 5px 12px;
+      font-size: 11.5px;
+    }
+
+    .kos-summary-stats {
+      display: flex;
+      align-items: stretch;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .kos-stat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 16px;
+    }
+
+    .kos-stat:first-child {
+      padding-left: 0;
+    }
+
+    .kos-stat:not(:last-child) {
+      border-right: 1px solid var(--border-color);
+    }
+
+    .kos-stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .kos-stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .kos-stat-val.in {
+      color: var(--color-success);
+    }
+
+    .kos-stat-val.out {
+      color: var(--color-danger);
+    }
+
+    .kos-list-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .kos-list-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .kos-list-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .kos-download-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .kos-download-row span {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
     .clean-list-row {
       display: flex;
       align-items: center;
@@ -2056,6 +2210,13 @@
       display: flex;
     }
 
+    .toast-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
     /* ═══════════════════════════════════════════════════════════
        MOBILE HAMBURGER + OVERLAY SIDEBAR SYSTEM
        ═══════════════════════════════════════════════════════════ */
@@ -2220,6 +2381,19 @@
 
       .mobile-topbar-brand svg {
         color: var(--accent-blue);
+      }
+
+      .mobile-topbar-title {
+        font-size: 16px;
+        font-weight: 800;
+        letter-spacing: -0.4px;
+        color: var(--text-main);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
+        min-width: 0;
+        margin-right: 8px;
       }
 
       .mobile-topbar-right {
@@ -2638,6 +2812,7 @@
 
   <!-- Mobile Top Bar (only visible on mobile) -->
   <div class="mobile-topbar" id="mobileTopbar">
+    <div class="mobile-topbar-title" id="mobilePageTitle">Overview</div>
     <div class="mobile-topbar-right">
       <button class="logout-icon-btn" id="mobileLogoutBtn" onclick="openLogoutConfirm()" title="Keluar"
         aria-label="Keluar">
@@ -2716,25 +2891,10 @@
       <!-- User Profile: Mark Williams -> Fahmi Fahrezy -->
       <div class="user-profile-row">
         <div class="avatar-area">
-          <div class="user-avatar-circle" id="avatarCircle" title="Tambah / ganti foto profil"
-            onclick="triggerAvatarUpload()">
+          <div class="user-avatar-circle" id="avatarCircle" title="Kelola foto profil" onclick="openAvatarMenu()">
             <span class="avatar-initials" id="avatarInitials">FF</span>
             <img class="avatar-photo" id="avatarPhoto" alt="Foto Profil" draggable="false" style="display:none;">
           </div>
-          <button type="button" class="avatar-tool avatar-tool-add" id="avatarAddTool"
-            title="Tambah / ganti foto" onclick="triggerAvatarUpload()" aria-label="Tambah foto profil">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-              stroke-linecap="round">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-          </button>
-          <button type="button" class="avatar-tool avatar-tool-del" id="avatarDelTool" title="Hapus foto"
-            style="display:none;" onclick="removeAvatarPhoto()" aria-label="Hapus foto profil">
-            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-              stroke-linecap="round">
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
           <input type="file" id="avatarFileInput" accept="image/*" style="display:none;"
             onchange="handleAvatarFile(event)">
         </div>
@@ -3532,35 +3692,45 @@
             </div>
           </div>
 
-          <!-- Month navigation -->
-          <div class="toolbar-filter" style="margin-bottom:20px;">
-            <button class="btn-clean-secondary" onclick="moveKosMonth(-1)" id="btnPrevMonth">&larr; Bulan
-              Sebelumnya</button>
-            <div id="kosMonthPicker" style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;"></div>
-            <button class="btn-clean-secondary" onclick="addNewKosMonth()">+ Bulan Baru</button>
-          </div>
-
-          <!-- Selected month summary -->
-          <div class="kpi-row-4" style="margin-bottom:20px;">
-            <div class="metric-card">
-              <div class="metric-card-label" id="kosActiveMonthLabel">BULAN AKTIF</div>
-              <div class="metric-card-val" id="kosActiveMonthVal">September 2026</div>
-              <div style="font-size:11.5px; color:var(--text-muted); margin-top:3px;">Pilih dari daftar bulan</div>
+          <!-- Ringkasan bulan -->
+          <div class="kos-summary-card">
+            <div class="kos-summary-head">
+              <div class="kos-summary-text">
+                <div class="kos-summary-title" id="kosActiveMonthVal">September 2026</div>
+                <div class="kos-summary-sub">Rekap pemasukan &amp; pengeluaran bulan aktif</div>
+              </div>
+              <div class="kos-month-nav">
+                <button type="button" class="btn-chevron" onclick="moveKosMonth(-1)" title="Bulan sebelumnya"
+                  aria-label="Bulan sebelumnya">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </button>
+                <div id="kosMonthPicker" class="kos-month-picker"></div>
+                <button type="button" class="btn-chevron" onclick="moveKosMonth(1)" title="Bulan berikutnya"
+                  aria-label="Bulan berikutnya">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+                <button type="button" class="btn-clean-secondary" onclick="addNewKosMonth()" style="padding:6px 12px;">+
+                  Bulan Baru</button>
+              </div>
             </div>
-            <div class="metric-card">
-              <div class="metric-card-label">PEMASUKAN</div>
-              <div class="metric-card-val" style="color:var(--color-success);" id="kpiKosPemasukanVal">Rp 0</div>
-              <div style="font-size:11.5px; color:var(--text-muted); margin-top:3px;">Uang bulanan, dll</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-card-label">PENGELUARAN</div>
-              <div class="metric-card-val" style="color:var(--color-danger);" id="kpiKosPengeluaranVal">Rp 0</div>
-              <div style="font-size:11.5px; color:var(--text-muted); margin-top:3px;">Total keluar bulan ini</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-card-label">SALDO BULAN INI</div>
-              <div class="metric-card-val" id="kpiKosSaldoVal">Rp 0</div>
-              <div style="font-size:11.5px; color:var(--text-muted); margin-top:3px;">Pemasukan &minus; pengeluaran
+            <div class="kos-summary-stats">
+              <div class="kos-stat">
+                <span class="kos-stat-label">Pemasukan</span>
+                <span class="kos-stat-val in" id="kpiKosPemasukanVal">Rp 0</span>
+              </div>
+              <div class="kos-stat">
+                <span class="kos-stat-label">Pengeluaran</span>
+                <span class="kos-stat-val out" id="kpiKosPengeluaranVal">Rp 0</span>
+              </div>
+              <div class="kos-stat">
+                <span class="kos-stat-label">Saldo</span>
+                <span class="kos-stat-val" id="kpiKosSaldoVal">Rp 0</span>
               </div>
             </div>
           </div>
@@ -3568,40 +3738,42 @@
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; align-items:start;">
             <!-- Left: Pemasukan -->
             <div class="clean-list-container">
-              <div
-                style="padding:18px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+              <div class="kos-list-head">
                 <div>
-                  <div style="font-size:15px; font-weight:700; color:var(--text-main);">Pemasukan</div>
-                  <div style="font-size:12px; color:var(--text-muted); margin-top:2px;" id="kosIncomeSubLabel">Bulan
-                    aktif</div>
+                  <div class="kos-list-title">Pemasukan</div>
+                  <div class="kos-list-sub" id="kosIncomeSubLabel">Bulan aktif</div>
                 </div>
-                <button class="btn-clean-primary" style="padding:6px 12px; font-size:12px;"
+                <button type="button" class="btn-clean-primary" style="padding:6px 14px; font-size:12.5px;"
                   onclick="openKosIncomeModal()">+ Tambah</button>
               </div>
-              <div id="kosIncomeListContainer" style="padding:10px 14px;"></div>
+              <div id="kosIncomeListContainer" style="padding:6px 8px;"></div>
             </div>
 
             <!-- Right: Pengeluaran -->
             <div class="clean-list-container">
-              <div
-                style="padding:18px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+              <div class="kos-list-head">
                 <div>
-                  <div style="font-size:15px; font-weight:700; color:var(--text-main);">Pengeluaran</div>
-                  <div style="font-size:12px; color:var(--text-muted); margin-top:2px;" id="kosExpenseSubLabel">Bulan
-                    aktif</div>
+                  <div class="kos-list-title">Pengeluaran</div>
+                  <div class="kos-list-sub" id="kosExpenseSubLabel">Bulan aktif</div>
                 </div>
-                <button class="btn-clean-primary" style="padding:6px 12px; font-size:12px;"
+                <button type="button" class="btn-clean-primary" style="padding:6px 14px; font-size:12.5px;"
                   onclick="openAddExpenseModal()">+ Tambah</button>
               </div>
-              <div id="kosExpensesListContainer" style="padding:10px 14px;"></div>
+              <div id="kosExpensesListContainer" style="padding:6px 8px;"></div>
             </div>
           </div>
 
-          <div style="margin-top:20px;">
-            <button class="btn-clean-primary" onclick="downloadKosMonthCsv()">Download CSV bulan ini (untuk
-              Excel)</button>
-            <span style="font-size:12px; color:var(--text-muted); margin-left:8px;">Simpan rekapan tiap bulan ke satu
-              file</span>
+          <div class="kos-download-row">
+            <button class="btn-clean-secondary" onclick="downloadKosMonthCsv()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download CSV (Excel)
+            </button>
+            <span>Simpan rekapan tiap bulan ke satu file</span>
           </div>
         </section>
 
@@ -3658,6 +3830,21 @@
       <div class="modal-action-footer">
         <button class="btn-clean-secondary"
           onclick="document.getElementById('detailModal').classList.remove('open')">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: MENU FOTO PROFIL -->
+  <div id="avatarMenuModal" class="modal-overlay" onclick="if(event.target===this) closeAvatarMenu()">
+    <div class="modal-card" style="max-width:340px; text-align:center;">
+      <div class="avatar-menu-preview" id="avatarMenuPreview"><span>FF</span></div>
+      <div class="modal-heading-title" style="margin-bottom:4px;">Foto Profil</div>
+      <div class="modal-heading-sub" style="margin-bottom:18px;">Fahmi Fahrezy</div>
+      <div class="avatar-menu-actions">
+        <button class="btn-clean-primary" onclick="triggerAvatarUpload()">Ganti Foto</button>
+        <button class="btn-danger" id="avatarMenuDeleteBtn" style="display:none;"
+          onclick="removeAvatarPhoto()">Hapus Foto</button>
+        <button class="btn-clean-secondary" onclick="closeAvatarMenu()">Tutup</button>
       </div>
     </div>
   </div>
@@ -4050,7 +4237,12 @@
 
   <!-- Toast Popup -->
   <div id="toastPopup" class="toast-popup">
-    <span id="toastIcon">✅</span>
+    <span id="toastIcon" class="toast-icon">
+      <svg id="toastIconSvg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </span>
     <span id="toastMsg">Berhasil</span>
   </div>
 
@@ -4186,6 +4378,20 @@
             btn.classList.add('active');
           }
         });
+
+        const titles = {
+          overview: 'Overview',
+          bca: 'Mutasi BCA',
+          judol: 'Judol',
+          pinjol: 'Pinjol',
+          kuliah: 'Biaya Kuliah',
+          jadwal: 'Jadwal Kuliah',
+          simpanuang: 'Simpan Uang & Kos',
+          analytics: 'Rekonsiliasi Silang',
+          masterledger: 'Buku Besar Gabungan'
+        };
+        const titleEl = document.getElementById('mobilePageTitle');
+        if (titleEl) titleEl.textContent = titles[tab] || tab;
 
         if (tab === 'bca') renderBcaTable();
         if (tab === 'judol') renderXbetTable();
@@ -4711,7 +4917,9 @@
       <td style="text-align:right;">
         <div style="display:flex; justify-content:flex-end; gap:6px; align-items:center;">
           <input type="number" id="kulAmt_${i}" min="0" value="${r.amount || ''}" placeholder="Nominal..." style="${_kuliahInputStyle}; max-width:150px; text-align:right;">
-          <button onclick="removeKuliahRow(${i})" title="Hapus baris" style="background:none; border:none; cursor:pointer; color:var(--color-danger); font-size:16px; line-height:1;">&times;</button>
+          <button onclick="removeKuliahRow(${i})" title="Hapus baris" style="background:none; border:none; cursor:pointer; color:var(--color-danger); line-height:1; display:inline-flex;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
         </div>
       </td>
     </tr>`).join('');
@@ -5393,13 +5601,18 @@
          TOAST NOTIFICATION
          ═════════════════════════════════════════════════════════════════════════ */
       let toastTimeout;
-      function showToast(msg, icon = '✅') {
+      function showToast(msg, icon) {
         const toast = document.getElementById('toastPopup');
         const toastMsg = document.getElementById('toastMsg');
         const toastIcon = document.getElementById('toastIcon');
         if (!toast || !toastMsg) return;
         toastMsg.textContent = msg;
-        if (toastIcon) toastIcon.textContent = icon;
+        const isError = icon === 'error' || icon === '⚠️';
+        if (toastIcon) {
+          toastIcon.innerHTML = isError
+            ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>'
+            : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+        }
         toast.classList.add('show');
         clearTimeout(toastTimeout);
         toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3500);
@@ -6314,7 +6527,7 @@
               </div>
               <div style="display:flex; align-items:center; gap:12px;">
                 <span class="link-action-pill" style="font-weight:600;">${c.day}, ${c.time}</span>
-                <button style="border:none; background:none; color:var(--text-muted); cursor:pointer; font-size:14px; padding:4px;" onclick="deleteClass('${c.id}')" title="Hapus">✕</button>
+                <button style="border:none; background:none; color:var(--text-muted); cursor:pointer; padding:4px; display:inline-flex;" onclick="deleteClass('${c.id}')" title="Hapus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
               </div>
             </div>
           `;
@@ -6358,7 +6571,7 @@
                 <span style="font-size:10.5px; font-weight:700; color:${priorityColor}; background:rgba(0,0,0,0.03); padding:2px 8px; border-radius:6px; border:1px solid ${priorityColor};">
                   ${t.priority}
                 </span>
-                <button style="border:none; background:none; color:var(--text-muted); cursor:pointer; font-size:13px; padding:2px 4px;" onclick="deleteTask('${t.id}')">✕</button>
+                <button style="border:none; background:none; color:var(--text-muted); cursor:pointer; padding:2px 4px; display:inline-flex;" onclick="deleteTask('${t.id}')" title="Hapus"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
               </div>
             </div>
           </div>
@@ -6575,7 +6788,7 @@
           </div>
           <div style="display:flex; align-items:center; gap:10px;">
             <span class="mono" style="font-weight:700; color:${color}; font-size:13px;">${sign}${fmtIDR(item.amount)}</span>
-            <button style="border:none; background:none; color:var(--text-muted); cursor:pointer; font-size:12px;" onclick="deleteKosItem('${kosActiveKey}','${type}','${item.id}')">✕</button>
+            <button style="border:none; background:none; color:var(--text-muted); cursor:pointer; display:inline-flex; padding:2px;" onclick="deleteKosItem('${kosActiveKey}','${type}','${item.id}')" title="Hapus"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
           </div>
         </div>`;
       }
@@ -6743,20 +6956,36 @@
         const dataUrl = localStorage.getItem(AVATAR_STORAGE_KEY);
         const img = document.getElementById('avatarPhoto');
         const initials = document.getElementById('avatarInitials');
-        const delTool = document.getElementById('avatarDelTool');
         if (dataUrl && img) {
           img.src = dataUrl;
           img.style.display = 'block';
           if (initials) initials.style.display = 'none';
-          if (delTool) delTool.style.display = 'flex';
         } else {
           if (img) { img.removeAttribute('src'); img.style.display = 'none'; }
           if (initials) initials.style.display = 'flex';
-          if (delTool) delTool.style.display = 'none';
         }
       }
 
+      function openAvatarMenu() {
+        const hasPhoto = !!localStorage.getItem(AVATAR_STORAGE_KEY);
+        const deleteBtn = document.getElementById('avatarMenuDeleteBtn');
+        const preview = document.getElementById('avatarMenuPreview');
+        if (deleteBtn) deleteBtn.style.display = hasPhoto ? 'flex' : 'none';
+        if (preview) {
+          const dataUrl = localStorage.getItem(AVATAR_STORAGE_KEY);
+          preview.innerHTML = dataUrl
+            ? '<img src="' + dataUrl + '" alt="Preview">'
+            : '<span>FF</span>';
+        }
+        document.getElementById('avatarMenuModal').classList.add('open');
+      }
+
+      function closeAvatarMenu() {
+        document.getElementById('avatarMenuModal').classList.remove('open');
+      }
+
       function triggerAvatarUpload() {
+        closeAvatarMenu();
         document.getElementById('avatarFileInput').click();
       }
 
@@ -6798,6 +7027,7 @@
       function removeAvatarPhoto() {
         localStorage.removeItem(AVATAR_STORAGE_KEY);
         applyAvatarPhoto();
+        closeAvatarMenu();
         showToast('Foto profil dihapus.', '✓');
       }
 
