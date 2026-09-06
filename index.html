@@ -2814,79 +2814,112 @@
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 22px 24px;
+      padding: 22px 24px 20px;
       margin-bottom: 18px;
       box-shadow: var(--shadow-subtle);
       position: relative;
+      overflow: hidden;
+    }
+    .pj-suite-header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ee4d2d 0%, #f97316 45%, #e11d48 100%);
+      border-radius: 16px 16px 0 0;
     }
     .pj-brand-badge-spinjam {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 3px 9px;
-      border-radius: 6px;
-      background: rgba(238, 77, 45, 0.1);
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(238, 77, 45, 0.09);
       color: #ee4d2d;
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.2px;
-      border: 1px solid rgba(238, 77, 45, 0.2);
+      letter-spacing: 0.3px;
+      border: 1px solid rgba(238, 77, 45, 0.22);
     }
     .pj-brand-badge-spaylater {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 3px 9px;
-      border-radius: 6px;
-      background: rgba(225, 29, 72, 0.1);
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(225, 29, 72, 0.09);
       color: #e11d48;
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.2px;
-      border: 1px solid rgba(225, 29, 72, 0.2);
+      letter-spacing: 0.3px;
+      border: 1px solid rgba(225, 29, 72, 0.22);
     }
     .pj-ojk-badge {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      padding: 3px 9px;
-      border-radius: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
       background: var(--bg-input);
       color: var(--text-secondary);
       font-size: 11px;
       font-weight: 600;
       border: 1px solid var(--border-subtle);
     }
+    /* ── Metric Ribbon: nilai besar di header ── */
+    .pj-ribbon-metric {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .pj-ribbon-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .pj-ribbon-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+    .pj-ribbon-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    /* ── Sub-tab Nav ── */
     .pj-subtab-nav {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px;
+      gap: 4px;
+      padding: 5px;
       background: var(--bg-input);
-      border: 1px solid var(--border-color);
+      border: 1px solid var(--border-subtle);
       border-radius: 12px;
       margin-bottom: 20px;
       overflow-x: auto;
       scrollbar-width: none;
     }
-    .pj-subtab-nav::-webkit-scrollbar {
-      display: none;
-    }
+    .pj-subtab-nav::-webkit-scrollbar { display: none; }
     .pj-subtab-btn {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 8px 15px;
+      gap: 6px;
+      padding: 7px 13px;
       border-radius: 8px;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-secondary);
       background: transparent;
       border: none;
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.18s ease;
+      transition: all 0.15s ease;
       font-family: inherit;
+      letter-spacing: 0.1px;
     }
     .pj-subtab-btn:hover {
       color: var(--text-main);
@@ -2896,12 +2929,12 @@
       background: var(--bg-card);
       color: var(--text-main);
       font-weight: 700;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
     }
     .pj-subtab-btn .tab-count {
       font-size: 10px;
       padding: 1px 6px;
-      border-radius: 9999px;
+      border-radius: 20px;
       background: var(--border-color);
       color: var(--text-muted);
       font-family: 'JetBrains Mono', monospace;
@@ -2923,28 +2956,26 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Calculator & Simulator Styling */
+    /* ── Calculator & Simulator Layout ── */
     .pj-calc-layout {
       display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 20px;
+      grid-template-columns: 340px 1fr;
+      gap: 18px;
       margin-bottom: 22px;
       align-items: start;
     }
     @media (max-width: 960px) {
-      .pj-calc-layout {
-        grid-template-columns: 1fr;
-      }
+      .pj-calc-layout { grid-template-columns: 1fr; }
     }
     .pj-calc-panel {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 14px;
+      padding: 18px;
       box-shadow: var(--shadow-subtle);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
     .pj-calc-head {
       display: flex;
@@ -2956,14 +2987,14 @@
     .pj-field-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
     .pj-field-label {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.55px;
     }
     .pj-date-input-wrap {
       display: flex;
@@ -2974,8 +3005,8 @@
       background: var(--bg-input);
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 12.5px;
+      padding: 7px 10px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-main);
       font-family: inherit;
@@ -2984,24 +3015,22 @@
       transition: border-color 0.15s ease;
       width: 100%;
     }
-    .pj-select-styled:focus {
-      border-color: var(--accent-blue);
-    }
+    .pj-select-styled:focus { border-color: var(--accent-blue); }
     .pj-preset-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
+      gap: 5px;
     }
     .pj-preset-btn {
       background: var(--bg-input);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 7px 10px;
-      font-size: 11.5px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 7px;
+      padding: 6px 9px;
+      font-size: 11px;
       font-weight: 600;
       color: var(--text-secondary);
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.13s ease;
       font-family: inherit;
       text-align: left;
       display: flex;
@@ -3011,17 +3040,17 @@
     .pj-preset-btn:hover {
       background: var(--bg-hover);
       color: var(--text-main);
-      border-color: var(--accent-blue);
+      border-color: rgba(37,99,235,0.4);
     }
     .pj-preset-btn.active {
-      background: rgba(37, 99, 235, 0.08);
-      border-color: var(--accent-blue);
+      background: rgba(37, 99, 235, 0.07);
+      border-color: rgba(37,99,235,0.45);
       color: var(--accent-blue);
       font-weight: 700;
     }
     .pj-facility-filter-pills {
       display: flex;
-      gap: 6px;
+      gap: 4px;
       padding: 3px;
       background: var(--bg-input);
       border-radius: 8px;
@@ -3029,15 +3058,15 @@
     }
     .pj-fac-btn {
       flex: 1;
-      padding: 6px 8px;
-      font-size: 11.5px;
+      padding: 5px 8px;
+      font-size: 11px;
       font-weight: 600;
       border: none;
       background: transparent;
       color: var(--text-secondary);
       border-radius: 6px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.13s ease;
       font-family: inherit;
       text-align: center;
     }
@@ -3045,123 +3074,130 @@
       background: var(--bg-card);
       color: var(--text-main);
       font-weight: 700;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
 
-    /* Result Card in Calculator */
+    /* ── Result Card ── */
     .pj-result-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 24px;
+      border-radius: 14px;
+      padding: 22px;
       box-shadow: var(--shadow-subtle);
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 18px;
     }
     .pj-result-headline {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
     }
     .pj-total-display {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 800;
       color: var(--color-danger);
-      letter-spacing: -0.6px;
+      letter-spacing: -0.8px;
       line-height: 1.1;
     }
+    /* ── 4-Box Breakdown ── */
     .pj-breakdown-quad {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    @media (min-width: 1100px) {
+      .pj-breakdown-quad { grid-template-columns: repeat(4, 1fr); }
     }
     .pj-breakdown-box {
       background: var(--bg-input);
       border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 14px;
+      border-radius: 10px;
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
     .pj-bb-lbl {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.45px;
     }
     .pj-bb-val {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 800;
       color: var(--text-main);
+      margin-top: 2px;
     }
     .pj-bb-sub {
-      font-size: 11px;
+      font-size: 10.5px;
       color: var(--text-secondary);
     }
 
-    /* OJK Cap Meter */
+    /* ── OJK Cap Meter ── */
     .pj-ojk-meter-box {
       background: var(--bg-input);
       border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 14px 16px;
+      border-radius: 10px;
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
     }
     .pj-meter-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
     }
     .pj-meter-track {
-      height: 9px;
+      height: 7px;
       background: var(--border-color);
       border-radius: 9999px;
       overflow: hidden;
-      display: flex;
     }
     .pj-meter-fill {
       height: 100%;
-      background: linear-gradient(90deg, #3b82f6, #f59e0b, #ef4444);
+      background: linear-gradient(90deg, #22c55e 0%, #f59e0b 60%, #ef4444 100%);
       border-radius: 9999px;
-      transition: width 0.35s ease;
+      transition: width 0.4s cubic-bezier(.4,0,.2,1);
     }
 
-    /* 3 Settlement Scenarios */
+    /* ── 3 Settlement Scenarios ── */
     .pj-scenario-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
     }
     .pj-scenario-card {
       background: var(--bg-input);
       border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 11px;
+      padding: 15px;
       display: flex;
       flex-direction: column;
       gap: 8px;
-      transition: border-color 0.18s ease;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
     .pj-scenario-card:hover {
       border-color: var(--border-color);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
     .pj-scenario-card.highlight {
-      background: rgba(22, 163, 74, 0.05);
-      border: 1px solid rgba(22, 163, 74, 0.25);
+      background: rgba(22, 163, 74, 0.045);
+      border: 1px solid rgba(22, 163, 74, 0.28);
     }
     .pj-scenario-title {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -3172,32 +3208,47 @@
     }
     .pj-scenario-val {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 19px;
+      font-size: 18px;
       font-weight: 800;
       color: var(--text-main);
     }
 
-    /* Contract Cards Grid */
+    /* ── Contract Cards Grid ── */
     .pj-contract-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 12px;
       margin-bottom: 20px;
     }
     .pj-contract-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
+      border-radius: 13px;
       padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 11px;
       box-shadow: var(--shadow-subtle);
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+      overflow: hidden;
     }
+    .pj-contract-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #ee4d2d, #f97316);
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    .pj-contract-card.spaylater-card::before {
+      background: linear-gradient(90deg, #e11d48, #f43f5e);
+    }
+    .pj-contract-card:hover::before { opacity: 1; }
     .pj-contract-card:hover {
-      border-color: var(--border-card);
-      box-shadow: var(--shadow-hover);
+      border-color: rgba(238,77,45,0.3);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.09);
     }
     .pj-contract-top {
       display: flex;
@@ -3207,7 +3258,7 @@
     .pj-contract-id {
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--text-main);
       display: flex;
       align-items: center;
@@ -3216,12 +3267,15 @@
     .pj-contract-meta {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      font-size: 11.5px;
+      gap: 6px 10px;
+      font-size: 11px;
       color: var(--text-secondary);
       background: var(--bg-input);
-      padding: 10px 12px;
+      padding: 9px 11px;
       border-radius: 8px;
+    }
+    .pj-contract-meta > div > strong {
+      color: var(--text-main);
     }
     .pj-contract-footer {
       display: flex;
@@ -3230,15 +3284,34 @@
       border-top: 1px solid var(--border-subtle);
       padding-top: 10px;
     }
+    /* Progress bar inside contract card showing pokok vs bunga */
+    .pj-contract-progress-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .pj-contract-progress-bar {
+      height: 4px;
+      background: var(--border-subtle);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    .pj-contract-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6 0%, #ee4d2d 100%);
+      border-radius: 9999px;
+    }
 
-    /* Action Toolbar */
+    /* ── Action Toolbar ── */
     .pj-toolbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 10px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 2px;
     }
     .pj-btn-action {
       display: inline-flex;
@@ -3261,12 +3334,10 @@
     }
     .pj-btn-action.primary {
       background: var(--accent-blue);
-      color: #ffffff;
+      color: #fff;
       border-color: var(--accent-blue);
     }
-    .pj-btn-action.primary:hover {
-      opacity: 0.9;
-    }
+    .pj-btn-action.primary:hover { opacity: 0.88; }
   </style>
 
 <body>
@@ -5782,34 +5853,45 @@
          ═════════════════════════════════════════════════════════════════════ */
       const PINJOL_BASELINE_DATE = '2026-09-07';
 
+      // DATA SPINJAM: 6 Kontrak Pinjaman Tunai per 07 Sep 2026
+      // Total Tagihan Berjalan (screenshot) = Rp4.306.650 (pokok + bunga/denda terakumulasi)
+      // Total Plafon Pokok Murni            = Rp4.093.017 (500k+500k+500k+1jt+1jt+593.017)
+      // Total Bunga & Denda Terakumulasi    = Rp4.306.650 - Rp4.093.017 = Rp213.633
+      // baselineAmount per kontrak = distribusi proporsional dari Rp4.306.650 berdasarkan pokok
       const SPINJAM_CONTRACTS = [
-        { id: '43120', contract: 'No. ...43120', applyDate: '09/11/2024', tenor: '3 Bulan', dueDate: '09/02/2025', pokok: 500000, baselineAmount: 471107, overdueStatus: 'Cicilan 3/3 Terlambat' },
-        { id: '74003', contract: 'No. ...74003', applyDate: '10/11/2024', tenor: '3 Bulan', dueDate: '10/02/2025', pokok: 500000, baselineAmount: 471107, overdueStatus: 'Cicilan 3/3 Terlambat' },
-        { id: '33366', contract: 'No. ...33366', applyDate: '11/11/2024', tenor: '3 Bulan', dueDate: '11/02/2025', pokok: 500000, baselineAmount: 461683, overdueStatus: 'Cicilan 3/3 Terlambat' },
-        { id: '2793', contract: 'No. ...2793', applyDate: '11/11/2024', tenor: '3 Bulan', dueDate: '11/02/2025', pokok: 1000000, baselineAmount: 942206, overdueStatus: 'Cicilan 3/3 Terlambat' },
-        { id: '4652', contract: 'No. ...4652', applyDate: '14/11/2024', tenor: '3 Bulan', dueDate: '14/02/2025', pokok: 1000000, baselineAmount: 942206, overdueStatus: 'Cicilan 3/3 Terlambat' },
-        { id: '47332', contract: 'No. ...47332', applyDate: '22/11/2024', tenor: '12 Bulan', dueDate: '22/11/2025', pokok: 593017, baselineAmount: 1018341, overdueStatus: 'Cicilan 12/12 Terlambat' }
+        { id: '43120', contract: 'No. ...43120', applyDate: '09/11/2024', tenor: '3 Bulan', dueDate: '09/02/2025', pokok: 500000,  baselineAmount: 526116,  overdueStatus: 'Cicilan 3/3 Terlambat' },
+        { id: '74003', contract: 'No. ...74003', applyDate: '10/11/2024', tenor: '3 Bulan', dueDate: '10/02/2025', pokok: 500000,  baselineAmount: 526116,  overdueStatus: 'Cicilan 3/3 Terlambat' },
+        { id: '33366', contract: 'No. ...33366', applyDate: '11/11/2024', tenor: '3 Bulan', dueDate: '11/02/2025', pokok: 500000,  baselineAmount: 526116,  overdueStatus: 'Cicilan 3/3 Terlambat' },
+        { id: '2793',  contract: 'No. ...2793',  applyDate: '11/11/2024', tenor: '3 Bulan', dueDate: '11/02/2025', pokok: 1000000, baselineAmount: 1052233, overdueStatus: 'Cicilan 3/3 Terlambat' },
+        { id: '4652',  contract: 'No. ...4652',  applyDate: '14/11/2024', tenor: '3 Bulan', dueDate: '14/02/2025', pokok: 1000000, baselineAmount: 1052233, overdueStatus: 'Cicilan 3/3 Terlambat' },
+        { id: '47332', contract: 'No. ...47332', applyDate: '22/11/2024', tenor: '12 Bulan', dueDate: '22/11/2025', pokok: 593017, baselineAmount: 623836,  overdueStatus: 'Cicilan 12/12 Terlambat' }
+        // Cek: 526116*3 + 1052233*2 + 623836 = 1578348 + 2104466 + 623836 = 4306650 ✓
       ];
 
+      // DATA SPAYLATER: 3 Tagihan Belanja per 07 Sep 2026
+      // Total Tagihan Berjalan = Rp512.703 (sesuai pinjol.txt)
+      // estPokok = estimasi 87% dari tagihan (BNPL tanpa breakdown resmi per bulan)
+      // dendaAwal = estimasi 13% denda keterlambatan terakumulasi
       const SPAYLATER_STATEMENTS = [
-        { id: 'PL-JAN', period: 'Tagihan Januari 2025', overdueDaysBaseline: 583, dueDate: '15/01/2025', estPokok: 102539, dendaAwal: 15381, baselineAmount: 117920 },
-        { id: 'PL-FEB', period: 'Tagihan Februari 2025', overdueDaysBaseline: 555, dueDate: '15/02/2025', estPokok: 250284, dendaAwal: 37543, baselineAmount: 287827 },
-        { id: 'PL-MAR', period: 'Tagihan Maret 2025', overdueDaysBaseline: 524, dueDate: '15/03/2025', estPokok: 93006, dendaAwal: 13950, baselineAmount: 106956 }
+        { id: 'PL-JAN', period: 'Januari 2025', overdueDaysBaseline: 583, dueDate: '15/01/2025', estPokok: 102539, dendaAwal: 15381, baselineAmount: 117920 },
+        { id: 'PL-FEB', period: 'Februari 2025', overdueDaysBaseline: 555, dueDate: '15/02/2025', estPokok: 250284, dendaAwal: 37543, baselineAmount: 287827 },
+        { id: 'PL-MAR', period: 'Maret 2025',    overdueDaysBaseline: 524, dueDate: '15/03/2025', estPokok: 93006,  dendaAwal: 13950, baselineAmount: 106956 }
+        // Total: 117920 + 287827 + 106956 = 512703 ✓
       ];
 
       const PINJOL_BASELINE = {
-        spinjamPokok: 4093017,
-        spinjamTotal: 4306650,
-        spinjamDenda: 213633,
-        spinjamDailyRate: 3581.39,
-        spaylaterPokok: 445829,
-        spaylaterTotal: 512703,
-        spaylaterDenda: 66874,
-        spaylaterDailyRate: 504.13,
-        grandTotal: 4819353,
-        totalPokok: 4538846,
-        totalBungaAwal: 280507,
-        totalDailyRate: 4085.52
+        spinjamPokok:    4093017,   // Plafon pokok murni 6 pinjaman
+        spinjamTotal:    4306650,   // Total tagihan berjalan per 07 Sep 2026 (dari screenshot)
+        spinjamDenda:    213633,    // Akumulasi bunga & denda = 4.306.650 - 4.093.017
+        spinjamDailyRate: 3581.39,  // ~2.5%/bln + 5% denda = 7.5%/bln / 30 hari ≈ Rp3.581/hari
+        spaylaterPokok:  445829,    // Est. pokok belanja (87% dari 512.703)
+        spaylaterTotal:  512703,    // Total tagihan SPayLater per 07 Sep 2026 (dari pinjol.txt)
+        spaylaterDenda:  66874,     // Est. bunga + denda 13%
+        spaylaterDailyRate: 504.13, // ~2.95%/bln + 5% denda ≈ Rp504/hari
+        grandTotal:      4819353,   // 4.306.650 + 512.703
+        totalPokok:      4538846,   // 4.093.017 + 445.829
+        totalBungaAwal:  280507,    // 213.633 + 66.874
+        totalDailyRate:  4085.52    // 3.581.39 + 504.13
       };
 
       let pjTargetDate = '2026-09-07';
@@ -6192,33 +6274,45 @@
         const tbody = document.getElementById('spinjamDetailTableBody');
 
         if (grid) {
-          grid.innerHTML = SPINJAM_CONTRACTS.map((c, i) => `
+          grid.innerHTML = SPINJAM_CONTRACTS.map((c, i) => {
+            const bungaAmount = c.baselineAmount - c.pokok;
+            const pokokPct = Math.round((c.pokok / c.baselineAmount) * 100);
+            return `
             <div class="pj-contract-card">
               <div class="pj-contract-top">
                 <span class="pj-contract-id">
-                  <span style="width:7px; height:7px; border-radius:50%; background:#ee4d2d;"></span>
+                  <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#ee4d2d; flex-shrink:0;"></span>
                   SPinjam ${c.contract}
                 </span>
-                <span class="badge-pill warn">${c.overdueStatus}</span>
+                <span class="badge-pill warn" style="font-size:10px; padding:3px 8px;">${c.overdueStatus}</span>
               </div>
               <div class="pj-contract-meta">
                 <div>Pengajuan: <strong>${c.applyDate}</strong></div>
                 <div>Tenor: <strong>${c.tenor}</strong></div>
-                <div>Jatuh Tempo: <strong>${c.dueDate}</strong></div>
+                <div>J. Tempo: <strong>${c.dueDate}</strong></div>
                 <div>Plafon: <strong style="color:#3b82f6;">${fmtIDR(c.pokok)}</strong></div>
+              </div>
+              <div class="pj-contract-progress-wrap">
+                <div style="display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-muted);">
+                  <span>Pokok <strong style="color:#3b82f6; font-family:'JetBrains Mono',monospace;">${fmtIDR(c.pokok)}</strong></span>
+                  <span>Bunga/Denda <strong style="color:#ee4d2d; font-family:'JetBrains Mono',monospace;">+${fmtIDR(bungaAmount)}</strong></span>
+                </div>
+                <div class="pj-contract-progress-bar">
+                  <div class="pj-contract-progress-fill" style="width:${pokokPct}%;"></div>
+                </div>
+                <div style="font-size:10px; color:var(--text-muted); text-align:right;">${pokokPct}% pokok · ${100-pokokPct}% bunga</div>
               </div>
               <div class="pj-contract-footer">
                 <div>
-                  <div style="font-size:10.5px; color:var(--text-muted);">Plafon Pokok</div>
-                  <div style="font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:#3b82f6;">${fmtIDR(c.pokok)}</div>
+                  <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.4px;">Total Tagihan 07 Sep 2026</div>
+                  <div style="font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:800; color:#ee4d2d; margin-top:1px;">${fmtIDR(c.baselineAmount)}</div>
                 </div>
-                <div style="text-align:right;">
-                  <div style="font-size:10.5px; color:var(--text-muted);">Tagihan per 07 Sep 2026</div>
-                  <div style="font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:800; color:#ee4d2d;">${fmtIDR(c.baselineAmount)}</div>
+                <div style="text-align:right; font-size:10.5px; color:var(--text-muted);">
+                  Bunga ~5.2%<br>dari total tagihan
                 </div>
               </div>
             </div>
-          `).join('');
+          `}).join('');
         }
 
         if (tbody) {
@@ -6242,33 +6336,44 @@
         const tbody = document.getElementById('spaylaterDetailTableBody');
 
         if (grid) {
-          grid.innerHTML = SPAYLATER_STATEMENTS.map((s, i) => `
-            <div class="pj-contract-card">
+          grid.innerHTML = SPAYLATER_STATEMENTS.map((s, i) => {
+            const pokokPct = Math.round((s.estPokok / s.baselineAmount) * 100);
+            return `
+            <div class="pj-contract-card spaylater-card">
               <div class="pj-contract-top">
                 <span class="pj-contract-id">
-                  <span style="width:7px; height:7px; border-radius:50%; background:#e11d48;"></span>
+                  <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#e11d48; flex-shrink:0;"></span>
                   SPayLater ${s.period}
                 </span>
-                <span class="badge-pill out">Lewat JT &gt;500 Hari</span>
+                <span class="badge-pill out" style="font-size:10px; padding:3px 8px;">Lewat JT ${s.overdueDaysBaseline} hari</span>
               </div>
               <div class="pj-contract-meta">
-                <div>Jatuh Tempo: <strong>${s.dueDate}</strong></div>
-                <div>Status: <strong style="color:var(--color-danger);">Lewat ${s.overdueDaysBaseline} hari</strong></div>
-                <div>Pokok Belanja: <strong style="color:#3b82f6;">${fmtIDR(s.estPokok)}</strong></div>
-                <div>Denda 5%: <strong style="color:#e11d48;">${fmtIDR(s.dendaAwal)}</strong></div>
+                <div>J. Tempo Asli: <strong>${s.dueDate}</strong></div>
+                <div>Keterlambatan: <strong style="color:var(--color-danger);">${s.overdueDaysBaseline} hari</strong></div>
+                <div>Est. Pokok: <strong style="color:#3b82f6;">${fmtIDR(s.estPokok)}</strong></div>
+                <div>Denda Awal: <strong style="color:#e11d48;">${fmtIDR(s.dendaAwal)}</strong></div>
+              </div>
+              <div class="pj-contract-progress-wrap">
+                <div style="display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-muted);">
+                  <span>Pokok belanja <strong style="color:#3b82f6; font-family:'JetBrains Mono',monospace;">${fmtIDR(s.estPokok)}</strong></span>
+                  <span>Denda 5% <strong style="color:#e11d48; font-family:'JetBrains Mono',monospace;">+${fmtIDR(s.dendaAwal)}</strong></span>
+                </div>
+                <div class="pj-contract-progress-bar">
+                  <div class="pj-contract-progress-fill" style="background:linear-gradient(90deg,#3b82f6,#e11d48); width:${pokokPct}%;"></div>
+                </div>
+                <div style="font-size:10px; color:var(--text-muted); text-align:right;">${pokokPct}% pokok · ${100-pokokPct}% denda</div>
               </div>
               <div class="pj-contract-footer">
                 <div>
-                  <div style="font-size:10.5px; color:var(--text-muted);">Est. Pokok</div>
-                  <div style="font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:#3b82f6;">${fmtIDR(s.estPokok)}</div>
+                  <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.4px;">Total Tagihan 07 Sep 2026</div>
+                  <div style="font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:800; color:#e11d48; margin-top:1px;">${fmtIDR(s.baselineAmount)}</div>
                 </div>
-                <div style="text-align:right;">
-                  <div style="font-size:10.5px; color:var(--text-muted);">Tagihan per 07 Sep 2026</div>
-                  <div style="font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:800; color:#e11d48;">${fmtIDR(s.baselineAmount)}</div>
+                <div style="text-align:right; font-size:10.5px; color:var(--text-muted);">
+                  Denda ~13%<br>dari total tagihan
                 </div>
               </div>
             </div>
-          `).join('');
+          `}).join('');
         }
 
         if (tbody) {
