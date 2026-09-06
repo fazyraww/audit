@@ -2807,6 +2807,466 @@
         display: none !important;
       }
     }
+    /* ═════════════════════════════════════════════════════════════════════════
+       PINJOL FORENSIC & DEBT SETTLEMENT TERMINAL (BESPOKE FINANCIAL UI)
+       ═════════════════════════════════════════════════════════════════════════ */
+    .pj-suite-header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 22px 24px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-subtle);
+      position: relative;
+    }
+    .pj-brand-badge-spinjam {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: rgba(238, 77, 45, 0.1);
+      color: #ee4d2d;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      border: 1px solid rgba(238, 77, 45, 0.2);
+    }
+    .pj-brand-badge-spaylater {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: rgba(225, 29, 72, 0.1);
+      color: #e11d48;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      border: 1px solid rgba(225, 29, 72, 0.2);
+    }
+    .pj-ojk-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid var(--border-subtle);
+    }
+    .pj-subtab-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .pj-subtab-nav::-webkit-scrollbar {
+      display: none;
+    }
+    .pj-subtab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s ease;
+      font-family: inherit;
+    }
+    .pj-subtab-btn:hover {
+      color: var(--text-main);
+      background: var(--bg-hover);
+    }
+    .pj-subtab-btn.active {
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-weight: 700;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+    .pj-subtab-btn .tab-count {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 9999px;
+      background: var(--border-color);
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+    .pj-subtab-btn.active .tab-count {
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--accent-blue);
+    }
+    .pj-tab-pane {
+      display: none;
+      animation: pjFadeIn 0.2s ease-out;
+    }
+    .pj-tab-pane.active {
+      display: block;
+    }
+    @keyframes pjFadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Calculator & Simulator Styling */
+    .pj-calc-layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+      margin-bottom: 22px;
+      align-items: start;
+    }
+    @media (max-width: 960px) {
+      .pj-calc-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .pj-calc-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .pj-calc-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .pj-field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .pj-field-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .pj-date-input-wrap {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .pj-select-styled {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-main);
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+      width: 100%;
+    }
+    .pj-select-styled:focus {
+      border-color: var(--accent-blue);
+    }
+    .pj-preset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+    }
+    .pj-preset-btn {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pj-preset-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-main);
+      border-color: var(--accent-blue);
+    }
+    .pj-preset-btn.active {
+      background: rgba(37, 99, 235, 0.08);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      font-weight: 700;
+    }
+    .pj-facility-filter-pills {
+      display: flex;
+      gap: 6px;
+      padding: 3px;
+      background: var(--bg-input);
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+    }
+    .pj-fac-btn {
+      flex: 1;
+      padding: 6px 8px;
+      font-size: 11.5px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      text-align: center;
+    }
+    .pj-fac-btn.active {
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-weight: 700;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+    }
+
+    /* Result Card in Calculator */
+    .pj-result-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .pj-result-headline {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .pj-total-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--color-danger);
+      letter-spacing: -0.6px;
+      line-height: 1.1;
+    }
+    .pj-breakdown-quad {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .pj-breakdown-box {
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .pj-bb-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .pj-bb-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+    .pj-bb-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* OJK Cap Meter */
+    .pj-ojk-meter-box {
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .pj-meter-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .pj-meter-track {
+      height: 9px;
+      background: var(--border-color);
+      border-radius: 9999px;
+      overflow: hidden;
+      display: flex;
+    }
+    .pj-meter-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #f59e0b, #ef4444);
+      border-radius: 9999px;
+      transition: width 0.35s ease;
+    }
+
+    /* 3 Settlement Scenarios */
+    .pj-scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .pj-scenario-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.18s ease;
+    }
+    .pj-scenario-card:hover {
+      border-color: var(--border-color);
+    }
+    .pj-scenario-card.highlight {
+      background: rgba(22, 163, 74, 0.05);
+      border: 1px solid rgba(22, 163, 74, 0.25);
+    }
+    .pj-scenario-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pj-scenario-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    /* Contract Cards Grid */
+    .pj-contract-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .pj-contract-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow-subtle);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .pj-contract-card:hover {
+      border-color: var(--border-card);
+      box-shadow: var(--shadow-hover);
+    }
+    .pj-contract-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pj-contract-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pj-contract-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      background: var(--bg-input);
+      padding: 10px 12px;
+      border-radius: 8px;
+    }
+    .pj-contract-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 10px;
+    }
+
+    /* Action Toolbar */
+    .pj-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .pj-btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      border: 1px solid var(--border-color);
+      background: var(--bg-input);
+      color: var(--text-main);
+      transition: all 0.15s ease;
+    }
+    .pj-btn-action:hover {
+      background: var(--bg-hover);
+      border-color: var(--accent-blue);
+    }
+    .pj-btn-action.primary {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+    }
+    .pj-btn-action.primary:hover {
+      opacity: 0.9;
+    }
   </style>
 
 <body>
@@ -3334,188 +3794,608 @@
         </section>
 
         <!-- ═════════════════════════════════════════════════════════════════════
-           PANEL 4: PINJOL SHOPEE
+           PANEL 4: PINJOL SHOPEE (BESPOKE FINANCIAL TERMINAL)
            ═════════════════════════════════════════════════════════════════════ -->
         <section id="panel-pinjol" class="panel-view">
-          <!-- Top Info Banner -->
-          <div style="background:linear-gradient(135deg, rgba(238, 77, 45, 0.08), rgba(245, 158, 11, 0.08)); border:1px solid rgba(238, 77, 45, 0.2); border-radius:12px; padding:14px 18px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-            <div style="display:flex; align-items:center; gap:12px;">
-              <div style="width:36px; height:36px; border-radius:8px; background:#ee4d2d; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:14px; flex-shrink:0;">SP</div>
+          <!-- Suite Header Banner -->
+          <div class="pj-suite-header">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
               <div>
-                <div style="font-weight:700; font-size:14px; color:var(--text-main);">Rekapitulasi Tagihan Shopee Financial (SPinjam &amp; SPayLater)</div>
-                <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Audit Pemindaian Data: <strong>7 September 2026</strong> &middot; Data sinkron 100% dengan catatan tagihan resmi</div>
-              </div>
-            </div>
-            <div>
-              <span class="badge-pill out" style="font-size:12px; padding:4px 10px;">Status: Menunggak (&gt;500 Hari)</span>
-            </div>
-          </div>
-
-          <div class="kpi-row-4">
-            <div class="metric-card">
-              <div class="metric-card-label">GRAND TOTAL HARUS DIBAYAR</div>
-              <div class="metric-card-val" style="color:var(--color-danger);" id="pinjolJatuhTempoVal">Rp 4.819.353</div>
-              <div class="metric-card-sub" id="pinjolJatuhTempoSub">SPinjam + SPayLater (Wajib Dilunasi)</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-card-label">TOTAL SPINJAM (6 PINJAMAN)</div>
-              <div class="metric-card-val" style="color:#d97706;" id="pinjolPokokVal">Rp 4.306.650</div>
-              <div class="metric-card-sub">Plafon Rp 4.093.017 + Denda Berjalan</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-card-label">TOTAL SPAYLATER (3 BULAN)</div>
-              <div class="metric-card-val" style="color:#e11d48;" id="pinjolBungaVal">Rp 512.703</div>
-              <div class="metric-card-sub">Jan, Feb, Mar 2025 + Denda &gt;500 Hari</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-card-label">STATUS JATUH TEMPO</div>
-              <div class="metric-card-val" style="color:var(--color-danger);">100% Terlambat</div>
-              <div class="metric-card-sub">Jatuh tempo sejak Feb 2025</div>
-            </div>
-          </div>
-
-          <div class="grid-2-charts" style="margin-bottom:20px;">
-            <div class="chart-card">
-              <div class="chart-card-title">Ketentuan Bunga &amp; Denda SPinjam</div>
-              <div class="chart-card-sub">Pinjaman dana tunai Shopee Financial</div>
-              <div style="margin-top:12px; font-size:12.5px; line-height:1.7; color:var(--text-main);">
-                <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--border-color);">
-                  <span style="color:var(--text-muted);">Suku bunga dasar</span><strong>1,8% &ndash; 3,95% / bulan</strong>
-                </div>
-                <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--border-color);">
-                  <span style="color:var(--text-muted);">Ketentuan denda</span><strong style="color:var(--color-danger);">Akumulasi harian/bulanan</strong>
-                </div>
-                <div style="display:flex; justify-content:space-between; padding:5px 0;">
-                  <span style="color:var(--text-muted);">Status jatuh tempo</span><strong style="color:var(--color-danger);">Terlewat sejak Februari 2025</strong>
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+                  <div style="width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg, #ee4d2d, #f97316); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:900; font-size:14px; box-shadow:0 3px 10px rgba(238,77,45,0.25);">SP</div>
+                  <div>
+                    <h2 style="font-size:18px; font-weight:800; color:var(--text-main); letter-spacing:-0.4px;">Audit Forensik Pinjol Shopee &amp; Simulator Pelunasan</h2>
+                    <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">
+                      Rekonsiliasi Utang Pokok vs Bunga Berjalan &middot; SPinjam &amp; SPayLater &middot; Patokan Dasar: <strong>07 September 2026</strong>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="chart-card">
-              <div class="chart-card-title">Ketentuan Bunga &amp; Denda SPayLater</div>
-              <div class="chart-card-sub">Fasilitas pembiayaan belanja PayLater</div>
-              <div style="margin-top:12px; font-size:12.5px; line-height:1.7; color:var(--text-main);">
-                <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--border-color);">
-                  <span style="color:var(--text-muted);">Suku bunga cicilan</span><strong>&plusmn;2,95% / bulan standar</strong>
-                </div>
-                <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--border-color);">
-                  <span style="color:var(--text-muted);">Denda keterlambatan</span><strong style="color:var(--color-danger);">Akumulatif (&gt;500 hari lewat JT)</strong>
-                </div>
-                <div style="display:flex; justify-content:space-between; padding:5px 0;">
-                  <span style="color:var(--text-muted);">Periode tunggakan</span><strong style="color:var(--color-danger);">Tagihan Jan, Feb, Mar 2025</strong>
-                </div>
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <span class="pj-brand-badge-spinjam">PT Lentera Dana Nusantara (SPinjam)</span>
+                <span class="pj-brand-badge-spaylater">PT Commerce Finance (SPayLater)</span>
+                <span class="badge-pill out" style="padding:4px 10px; font-size:11px;">Kolektibilitas 5 (Macet &gt;500 Hari)</span>
               </div>
             </div>
-          </div>
 
-          <!-- Tabel 1: Rekapitulasi Ringkas Produk -->
-          <div class="table-box" style="margin-bottom:24px;">
-            <div style="padding:14px 18px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <!-- Header Quick Summary Metric Ribbon -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:18px; padding-top:16px; border-top:1px solid var(--border-subtle);">
               <div>
-                <div style="font-weight:700; font-size:14px; color:var(--text-main);">Ringkasan Portofolio Pinjol Shopee</div>
-                <div style="font-size:12px; color:var(--text-muted);">Komposisi kewajiban antara fasilitas SPinjam dan SPayLater</div>
+                <div style="font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Grand Total Baseline</div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:800; color:var(--color-danger); margin-top:2px;" id="pjHdrGrandTotal">Rp 4.819.353</div>
+                <div style="font-size:11px; color:var(--text-muted);">Sesuai pinjol.txt (07 Sep 2026)</div>
               </div>
-              <span class="badge-pill neutral">2 Fasilitas Aktif Menunggak</span>
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Fasilitas / Produk</th>
-                  <th>Cakupan Pinjaman</th>
-                  <th style="text-align:right;">Plafon Pokok</th>
-                  <th>Status &amp; Keterlambatan</th>
-                  <th style="text-align:right;">Tagihan Berjalan</th>
-                </tr>
-              </thead>
-              <tbody id="pinjolSummaryTableBody"></tbody>
-            </table>
-            <div class="table-footer">
-              <span id="pinjolTableFooterInfo">Pemindaian: 7 September 2026 &middot; Data akurat sesuai pinjol.txt</span>
-              <span style="font-weight:800; font-size:13px; color:var(--color-danger);" id="pinjolTableTotalVal">Total: Rp 4.819.353</span>
-            </div>
-          </div>
-
-          <!-- Tabel 2: Rincian 6 Pinjaman SPinjam Belum Lunas -->
-          <div class="table-box" style="margin-bottom:24px;">
-            <div style="padding:14px 18px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
               <div>
-                <div style="font-weight:700; font-size:14px; color:var(--text-main);">I. Rincian 6 Pinjaman SPinjam (Belum Lunas)</div>
-                <div style="font-size:12px; color:var(--text-muted);">Total Tagihan Berjalan: <strong>Rp 4.306.650</strong> &middot; Seluruh pinjaman diajukan November 2024</div>
+                <div style="font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Plafon Pokok SPinjam</div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:800; color:#3b82f6; margin-top:2px;">Rp 4.093.017</div>
+                <div style="font-size:11px; color:var(--text-muted);">6 Pinjaman Pokok Murni</div>
               </div>
-              <span class="badge-pill warn">6 Pinjaman Terlambat</span>
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:40px; text-align:center;">No</th>
-                  <th>No. Kontrak Pinjaman</th>
-                  <th>Waktu Pengajuan</th>
-                  <th>Tenor</th>
-                  <th style="text-align:right;">Plafon Pokok</th>
-                  <th>Status Cicilan &amp; Jatuh Tempo</th>
-                  <th style="text-align:right;">Tagihan Berjalan</th>
-                </tr>
-              </thead>
-              <tbody id="spinjamDetailTableBody"></tbody>
-            </table>
-            <div class="table-footer">
-              <span>Total Plafon Pokok SPinjam: <strong style="font-family:'JetBrains Mono',monospace;">Rp 4.093.017</strong></span>
-              <span style="font-weight:800; font-size:13px; color:#d97706;">Subtotal SPinjam: Rp 4.306.650</span>
-            </div>
-          </div>
-
-          <!-- Tabel 3: Rincian Tagihan Bulanan SPayLater -->
-          <div class="table-box" style="margin-bottom:24px;">
-            <div style="padding:14px 18px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
               <div>
-                <div style="font-weight:700; font-size:14px; color:var(--text-main);">II. Rincian Tagihan Bulanan SPayLater</div>
-                <div style="font-size:12px; color:var(--text-muted);">Total Tagihan Berjalan: <strong>Rp 512.703</strong> &middot; Denda akumulatif akibat lewat jatuh tempo &gt;500 hari</div>
+                <div style="font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Tagihan SPayLater</div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:800; color:#e11d48; margin-top:2px;">Rp 512.703</div>
+                <div style="font-size:11px; color:var(--text-muted);">3 Periode Tagihan Belanja</div>
               </div>
-              <span class="badge-pill out">3 Bulan Menunggak</span>
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:40px; text-align:center;">No</th>
-                  <th>Periode Tagihan</th>
-                  <th>Status Keterlambatan</th>
-                  <th>Status Penagihan</th>
-                  <th style="text-align:right;">Nominal Tagihan</th>
-                </tr>
-              </thead>
-              <tbody id="spaylaterDetailTableBody"></tbody>
-            </table>
-            <div class="table-footer">
-              <span>3 Tagihan Bulanan (Januari, Februari, Maret 2025)</span>
-              <span style="font-weight:800; font-size:13px; color:#e11d48;">Subtotal SPayLater: Rp 512.703</span>
+              <div>
+                <div style="font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Laju Bunga Berjalan</div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:800; color:var(--color-warning); margin-top:2px;">+Rp 4.085 / hari</div>
+                <div style="font-size:11px; color:var(--text-muted);">SP: +Rp 3.581 &middot; PL: +Rp 504</div>
+              </div>
             </div>
           </div>
 
-          <!-- III. Kesimpulan Utang Card -->
-          <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; padding:18px 20px;">
-            <div style="font-weight:800; font-size:14px; color:var(--text-main); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-              <span style="color:#ee4d2d;">&#9888;&#65039;</span> III. KESIMPULAN UTANG KESELURUHAN &amp; CATATAN AUDIT
-            </div>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; margin-bottom:16px;">
-              <div style="background:var(--bg-input); padding:12px 14px; border-radius:8px; border:1px solid var(--border-subtle);">
-                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Total SPinjam</div>
-                <div style="font-size:18px; font-weight:800; color:#d97706; font-family:'JetBrains Mono',monospace; margin-top:2px;">Rp 4.306.650</div>
-                <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">6 pinjaman terlambat (89,4%)</div>
+          <!-- Sub-Tab Navigation Bar -->
+          <div class="pj-subtab-nav">
+            <button type="button" class="pj-subtab-btn active" id="pjTabBtnCalc" onclick="switchPinjolSubTab('calc')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+              <span>Kalkulator &amp; Simulator Pelunasan</span>
+              <span class="tab-count">Otomatis</span>
+            </button>
+            <button type="button" class="pj-subtab-btn" id="pjTabBtnMatrix" onclick="switchPinjolSubTab('matrix')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+              <span>Rekonsiliasi Pokok vs Bunga</span>
+            </button>
+            <button type="button" class="pj-subtab-btn" id="pjTabBtnSpinjam" onclick="switchPinjolSubTab('spinjam')">
+              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ee4d2d;"></span>
+              <span>Kontrak SPinjam</span>
+              <span class="tab-count">6</span>
+            </button>
+            <button type="button" class="pj-subtab-btn" id="pjTabBtnSpaylater" onclick="switchPinjolSubTab('spaylater')">
+              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#e11d48;"></span>
+              <span>Tagihan SPayLater</span>
+              <span class="tab-count">3</span>
+            </button>
+            <button type="button" class="pj-subtab-btn" id="pjTabBtnResearch" onclick="switchPinjolSubTab('research')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              <span>Riset &amp; Regulasi OJK</span>
+            </button>
+          </div>
+
+          <!-- ═══════════════════════════════════════════════════════════════════
+             SUB-TAB 1: KALKULATOR & SIMULATOR PELUNASAN OTOMATIS
+             ═══════════════════════════════════════════════════════════════════ -->
+          <div id="pjPaneCalc" class="pj-tab-pane active">
+            <div class="pj-calc-layout">
+              <!-- Left Column: Controls & Filters -->
+              <div class="pj-calc-panel">
+                <div class="pj-calc-head">
+                  <div style="font-weight:800; font-size:13.5px; color:var(--text-main); display:flex; align-items:center; gap:7px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <span>Target Pelunasan</span>
+                  </div>
+                  <span class="badge-pill neutral" id="pjCalcModeBadge">Harian &amp; Bulanan</span>
+                </div>
+
+                <!-- 1. Input Tanggal Langsung -->
+                <div class="pj-field-group">
+                  <label class="pj-field-label">Pilih Tanggal Rencana Bayar</label>
+                  <div class="pj-date-input-wrap">
+                    <input type="date" id="pjCalcDateInput" class="clean-input" style="width:100%; padding:8px 12px; font-size:13px; font-family:'JetBrains Mono',monospace;" value="2026-09-07" onchange="handlePinjolDateInput(this.value)">
+                  </div>
+                </div>
+
+                <!-- 2. Dropdown Bulan & Tahun -->
+                <div class="pj-field-group">
+                  <label class="pj-field-label">Atau Pilih Bulan &amp; Tahun</label>
+                  <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:8px;">
+                    <select id="pjCalcMonthSelect" class="pj-select-styled" onchange="handlePinjolMonthYearChange()">
+                      <option value="0">Januari</option>
+                      <option value="1">Februari</option>
+                      <option value="2">Maret</option>
+                      <option value="3">April</option>
+                      <option value="4">Mei</option>
+                      <option value="5">Juni</option>
+                      <option value="6">Juli</option>
+                      <option value="7">Agustus</option>
+                      <option value="8" selected>September</option>
+                      <option value="9">Oktober</option>
+                      <option value="10">November</option>
+                      <option value="11">Desember</option>
+                    </select>
+                    <select id="pjCalcYearSelect" class="pj-select-styled" onchange="handlePinjolMonthYearChange()">
+                      <option value="2026" selected>2026</option>
+                      <option value="2027">2027</option>
+                      <option value="2028">2028</option>
+                      <option value="2029">2029</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- 3. Preset Cepat -->
+                <div class="pj-field-group">
+                  <label class="pj-field-label">Shortcut Preset Tanggal</label>
+                  <div class="pj-preset-grid">
+                    <button type="button" class="pj-preset-btn active" id="btnPjPreset0" onclick="applyPinjolPreset(0, this)">
+                      <span>📌 Posisi Screenshot</span>
+                      <small style="opacity:0.7;">07/09/26</small>
+                    </button>
+                    <button type="button" class="pj-preset-btn" id="btnPjPresetToday" onclick="applyPinjolPreset('today', this)">
+                      <span>⚡ Hari Ini</span>
+                      <small style="opacity:0.7;">Live</small>
+                    </button>
+                    <button type="button" class="pj-preset-btn" onclick="applyPinjolPreset(30, this)">
+                      <span>+30 Hari</span>
+                      <small style="opacity:0.7;">1 Bln</small>
+                    </button>
+                    <button type="button" class="pj-preset-btn" onclick="applyPinjolPreset('eoy2026', this)">
+                      <span>Akhir Thn 2026</span>
+                      <small style="opacity:0.7;">31 Des</small>
+                    </button>
+                    <button type="button" class="pj-preset-btn" onclick="applyPinjolPreset('mid2027', this)">
+                      <span>Tengah Thn 2027</span>
+                      <small style="opacity:0.7;">30 Jun</small>
+                    </button>
+                    <button type="button" class="pj-preset-btn" onclick="applyPinjolPreset('eoy2027', this)">
+                      <span>Akhir Thn 2027</span>
+                      <small style="opacity:0.7;">31 Des</small>
+                    </button>
+                    <button type="button" class="pj-preset-btn" style="grid-column:1 / -1;" onclick="applyPinjolPreset('ojkcap', this)">
+                      <span style="color:#d97706;">🛑 Titik Cap 100% OJK</span>
+                      <small style="opacity:0.7;">Maksimal Hukum</small>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 4. Pilihan Fasilitas yang Dihitung -->
+                <div class="pj-field-group">
+                  <label class="pj-field-label">Objek Fasilitas yang Dihitung</label>
+                  <div class="pj-facility-filter-pills">
+                    <button type="button" class="pj-fac-btn active" id="btnPjFacAll" onclick="setPinjolFacilityFilter('ALL', this)">Semua</button>
+                    <button type="button" class="pj-fac-btn" id="btnPjFacSpinjam" onclick="setPinjolFacilityFilter('SPINJAM', this)">SPinjam</button>
+                    <button type="button" class="pj-fac-btn" id="btnPjFacSpaylater" onclick="setPinjolFacilityFilter('SPAYLATER', this)">SPayLater</button>
+                  </div>
+                </div>
+
+                <!-- 5. Checklist Selektif Pinjaman -->
+                <div class="pj-field-group">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <label class="pj-field-label" style="margin-bottom:0;">Seleksi Item Pelunasan</label>
+                    <button type="button" onclick="toggleAllPinjolItems(true)" style="background:none; border:none; font-size:10.5px; color:var(--accent-blue); cursor:pointer; font-weight:700;">Pilih Semua</button>
+                  </div>
+                  <div id="pjCalcItemChecklist" style="display:flex; flex-direction:column; gap:6px; max-height:220px; overflow-y:auto; padding-right:4px;">
+                    <!-- Populated dynamically by JS -->
+                  </div>
+                </div>
               </div>
-              <div style="background:var(--bg-input); padding:12px 14px; border-radius:8px; border:1px solid var(--border-subtle);">
-                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Total SPayLater</div>
-                <div style="font-size:18px; font-weight:800; color:#e11d48; font-family:'JetBrains Mono',monospace; margin-top:2px;">Rp 512.703</div>
-                <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">3 bulan lewat &gt;500 hari (10,6%)</div>
+
+              <!-- Right Column: Live Calculation Results & Settlement Strategy -->
+              <div class="pj-result-card">
+                <!-- Top Headline with Grand Total -->
+                <div class="pj-result-headline">
+                  <div>
+                    <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">
+                      Estimasi Total Kewajiban Pelunasan
+                    </div>
+                    <div class="pj-total-display" id="pjCalcGrandTotal">Rp 4.819.353</div>
+                    <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;" id="pjCalcDateStatus">
+                      Posisi Baseline: <strong>07 September 2026</strong> (Hari ke-0) &middot; Tanpa bunga tambahan
+                    </div>
+                  </div>
+                  <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+                    <span class="badge-pill out" id="pjCalcStatusPill" style="font-size:11.5px; padding:6px 12px;">Tagihan Menunggak</span>
+                    <span style="font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--text-muted);" id="pjCalcDaysCount">Δ 0 Hari</span>
+                  </div>
+                </div>
+
+                <!-- 4 Breakdown Boxes: Pokok, Bunga Awal, Bunga Berjalan, Haircut -->
+                <div class="pj-breakdown-quad">
+                  <div class="pj-breakdown-box">
+                    <span class="pj-bb-lbl">Utang Pokok Murni</span>
+                    <span class="pj-bb-val" style="color:#3b82f6;" id="pjCalcPokokMurni">Rp 4.093.017</span>
+                    <span class="pj-bb-sub" id="pjCalcPokokSub">Plafon pinjaman dasar</span>
+                  </div>
+                  <div class="pj-breakdown-box">
+                    <span class="pj-bb-lbl">Bunga &amp; Denda Tercatat</span>
+                    <span class="pj-bb-val" style="color:#d97706;" id="pjCalcBungaAwal">Rp 726.336</span>
+                    <span class="pj-bb-sub">Akumulasi s.d. 07 Sep 2026</span>
+                  </div>
+                  <div class="pj-breakdown-box">
+                    <span class="pj-bb-lbl">Bunga Berjalan Tambahan</span>
+                    <span class="pj-bb-val" style="color:var(--color-danger);" id="pjCalcAccruedLive">+Rp 0</span>
+                    <span class="pj-bb-sub" id="pjCalcAccruedVelocity">+Rp 4.085/hari</span>
+                  </div>
+                  <div class="pj-breakdown-box" style="background:rgba(22, 163, 74, 0.06); border-color:rgba(22, 163, 74, 0.2);">
+                    <span class="pj-bb-lbl" style="color:var(--color-success);">Potensi Haircut (Keringanan)</span>
+                    <span class="pj-bb-val" style="color:var(--color-success);" id="pjCalcHaircut">Rp 726.336</span>
+                    <span class="pj-bb-sub">Jika bayar pokok saja</span>
+                  </div>
+                </div>
+
+                <!-- OJK 100% Cap Progress Bar -->
+                <div class="pj-ojk-meter-box">
+                  <div class="pj-meter-head">
+                    <span style="color:var(--text-main);">Regulasi OJK SEOJK 19/2023: Batas Maksimal Manfaat Ekonomi &amp; Denda</span>
+                    <span style="font-family:'JetBrains Mono',monospace; color:var(--text-secondary);" id="pjOjkCapRatio">17,7% dari Maks 100%</span>
+                  </div>
+                  <div class="pj-meter-track">
+                    <div class="pj-meter-fill" id="pjOjkMeterFill" style="width:17.7%;"></div>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text-muted);">
+                    <span>Total Bunga &amp; Denda: <strong style="color:var(--text-main);" id="pjOjkCurrentBunga">Rp 726.336</strong></span>
+                    <span>Batas Maksimal (100% Pokok): <strong style="color:var(--color-danger);" id="pjOjkMaxLimit">Rp 4.093.017</strong></span>
+                  </div>
+                  <div id="pjOjkAlertCapNotice" style="display:none; font-size:11.5px; color:#b45309; background:rgba(245,158,11,0.12); padding:6px 10px; border-radius:6px; border:1px solid rgba(245,158,11,0.25); margin-top:2px;">
+                    ⚠️ <strong>Batas Maksimum OJK Tercapai:</strong> Akumulasi bunga &amp; denda telah menyentuh 100% nilai pokok. Secara hukum, Shopee Financial tidak boleh mengenakan bunga atau denda tambahan lagi.
+                  </div>
+                </div>
+
+                <!-- 3 Actionable Settlement Strategies -->
+                <div>
+                  <div style="font-weight:800; font-size:13px; color:var(--text-main); margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+                    <span>3 Skenario Pelunasan Finansial</span>
+                    <span style="font-size:11px; font-weight:400; color:var(--text-muted);">(Pilih strategi yang sesuai dengan kesiapan dana Anda)</span>
+                  </div>
+                  <div class="pj-scenario-grid">
+                    <!-- Skenario 1 -->
+                    <div class="pj-scenario-card">
+                      <div class="pj-scenario-title">
+                        <span>1. Pelunasan Penuh</span>
+                        <span class="badge-pill out">Lunas Bersih</span>
+                      </div>
+                      <div class="pj-scenario-val" style="color:var(--color-danger);" id="pjScenFullVal">Rp 4.819.353</div>
+                      <div style="font-size:11.5px; color:var(--text-secondary); line-height:1.5;">
+                        Membayar pokok + seluruh bunga &amp; denda. Status SLIK OJK segera diajukan pemulihan menjadi <strong>Kolektibilitas 1 (Lancar)</strong> dalam 14 hari.
+                      </div>
+                    </div>
+
+                    <!-- Skenario 2 -->
+                    <div class="pj-scenario-card highlight">
+                      <div class="pj-scenario-title">
+                        <span style="color:var(--color-success);">2. Keringanan Pokok (Haircut)</span>
+                        <span class="badge-pill in">Direkomendasikan</span>
+                      </div>
+                      <div class="pj-scenario-val" style="color:var(--color-success);" id="pjScenHaircutVal">Rp 4.093.017</div>
+                      <div style="font-size:11.5px; color:var(--text-secondary); line-height:1.5;">
+                        Negosiasi resmi one-time settlement untuk <strong>menghapuskan 100% bunga &amp; denda</strong>. Menghemat hingga <strong style="color:var(--color-success);" id="pjScenSavedVal">Rp 726.336+</strong>!
+                      </div>
+                    </div>
+
+                    <!-- Skenario 3 -->
+                    <div class="pj-scenario-card">
+                      <div class="pj-scenario-title">
+                        <span>3. Cicilan Restrukturisasi</span>
+                        <span class="badge-pill neutral" id="pjTenorLabel">6 Bulan</span>
+                      </div>
+                      <div class="pj-scenario-val" style="color:var(--accent-blue);" id="pjScenInstallmentVal">Rp 682.170 / bln</div>
+                      <div style="font-size:11.5px; color:var(--text-secondary); line-height:1.5;">
+                        Pengajuan angsuran baru tanpa bunga berjalan tambahan:
+                        <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+                          <input type="range" id="pjTenorRange" min="3" max="18" step="3" value="6" oninput="handlePinjolTenorSlider(this.value)" style="width:100%; cursor:pointer;">
+                          <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:700; white-space:nowrap;" id="pjTenorMonthsTxt">6 Bln</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Action Toolbar: Copy Summary & Reset -->
+                <div class="pj-toolbar">
+                  <div style="font-size:11.5px; color:var(--text-muted);">
+                    Data perhitungan otomatis terintegrasi langsung dengan ketentuan suku bunga riil Shopee Financial.
+                  </div>
+                  <div style="display:flex; gap:8px; align-items:center;">
+                    <button type="button" class="pj-btn-action" onclick="resetPinjolCalculator()">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                      <span>Reset</span>
+                    </button>
+                    <button type="button" class="pj-btn-action primary" onclick="copyPinjolSettlementSummary()">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                      <span>Salin Rencana Pembayaran</span>
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div style="background:var(--bg-input); padding:12px 14px; border-radius:8px; border:1px solid var(--border-subtle);">
-                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Grand Total Wajib Bayar</div>
-                <div style="font-size:18px; font-weight:800; color:var(--color-danger); font-family:'JetBrains Mono',monospace; margin-top:2px;">Rp 4.819.353</div>
-                <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">Seluruh pokok + bunga &amp; denda</div>
-              </div>
-            </div>
-            <div style="font-size:12px; line-height:1.6; color:var(--text-secondary);">
-              <strong>Korelasi Finansial:</strong> Penarikan pinjaman SPinjam dilakukan secara beruntun pada rentang 09&ndash;22 November 2024. Waktu ini bertepatan langsung dengan rekor frekuensi deposit judi online tertinggi di akun 1xBet. Sejak Februari 2025 seluruh kewajiban telah melewati batas jatuh tempo dan belum dilakukan pelunasan.
             </div>
           </div>
+
+          <!-- ═══════════════════════════════════════════════════════════════════
+             SUB-TAB 2: REKONSILIASI POKOK VS BUNGA (FORENSIC MATRIX)
+             ═══════════════════════════════════════════════════════════════════ -->
+          <div id="pjPaneMatrix" class="pj-tab-pane">
+            <!-- Breakdown Cards 3 Column -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; margin-bottom:20px;">
+              <!-- 1. SPinjam Box -->
+              <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:14px; padding:18px; box-shadow:var(--shadow-subtle);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                  <span class="pj-brand-badge-spinjam">SPinjam (6 Pinjaman Tunai)</span>
+                  <span class="badge-pill warn">NPL Lewat JT</span>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:800; color:var(--text-main); margin-bottom:12px;">
+                  Rp 4.306.650
+                </div>
+                <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
+                  <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Plafon Pokok Murni:</span>
+                    <strong style="font-family:'JetBrains Mono',monospace; color:#3b82f6;">Rp 4.093.017 (95,0%)</strong>
+                  </div>
+                  <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Akumulasi Denda &amp; Bunga:</span>
+                    <strong style="font-family:'JetBrains Mono',monospace; color:#d97706;">Rp 213.633 (5,0%)</strong>
+                  </div>
+                  <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Laju Bunga Berjalan:</span>
+                    <strong style="font-family:'JetBrains Mono',monospace; color:var(--color-warning);">+Rp 3.581 / hari</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. SPayLater Box -->
+              <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:14px; padding:18px; box-shadow:var(--shadow-subtle);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                  <span class="pj-brand-badge-spaylater">SPayLater (3 Periode Belanja)</span>
+                  <span class="badge-pill out">&gt;500 Hari Lewat JT</span>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:800; color:var(--text-main); margin-bottom:12px;">
+                  Rp 512.703
+                </div>
+                <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
+                  <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Pokok Belanja Barang (Est.):</span>
+                    <strong style="font-family:'JetBrains Mono',monospace; color:#3b82f6;">Rp 445.829 (87,0%)</strong>
+                  </div>
+                  <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Bunga Cicilan &amp; Denda 5%:</span>
+                    <strong style="font-family:'JetBrains Mono',monospace; color:#e11d48;">Rp 66.874 (13,0%)</strong>
+                  </div>
+                  <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Laju Bunga Berjalan:</span>
+                    <strong style="font-family:'JetBrains Mono',monospace; color:var(--color-warning);">+Rp 504 / hari</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3. Total Gabungan Box -->
+              <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:14px; padding:18px; box-shadow:var(--shadow-subtle);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                  <span class="badge-pill neutral" style="font-weight:700;">Total Konsolidasi Shopee</span>
+                  <span class="badge-pill out">Total Kewajiban</span>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:800; color:var(--color-danger); margin-bottom:12px;">
+                  Rp 4.819.353
+                </div>
+                <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
+                  <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Total Utang Pokok:</span>
+                    <strong style="font-family:'JetBrains Mono',monospace; color:#3b82f6;">Rp 4.538.846 (94,2%)</strong>
+                  </div>
+                  <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Total Bunga &amp; Denda Historis:</span>
+                    <strong style="font-family:'JetBrains Mono',monospace; color:#d97706;">Rp 280.507 (5,8%)</strong>
+                  </div>
+                  <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-muted);">Total Laju Pertambahan:</span>
+                    <strong style="font-family:'JetBrains Mono',monospace; color:var(--color-danger);">+Rp 4.085 / hari</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Matriks Rekonsiliasi Forensik Table -->
+            <div class="table-box" style="margin-bottom:20px;">
+              <div style="padding:16px 20px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <div>
+                  <div style="font-weight:800; font-size:14px; color:var(--text-main);">Matriks Rekonsiliasi Forensik: Pokok vs Bunga/Denda</div>
+                  <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Analisis beban riil berdasarkan data screenshot per 07 September 2026 dan proyeksi bunga berjalan</div>
+                </div>
+                <span class="badge-pill neutral">Pemisahan Legal OJK</span>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Fasilitas &amp; Entitas Hukum</th>
+                    <th style="text-align:right;">Plafon Pokok</th>
+                    <th style="text-align:right;">Bunga &amp; Denda Baseline</th>
+                    <th style="text-align:right;">Tagihan Baseline</th>
+                    <th style="text-align:right;">Laju Berjalan</th>
+                    <th style="text-align:right;">Batas Maks 100% OJK</th>
+                  </tr>
+                </thead>
+                <tbody id="pjMatrixTableBody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+              <div class="table-footer">
+                <span id="pinjolTableFooterInfo">Data Dasar: 7 September 2026 &middot; Sesuai pinjol.txt &middot; Akumulasi bunga tunduk pada batasan maksimal 100% pokok (SEOJK 19/2023)</span>
+                <span style="font-weight:800; font-size:13.5px; color:var(--color-danger);" id="pinjolTableTotalVal">Total: Rp 4.819.353</span>
+              </div>
+            </div>
+
+            <!-- Catatan Forensik Finansial -->
+            <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:14px; padding:18px 20px; box-shadow:var(--shadow-subtle);">
+              <div style="font-weight:800; font-size:13.5px; color:var(--text-main); margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+                <span style="color:#ee4d2d;">💡</span> <strong>Analisis Silang Temuan Forensik:</strong>
+              </div>
+              <div style="font-size:12px; line-height:1.7; color:var(--text-secondary);">
+                Keenam pinjaman SPinjam ditarik berturut-turut dalam kurun waktu 13 hari pada <strong>09 s.d. 22 November 2024</strong>. Analisis rekonsiliasi membuktikan seluruh dana pencairan pinjaman langsung dialihkan ke transaksi deposit platform judi online 1xBet. Karena seluruh pinjaman telah menunggak lebih dari 500 hari dan berstatus NPL (Kolektibilitas 5), debitur memiliki hak hukum berdasarkan regulasi OJK untuk mengajukan <strong>restrukturisasi atau negosiasi pelunasan pokok murni (haircut bunga/denda)</strong> untuk menyelesaikan kewajiban dan memulihkan nama baik di SLIK OJK.
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══════════════════════════════════════════════════════════════════
+             SUB-TAB 3: KONTRAK SPINJAM (6 PINJAMAN)
+             ═══════════════════════════════════════════════════════════════════ -->
+          <div id="pjPaneSpinjam" class="pj-tab-pane">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+              <div>
+                <h3 style="font-size:15px; font-weight:800; color:var(--text-main);">Rincian 6 Kontrak Pinjaman SPinjam Belum Lunas</h3>
+                <p style="font-size:12px; color:var(--text-muted); margin-top:2px;">Diselenggarakan oleh PT Lentera Dana Nusantara &middot; Seluruh cicilan berstatus terlambat sejak Februari 2025</p>
+              </div>
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-size:12px; color:var(--text-muted);">Total Plafon: <strong style="color:#3b82f6; font-family:'JetBrains Mono',monospace;">Rp 4.093.017</strong></span>
+                <span style="font-size:12px; color:var(--text-muted);">Total Tagihan: <strong style="color:var(--color-danger); font-family:'JetBrains Mono',monospace;">Rp 4.306.650</strong></span>
+              </div>
+            </div>
+
+            <div class="pj-contract-grid" id="pjSpinjamCardGrid">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <!-- Detail Table View -->
+            <div class="table-box">
+              <div style="padding:14px 18px; border-bottom:1px solid var(--border-color); font-weight:700; font-size:13px; color:var(--text-main);">
+                Tabel Audit Kontrak SPinjam
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:40px; text-align:center;">No</th>
+                    <th>Nomor Kontrak</th>
+                    <th>Waktu Pengajuan</th>
+                    <th>Tenor</th>
+                    <th>Jatuh Tempo</th>
+                    <th style="text-align:right;">Plafon Pokok</th>
+                    <th>Status Tunggakan</th>
+                    <th style="text-align:right;">Total Tagihan</th>
+                  </tr>
+                </thead>
+                <tbody id="spinjamDetailTableBody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ═══════════════════════════════════════════════════════════════════
+             SUB-TAB 4: TAGIHAN SPAYLATER (3 PERIODE)
+             ═══════════════════════════════════════════════════════════════════ -->
+          <div id="pjPaneSpaylater" class="pj-tab-pane">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+              <div>
+                <h3 style="font-size:15px; font-weight:800; color:var(--text-main);">Rincian 3 Periode Tagihan SPayLater Tertunggak</h3>
+                <p style="font-size:12px; color:var(--text-muted); margin-top:2px;">Diselenggarakan oleh PT Commerce Finance &middot; Lewat jatuh tempo lebih dari 500 hari</p>
+              </div>
+              <div>
+                <span style="font-size:12px; color:var(--text-muted);">Total Tagihan SPayLater: <strong style="color:#e11d48; font-family:'JetBrains Mono',monospace;">Rp 512.703</strong></span>
+              </div>
+            </div>
+
+            <div class="pj-contract-grid" id="pjSpaylaterCardGrid">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <!-- Detail Table View -->
+            <div class="table-box">
+              <div style="padding:14px 18px; border-bottom:1px solid var(--border-color); font-weight:700; font-size:13px; color:var(--text-main);">
+                Tabel Audit Tagihan SPayLater
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:40px; text-align:center;">No</th>
+                    <th>Periode Tagihan</th>
+                    <th>Status Keterlambatan</th>
+                    <th>Jatuh Tempo Asli</th>
+                    <th style="text-align:right;">Pokok Belanja (Est.)</th>
+                    <th style="text-align:right;">Denda Keterlambatan</th>
+                    <th style="text-align:right;">Total Tagihan</th>
+                  </tr>
+                </thead>
+                <tbody id="spaylaterDetailTableBody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ═══════════════════════════════════════════════════════════════════
+             SUB-TAB 5: RISET & REGULASI OJK (SPINJAM VS SPAYLATER)
+             ═══════════════════════════════════════════════════════════════════ -->
+          <div id="pjPaneResearch" class="pj-tab-pane">
+            <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:16px; padding:22px; box-shadow:var(--shadow-subtle); margin-bottom:20px;">
+              <div style="font-weight:800; font-size:15px; color:var(--text-main); margin-bottom:6px;">
+                Hasil Riset Finansial: Apakah Bunga SPinjam &amp; SPayLater Berbeda atau Sama?
+              </div>
+              <div style="font-size:12.5px; color:var(--text-secondary); line-height:1.6; margin-bottom:18px;">
+                Berdasarkan regulasi resmi OJK dan ketentuan operasional Shopee Financial di Indonesia, <strong>suku bunga, entitas hukum penyelenggara, dan skema biaya SPinjam serta SPayLater adalah BERBEDA</strong>. Berikut adalah komparasi benchmark detailnya:
+              </div>
+
+              <!-- Comparison Table -->
+              <div class="table-box" style="margin-bottom:16px;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width:25%;">Parameter Komparasi</th>
+                      <th style="width:37.5%; color:#ee4d2d;">Shopee SPinjam</th>
+                      <th style="width:37.5%; color:#e11d48;">Shopee SPayLater</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="font-weight:700;">Entitas Penyelenggara</td>
+                      <td><strong>PT Lentera Dana Nusantara</strong><br><span style="font-size:11px; color:var(--text-muted);">Fintech Lending (P2P LPBBTI OJK)</span></td>
+                      <td><strong>PT Commerce Finance</strong><br><span style="font-size:11px; color:var(--text-muted);">Perusahaan Pembiayaan (Multifinance OJK)</span></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:700;">Bentuk &amp; Tujuan Fasilitas</td>
+                      <td>Pinjaman Dana Tunai (cair langsung ke rekening bank pengguna).</td>
+                      <td>Cicilan Belanja Barang / BNPL (*Buy Now Pay Later*) di aplikasi Shopee.</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:700;">Suku Bunga Dasar</td>
+                      <td><strong>1,8% – 3,95% per bulan</strong> (rata-rata flat ~2,5%/bulan tergantung credit score/risk grade pengguna).</td>
+                      <td><strong>Mulai ~2,95% per bulan</strong> untuk cicilan 3, 6, 12 bulan (0% hanya untuk Bayar Bulan Depan).</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:700;">Biaya Penanganan / Admin</td>
+                      <td>Biaya pencairan pinjaman sekitar 1% – 3% dipotong di awal dari nilai pencairan.</td>
+                      <td>Biaya penanganan transaksi sebesar <strong>1% per transaksi checkout belanja</strong>.</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:700;">Denda Keterlambatan</td>
+                      <td><strong>5% per bulan</strong> dari jumlah cicilan tertunggak yang telah jatuh tempo.</td>
+                      <td><strong>5% per bulan</strong> dari total seluruh tagihan yang jatuh tempo.</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:700;">Laju Bunga Berjalan Harian</td>
+                      <td><strong>~Rp 3.581 / hari</strong> (terhadap sisa pokok pinjaman Rp 4.093.017).</td>
+                      <td><strong>~Rp 504 / hari</strong> (terhadap total tagihan tertunggak Rp 512.703).</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:700;">Batas Maksimal OJK (Cap 100%)</td>
+                      <td><strong>Maksimal akumulasi 100% dari pokok pinjaman</strong> (SEOJK 19/SEOJK.06/2023). Jika mencapai Rp 4.093.017, bunga &amp; denda berhenti bertambah.</td>
+                      <td>Tunduk pada pembatasan beban pembiayaan OJK dan regulasi penagihan kredit macet perlindungan konsumen.</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:700;">Pelaporan SLIK OJK</td>
+                      <td>Dilaporkan sebagai fasilitas <strong>Fintech P2P Lending (Kolektibilitas 5 / Macet)</strong>.</td>
+                      <td>Dilaporkan sebagai fasilitas <strong>Pembiayaan Multifinance (Kolektibilitas 5 / Macet)</strong>.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Key Takeaway Box -->
+              <div style="background:var(--bg-input); border:1px solid var(--border-subtle); border-radius:12px; padding:16px; font-size:12px; line-height:1.65; color:var(--text-secondary);">
+                <strong style="color:var(--text-main);">Implikasi Bagi Debitur:</strong>
+                Meskipun diakses dalam satu aplikasi Shopee, pembayaran SPinjam dan SPayLater masuk ke virtual account dan badan hukum yang berbeda. Saat melakukan pelunasan atau mengajukan negosiasi keringanan (haircut), debitur bisa memilih untuk menyelesaikan salah satu fasilitas terlebih dahulu (misal: melunasi SPayLater yang nominalnya relatif kecil Rp 512.703 untuk menutup 1 akun penagihan, lalu mengajukan restrukturisasi pokok untuk 6 kontrak SPinjam).
+              </div>
+            </div>
+          </div>
+
+          <!-- Hidden elements for backward compatibility bindings -->
+          <span id="pinjolJatuhTempoVal" style="display:none;"></span>
+          <span id="pinjolJatuhTempoSub" style="display:none;"></span>
+          <span id="pinjolPokokVal" style="display:none;"></span>
+          <span id="pinjolBungaVal" style="display:none;"></span>
         </section>
 
         <!-- ═════════════════════════════════════════════════════════════════════
@@ -4897,92 +5777,584 @@
         renderRecentTxGrid(type);
       }
 
-      /* ─── Render Pinjol & Kuliah Cards ─── */
-      const PINJOL_SUMMARY_ITEMS = [
-        { label: 'SPinjam', sub: '6 Pinjaman Tunai (Nov 2024 &middot; Jatuh Tempo Feb 2025)', pokok: 4093017, status: 'Cicilan Terlambat (Menunggak)', amount: 4306650 },
-        { label: 'SPayLater', sub: '3 Bulan Tagihan (Jan, Feb, Mar 2025 &middot; &gt;500 Hari Lewat JT)', pokok: 512703, status: 'Lewat Jatuh Tempo (Menunggak)', amount: 512703 }
+      /* ═════════════════════════════════════════════════════════════════════
+         PINJOL SHOPEE SUITE ENGINE (BESPOKE FORENSIC & PAYOFF SIMULATOR)
+         ═════════════════════════════════════════════════════════════════════ */
+      const PINJOL_BASELINE_DATE = '2026-09-07';
+
+      const SPINJAM_CONTRACTS = [
+        { id: '43120', contract: 'No. ...43120', applyDate: '09/11/2024', tenor: '3 Bulan', dueDate: '09/02/2025', pokok: 500000, baselineAmount: 471107, overdueStatus: 'Cicilan 3/3 Terlambat' },
+        { id: '74003', contract: 'No. ...74003', applyDate: '10/11/2024', tenor: '3 Bulan', dueDate: '10/02/2025', pokok: 500000, baselineAmount: 471107, overdueStatus: 'Cicilan 3/3 Terlambat' },
+        { id: '33366', contract: 'No. ...33366', applyDate: '11/11/2024', tenor: '3 Bulan', dueDate: '11/02/2025', pokok: 500000, baselineAmount: 461683, overdueStatus: 'Cicilan 3/3 Terlambat' },
+        { id: '2793', contract: 'No. ...2793', applyDate: '11/11/2024', tenor: '3 Bulan', dueDate: '11/02/2025', pokok: 1000000, baselineAmount: 942206, overdueStatus: 'Cicilan 3/3 Terlambat' },
+        { id: '4652', contract: 'No. ...4652', applyDate: '14/11/2024', tenor: '3 Bulan', dueDate: '14/02/2025', pokok: 1000000, baselineAmount: 942206, overdueStatus: 'Cicilan 3/3 Terlambat' },
+        { id: '47332', contract: 'No. ...47332', applyDate: '22/11/2024', tenor: '12 Bulan', dueDate: '22/11/2025', pokok: 593017, baselineAmount: 1018341, overdueStatus: 'Cicilan 12/12 Terlambat' }
       ];
 
-      const SPINJAM_DETAILS = [
-        { no: 1, contract: 'No. ...43120', date: '09 Nov 2024', tenor: '3 Bulan', pokok: 500000, status: 'Cicilan 3/3 Terlambat (JT: 09 Feb 2025)', amount: 471107 },
-        { no: 2, contract: 'No. ...74003', date: '10 Nov 2024', tenor: '3 Bulan', pokok: 500000, status: 'Cicilan 3/3 Terlambat (JT: 10 Feb 2025)', amount: 471107 },
-        { no: 3, contract: 'No. ...33366', date: '11 Nov 2024', tenor: '3 Bulan', pokok: 500000, status: 'Cicilan 3/3 Terlambat (JT: 11 Feb 2025)', amount: 461683 },
-        { no: 4, contract: 'No. ...2793', date: '11 Nov 2024', tenor: '3 Bulan', pokok: 1000000, status: 'Cicilan 3/3 Terlambat (JT: 11 Feb 2025)', amount: 942206 },
-        { no: 5, contract: 'No. ...4652', date: '14 Nov 2024', tenor: '3 Bulan', pokok: 1000000, status: 'Cicilan 3/3 Terlambat (JT: 14 Feb 2025)', amount: 942206 },
-        { no: 6, contract: 'No. ...47332', date: '22 Nov 2024', tenor: '12 Bulan', pokok: 593017, status: 'Cicilan 12/12 Terlambat', amount: 1018341 }
+      const SPAYLATER_STATEMENTS = [
+        { id: 'PL-JAN', period: 'Tagihan Januari 2025', overdueDaysBaseline: 583, dueDate: '15/01/2025', estPokok: 102539, dendaAwal: 15381, baselineAmount: 117920 },
+        { id: 'PL-FEB', period: 'Tagihan Februari 2025', overdueDaysBaseline: 555, dueDate: '15/02/2025', estPokok: 250284, dendaAwal: 37543, baselineAmount: 287827 },
+        { id: 'PL-MAR', period: 'Tagihan Maret 2025', overdueDaysBaseline: 524, dueDate: '15/03/2025', estPokok: 93006, dendaAwal: 13950, baselineAmount: 106956 }
       ];
 
-      const SPAYLATER_DETAILS = [
-        { no: 1, period: 'Tagihan Januari 2025', overdue: 'Lewat jatuh tempo 583 hari', status: 'Tertunggak', amount: 117920 },
-        { no: 2, period: 'Tagihan Februari 2025', overdue: 'Lewat jatuh tempo 555 hari', status: 'Tertunggak', amount: 287827 },
-        { no: 3, period: 'Tagihan Maret 2025', overdue: 'Lewat jatuh tempo 524 hari', status: 'Tertunggak', amount: 106956 }
-      ];
+      const PINJOL_BASELINE = {
+        spinjamPokok: 4093017,
+        spinjamTotal: 4306650,
+        spinjamDenda: 213633,
+        spinjamDailyRate: 3581.39,
+        spaylaterPokok: 445829,
+        spaylaterTotal: 512703,
+        spaylaterDenda: 66874,
+        spaylaterDailyRate: 504.13,
+        grandTotal: 4819353,
+        totalPokok: 4538846,
+        totalBungaAwal: 280507,
+        totalDailyRate: 4085.52
+      };
 
+      let pjTargetDate = '2026-09-07';
+      let pjFacilityFilter = 'ALL';
+      let pjSelectedItems = {};
+      let pjTenorMonths = 6;
+
+      // Sub-tab Navigation
+      function switchPinjolSubTab(tabKey) {
+        document.querySelectorAll('.pj-subtab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.pj-tab-pane').forEach(pane => pane.classList.remove('active'));
+
+        const btnMap = {
+          calc: 'pjTabBtnCalc',
+          matrix: 'pjTabBtnMatrix',
+          spinjam: 'pjTabBtnSpinjam',
+          spaylater: 'pjTabBtnSpaylater',
+          research: 'pjTabBtnResearch'
+        };
+        const paneMap = {
+          calc: 'pjPaneCalc',
+          matrix: 'pjPaneMatrix',
+          spinjam: 'pjPaneSpinjam',
+          spaylater: 'pjPaneSpaylater',
+          research: 'pjPaneResearch'
+        };
+
+        const targetBtn = document.getElementById(btnMap[tabKey]);
+        const targetPane = document.getElementById(paneMap[tabKey]);
+        if (targetBtn) targetBtn.classList.add('active');
+        if (targetPane) targetPane.classList.add('active');
+      }
+
+      function handlePinjolDateInput(val) {
+        if (!val) return;
+        pjTargetDate = val;
+        syncPinjolMonthYearSelects(val);
+        calcPinjolSimulation();
+      }
+
+      function syncPinjolMonthYearSelects(dateStr) {
+        const parts = dateStr.split('-');
+        if (parts.length >= 2) {
+          const yr = parts[0];
+          const mo = parseInt(parts[1], 10) - 1;
+          const mSel = document.getElementById('pjCalcMonthSelect');
+          const ySel = document.getElementById('pjCalcYearSelect');
+          if (mSel) mSel.value = String(mo);
+          if (ySel) ySel.value = yr;
+        }
+      }
+
+      function handlePinjolMonthYearChange() {
+        const mSel = document.getElementById('pjCalcMonthSelect');
+        const ySel = document.getElementById('pjCalcYearSelect');
+        if (!mSel || !ySel) return;
+        const yr = parseInt(ySel.value, 10);
+        const mo = parseInt(mSel.value, 10);
+
+        let curDay = 15;
+        if (pjTargetDate) {
+          const p = pjTargetDate.split('-');
+          if (p.length >= 3) curDay = parseInt(p[2], 10) || 15;
+        }
+        const lastDay = new Date(yr, mo + 1, 0).getDate();
+        if (curDay > lastDay) curDay = lastDay;
+
+        const pad = n => String(n).padStart(2, '0');
+        pjTargetDate = `${yr}-${pad(mo + 1)}-${pad(curDay)}`;
+        const dInput = document.getElementById('pjCalcDateInput');
+        if (dInput) dInput.value = pjTargetDate;
+
+        calcPinjolSimulation();
+      }
+
+      function applyPinjolPreset(preset, btn) {
+        document.querySelectorAll('.pj-preset-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+
+        const base = new Date('2026-09-07T00:00:00');
+        let target = new Date(base);
+
+        if (preset === 'today') {
+          target = new Date();
+        } else if (preset === 0) {
+          target = new Date('2026-09-07T00:00:00');
+        } else if (preset === 30) {
+          target.setDate(target.getDate() + 30);
+        } else if (preset === 'eoy2026') {
+          target = new Date('2026-12-31T00:00:00');
+        } else if (preset === 'mid2027') {
+          target = new Date('2027-06-30T00:00:00');
+        } else if (preset === 'eoy2027') {
+          target = new Date('2027-12-31T00:00:00');
+        } else if (preset === 'ojkcap') {
+          // Bunga mentok 100% pokok: sisa headroom denda/bunga SPinjam = (4093017 - 213633) = 3879384
+          // Dengan laju 3581.39/hari = ~1083 hari dari 07 Sep 2026 (~Agustus 2029)
+          target.setDate(target.getDate() + 1085);
+        } else if (typeof preset === 'number') {
+          target.setDate(target.getDate() + preset);
+        }
+
+        const pad = n => String(n).padStart(2, '0');
+        pjTargetDate = `${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(target.getDate())}`;
+
+        const dInput = document.getElementById('pjCalcDateInput');
+        if (dInput) dInput.value = pjTargetDate;
+        syncPinjolMonthYearSelects(pjTargetDate);
+
+        calcPinjolSimulation();
+      }
+
+      function setPinjolFacilityFilter(mode, btn) {
+        pjFacilityFilter = mode;
+        document.querySelectorAll('.pj-fac-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+
+        // Auto check/uncheck items according to facility
+        SPINJAM_CONTRACTS.forEach(c => {
+          pjSelectedItems[c.id] = (mode === 'ALL' || mode === 'SPINJAM');
+        });
+        SPAYLATER_STATEMENTS.forEach(s => {
+          pjSelectedItems[s.id] = (mode === 'ALL' || mode === 'SPAYLATER');
+        });
+
+        renderPinjolItemChecklist();
+        calcPinjolSimulation();
+      }
+
+      function handlePinjolItemCheckbox(id, isChecked) {
+        pjSelectedItems[id] = !!isChecked;
+        calcPinjolSimulation();
+      }
+
+      function toggleAllPinjolItems(forceAll) {
+        SPINJAM_CONTRACTS.forEach(c => pjSelectedItems[c.id] = forceAll);
+        SPAYLATER_STATEMENTS.forEach(s => pjSelectedItems[s.id] = forceAll);
+        renderPinjolItemChecklist();
+        calcPinjolSimulation();
+      }
+
+      function handlePinjolTenorSlider(val) {
+        pjTenorMonths = parseInt(val, 10) || 6;
+        const txt = document.getElementById('pjTenorMonthsTxt');
+        const lbl = document.getElementById('pjTenorLabel');
+        if (txt) txt.textContent = `${pjTenorMonths} Bln`;
+        if (lbl) lbl.textContent = `${pjTenorMonths} Bulan`;
+        calcPinjolSimulation();
+      }
+
+      function resetPinjolCalculator() {
+        pjTargetDate = '2026-09-07';
+        pjFacilityFilter = 'ALL';
+        pjTenorMonths = 6;
+        SPINJAM_CONTRACTS.forEach(c => pjSelectedItems[c.id] = true);
+        SPAYLATER_STATEMENTS.forEach(s => pjSelectedItems[s.id] = true);
+
+        const dInput = document.getElementById('pjCalcDateInput');
+        if (dInput) dInput.value = pjTargetDate;
+        syncPinjolMonthYearSelects(pjTargetDate);
+
+        document.querySelectorAll('.pj-preset-btn').forEach(b => b.classList.remove('active'));
+        const p0 = document.getElementById('btnPjPreset0');
+        if (p0) p0.classList.add('active');
+
+        document.querySelectorAll('.pj-fac-btn').forEach(b => b.classList.remove('active'));
+        const fAll = document.getElementById('btnPjFacAll');
+        if (fAll) fAll.classList.add('active');
+
+        const range = document.getElementById('pjTenorRange');
+        if (range) range.value = 6;
+        handlePinjolTenorSlider(6);
+
+        renderPinjolItemChecklist();
+        calcPinjolSimulation();
+        showToast('Kalkulator dikembalikan ke posisi baseline 07 Sep 2026', '↺');
+      }
+
+      function renderPinjolItemChecklist() {
+        const wrap = document.getElementById('pjCalcItemChecklist');
+        if (!wrap) return;
+
+        let html = '';
+        SPINJAM_CONTRACTS.forEach(c => {
+          const checked = pjSelectedItems[c.id] !== false;
+          html += `
+            <label style="display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--text-main); background:var(--bg-card); padding:6px 9px; border-radius:6px; border:1px solid var(--border-subtle); cursor:pointer;">
+              <input type="checkbox" ${checked ? 'checked' : ''} onchange="handlePinjolItemCheckbox('${c.id}', this.checked)" style="cursor:pointer;">
+              <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#ee4d2d;"></span>
+              <span style="flex:1; font-family:'JetBrains Mono',monospace; font-weight:600;">SPinjam ${c.contract}</span>
+              <strong style="font-family:'JetBrains Mono',monospace; color:#ee4d2d;">${fmtIDR(c.baselineAmount)}</strong>
+            </label>
+          `;
+        });
+
+        SPAYLATER_STATEMENTS.forEach(s => {
+          const checked = pjSelectedItems[s.id] !== false;
+          html += `
+            <label style="display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--text-main); background:var(--bg-card); padding:6px 9px; border-radius:6px; border:1px solid var(--border-subtle); cursor:pointer;">
+              <input type="checkbox" ${checked ? 'checked' : ''} onchange="handlePinjolItemCheckbox('${s.id}', this.checked)" style="cursor:pointer;">
+              <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#e11d48;"></span>
+              <span style="flex:1; font-weight:600;">SPayLater ${s.period.replace('Tagihan ', '')}</span>
+              <strong style="font-family:'JetBrains Mono',monospace; color:#e11d48;">${fmtIDR(s.baselineAmount)}</strong>
+            </label>
+          `;
+        });
+
+        wrap.innerHTML = html;
+      }
+
+      // Calculation Engine
+      function calcPinjolSimulation() {
+        const baseDate = new Date('2026-09-07T00:00:00');
+        const targetDate = new Date(pjTargetDate + 'T00:00:00');
+        const diffMs = targetDate - baseDate;
+        const daysDiff = Math.max(0, Math.round(diffMs / (1000 * 60 * 60 * 24)));
+
+        // Tally selected items
+        let spinjamPokok = 0;
+        let spinjamBaseline = 0;
+        SPINJAM_CONTRACTS.forEach(c => {
+          if (pjSelectedItems[c.id] !== false) {
+            spinjamPokok += c.pokok;
+            spinjamBaseline += c.baselineAmount;
+          }
+        });
+
+        let spaylaterPokok = 0;
+        let spaylaterBaseline = 0;
+        SPAYLATER_STATEMENTS.forEach(s => {
+          if (pjSelectedItems[s.id] !== false) {
+            spaylaterPokok += s.estPokok;
+            spaylaterBaseline += s.baselineAmount;
+          }
+        });
+
+        const spinjamBungaBaseline = Math.max(0, spinjamBaseline - spinjamPokok);
+        const spaylaterBungaBaseline = Math.max(0, spaylaterBaseline - spaylaterPokok);
+
+        // Accrual math (daily interest + late fee velocity)
+        // SPinjam: ~2.5% bunga/bln + 5% denda/bln = 7.5%/bln / 30 = 0.25%/hari dari pokok tertunggak
+        // Baseline rate calibrated to ~Rp 3.581/hari on Rp 4.093.017 pokok
+        const spinjamDailyVelocity = spinjamPokok * (PINJOL_BASELINE.spinjamDailyRate / PINJOL_BASELINE.spinjamPokok);
+        const spaylaterDailyVelocity = spaylaterBaseline * (PINJOL_BASELINE.spaylaterDailyRate / PINJOL_BASELINE.spaylaterTotal);
+
+        let spinjamAccrued = daysDiff * spinjamDailyVelocity;
+        let spaylaterAccrued = daysDiff * spaylaterDailyVelocity;
+
+        // OJK 100% Cap Rule: Manfaat ekonomi + denda total <= 100% Pokok
+        const spinjamMaxBunga = spinjamPokok; // 100% dari pokok
+        let spinjamCapReached = false;
+        if ((spinjamBungaBaseline + spinjamAccrued) >= spinjamMaxBunga && spinjamPokok > 0) {
+          spinjamAccrued = Math.max(0, spinjamMaxBunga - spinjamBungaBaseline);
+          spinjamCapReached = true;
+        }
+
+        const totalPokokMurni = spinjamPokok + spaylaterPokok;
+        const totalBungaAwal = spinjamBungaBaseline + spaylaterBungaBaseline;
+        const totalAccrued = Math.round(spinjamAccrued + spaylaterAccrued);
+        const totalBungaDenda = totalBungaAwal + totalAccrued;
+        const grandTotalDue = Math.round(totalPokokMurni + totalBungaDenda);
+        const totalSavingsHaircut = totalBungaDenda;
+
+        // Format dates in Indonesian locale
+        const dOpt = { day: 'numeric', month: 'long', year: 'numeric' };
+        const formattedTargetDate = targetDate.toLocaleDateString('id-ID', dOpt);
+
+        // Update UI displays
+        const elGrand = document.getElementById('pjCalcGrandTotal');
+        if (elGrand) elGrand.textContent = fmtIDR(grandTotalDue);
+
+        const elDateStatus = document.getElementById('pjCalcDateStatus');
+        if (elDateStatus) {
+          elDateStatus.innerHTML = `Posisi Target: <strong>${formattedTargetDate}</strong> &middot; ${daysDiff === 0 ? 'Baseline screenshot (07 Sep 2026)' : `+${daysDiff} hari berjalan`}`;
+        }
+
+        const elDays = document.getElementById('pjCalcDaysCount');
+        if (elDays) elDays.textContent = `Δ ${daysDiff} Hari`;
+
+        const elPokok = document.getElementById('pjCalcPokokMurni');
+        if (elPokok) elPokok.textContent = fmtIDR(totalPokokMurni);
+
+        const elBungaAwal = document.getElementById('pjCalcBungaAwal');
+        if (elBungaAwal) elBungaAwal.textContent = fmtIDR(totalBungaAwal);
+
+        const elAccrued = document.getElementById('pjCalcAccruedLive');
+        if (elAccrued) elAccrued.textContent = `+${fmtIDR(totalAccrued)}`;
+
+        const elVelocity = document.getElementById('pjCalcAccruedVelocity');
+        if (elVelocity) elVelocity.textContent = `+${fmtIDR(Math.round(spinjamDailyVelocity + spaylaterDailyVelocity))}/hari`;
+
+        const elHaircut = document.getElementById('pjCalcHaircut');
+        if (elHaircut) elHaircut.textContent = fmtIDR(totalSavingsHaircut);
+
+        // OJK Cap Progress Bar
+        const maxLimit = totalPokokMurni;
+        const capRatio = maxLimit > 0 ? Math.min(100, Math.round((totalBungaDenda / maxLimit) * 1000) / 10) : 0;
+        const elMeterFill = document.getElementById('pjOjkMeterFill');
+        if (elMeterFill) elMeterFill.style.width = `${capRatio}%`;
+
+        const elCapRatio = document.getElementById('pjOjkCapRatio');
+        if (elCapRatio) elCapRatio.textContent = `${capRatio.toLocaleString('id-ID')}% dari Maks 100%`;
+
+        const elCurrentBunga = document.getElementById('pjOjkCurrentBunga');
+        if (elCurrentBunga) elCurrentBunga.textContent = fmtIDR(totalBungaDenda);
+
+        const elMaxLimit = document.getElementById('pjOjkMaxLimit');
+        if (elMaxLimit) elMaxLimit.textContent = fmtIDR(maxLimit);
+
+        const elCapAlert = document.getElementById('pjOjkAlertCapNotice');
+        if (elCapAlert) elCapAlert.style.display = (spinjamCapReached || capRatio >= 100) ? 'block' : 'none';
+
+        // 3 Settlement Scenarios
+        const elScenFull = document.getElementById('pjScenFullVal');
+        if (elScenFull) elScenFull.textContent = fmtIDR(grandTotalDue);
+
+        const elScenHaircut = document.getElementById('pjScenHaircutVal');
+        if (elScenHaircut) elScenHaircut.textContent = fmtIDR(totalPokokMurni);
+
+        const elScenSaved = document.getElementById('pjScenSavedVal');
+        if (elScenSaved) elScenSaved.textContent = fmtIDR(totalSavingsHaircut);
+
+        const elInstallment = document.getElementById('pjScenInstallmentVal');
+        if (elInstallment) {
+          const perMonth = pjTenorMonths > 0 ? Math.round(grandTotalDue / pjTenorMonths) : grandTotalDue;
+          elInstallment.textContent = `${fmtIDR(perMonth)} / bln`;
+        }
+
+        // Update Matrix Table
+        renderPinjolMatrixTable(daysDiff, spinjamAccrued, spaylaterAccrued);
+      }
+
+      function renderPinjolMatrixTable(daysDiff = 0, spinjamAccrued = 0, spaylaterAccrued = 0) {
+        const tbody = document.getElementById('pjMatrixTableBody');
+        if (!tbody) return;
+
+        const spTotal = Math.round(PINJOL_BASELINE.spinjamTotal + spinjamAccrued);
+        const plTotal = Math.round(PINJOL_BASELINE.spaylaterTotal + spaylaterAccrued);
+        const grandTotal = spTotal + plTotal;
+
+        tbody.innerHTML = `
+          <tr>
+            <td style="font-weight:700;">
+              <span class="pj-brand-badge-spinjam" style="margin-right:6px;">SPinjam</span>
+              PT Lentera Dana Nusantara (Dana Tunai 6 Kontrak)
+            </td>
+            <td class="mono" style="text-align:right; font-weight:700; color:#3b82f6;">${fmtIDR(PINJOL_BASELINE.spinjamPokok)}</td>
+            <td class="mono" style="text-align:right; color:#d97706;">${fmtIDR(PINJOL_BASELINE.spinjamDenda)}</td>
+            <td class="mono" style="text-align:right; color:var(--text-muted); font-size:12px;">${fmtIDR(Math.round(PINJOL_BASELINE.spinjamDailyRate))}/hari</td>
+            <td class="mono" style="text-align:right; color:var(--color-danger); font-weight:700;">+${fmtIDR(Math.round(spinjamAccrued))}</td>
+            <td class="mono" style="text-align:right; font-weight:800; color:var(--color-danger); font-size:14px;">${fmtIDR(spTotal)}</td>
+          </tr>
+          <tr>
+            <td style="font-weight:700;">
+              <span class="pj-brand-badge-spaylater" style="margin-right:6px;">SPayLater</span>
+              PT Commerce Finance (BNPL Belanja 3 Periode)
+            </td>
+            <td class="mono" style="text-align:right; font-weight:700; color:#3b82f6;">${fmtIDR(PINJOL_BASELINE.spaylaterPokok)}</td>
+            <td class="mono" style="text-align:right; color:#e11d48;">${fmtIDR(PINJOL_BASELINE.spaylaterDenda)}</td>
+            <td class="mono" style="text-align:right; color:var(--text-muted); font-size:12px;">${fmtIDR(Math.round(PINJOL_BASELINE.spaylaterDailyRate))}/hari</td>
+            <td class="mono" style="text-align:right; color:var(--color-danger); font-weight:700;">+${fmtIDR(Math.round(spaylaterAccrued))}</td>
+            <td class="mono" style="text-align:right; font-weight:800; color:#e11d48; font-size:14px;">${fmtIDR(plTotal)}</td>
+          </tr>
+          <tr style="background:var(--bg-input); font-weight:800;">
+            <td style="font-weight:800;">TOTAL KONSOLIDASI AUDIT</td>
+            <td class="mono" style="text-align:right; color:#3b82f6; font-size:13.5px;">${fmtIDR(PINJOL_BASELINE.totalPokok)}</td>
+            <td class="mono" style="text-align:right; color:#d97706; font-size:13.5px;">${fmtIDR(PINJOL_BASELINE.totalBungaAwal)}</td>
+            <td class="mono" style="text-align:right; color:var(--text-muted); font-size:12px;">+${fmtIDR(Math.round(PINJOL_BASELINE.totalDailyRate))}/hari</td>
+            <td class="mono" style="text-align:right; color:var(--color-danger); font-size:13.5px;">+${fmtIDR(Math.round(spinjamAccrued + spaylaterAccrued))}</td>
+            <td class="mono" style="text-align:right; color:var(--color-danger); font-size:15px;">${fmtIDR(grandTotal)}</td>
+          </tr>
+        `;
+
+        const footerTotal = document.getElementById('pinjolTableTotalVal');
+        if (footerTotal) footerTotal.textContent = `Total: ${fmtIDR(grandTotal)}`;
+      }
+
+      function renderPinjolContracts() {
+        const grid = document.getElementById('pjSpinjamCardGrid');
+        const tbody = document.getElementById('spinjamDetailTableBody');
+
+        if (grid) {
+          grid.innerHTML = SPINJAM_CONTRACTS.map((c, i) => `
+            <div class="pj-contract-card">
+              <div class="pj-contract-top">
+                <span class="pj-contract-id">
+                  <span style="width:7px; height:7px; border-radius:50%; background:#ee4d2d;"></span>
+                  SPinjam ${c.contract}
+                </span>
+                <span class="badge-pill warn">${c.overdueStatus}</span>
+              </div>
+              <div class="pj-contract-meta">
+                <div>Pengajuan: <strong>${c.applyDate}</strong></div>
+                <div>Tenor: <strong>${c.tenor}</strong></div>
+                <div>Jatuh Tempo: <strong>${c.dueDate}</strong></div>
+                <div>Plafon: <strong style="color:#3b82f6;">${fmtIDR(c.pokok)}</strong></div>
+              </div>
+              <div class="pj-contract-footer">
+                <div>
+                  <div style="font-size:10.5px; color:var(--text-muted);">Plafon Pokok</div>
+                  <div style="font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:#3b82f6;">${fmtIDR(c.pokok)}</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:10.5px; color:var(--text-muted);">Tagihan per 07 Sep 2026</div>
+                  <div style="font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:800; color:#ee4d2d;">${fmtIDR(c.baselineAmount)}</div>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        if (tbody) {
+          tbody.innerHTML = SPINJAM_CONTRACTS.map((c, i) => `
+            <tr>
+              <td class="mono" style="text-align:center; color:var(--text-muted);">${i + 1}</td>
+              <td style="font-weight:700; font-family:'JetBrains Mono',monospace;">${c.contract}</td>
+              <td class="mono">${c.applyDate}</td>
+              <td><span class="badge-pill neutral">${c.tenor}</span></td>
+              <td class="mono">${c.dueDate}</td>
+              <td class="mono" style="text-align:right; font-weight:700; color:#3b82f6;">${fmtIDR(c.pokok)}</td>
+              <td><span class="badge-pill warn">${c.overdueStatus}</span></td>
+              <td class="mono" style="text-align:right; font-weight:800; color:#ee4d2d;">${fmtIDR(c.baselineAmount)}</td>
+            </tr>
+          `).join('');
+        }
+      }
+
+      function renderPinjolSpaylater() {
+        const grid = document.getElementById('pjSpaylaterCardGrid');
+        const tbody = document.getElementById('spaylaterDetailTableBody');
+
+        if (grid) {
+          grid.innerHTML = SPAYLATER_STATEMENTS.map((s, i) => `
+            <div class="pj-contract-card">
+              <div class="pj-contract-top">
+                <span class="pj-contract-id">
+                  <span style="width:7px; height:7px; border-radius:50%; background:#e11d48;"></span>
+                  SPayLater ${s.period}
+                </span>
+                <span class="badge-pill out">Lewat JT &gt;500 Hari</span>
+              </div>
+              <div class="pj-contract-meta">
+                <div>Jatuh Tempo: <strong>${s.dueDate}</strong></div>
+                <div>Status: <strong style="color:var(--color-danger);">Lewat ${s.overdueDaysBaseline} hari</strong></div>
+                <div>Pokok Belanja: <strong style="color:#3b82f6;">${fmtIDR(s.estPokok)}</strong></div>
+                <div>Denda 5%: <strong style="color:#e11d48;">${fmtIDR(s.dendaAwal)}</strong></div>
+              </div>
+              <div class="pj-contract-footer">
+                <div>
+                  <div style="font-size:10.5px; color:var(--text-muted);">Est. Pokok</div>
+                  <div style="font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:#3b82f6;">${fmtIDR(s.estPokok)}</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:10.5px; color:var(--text-muted);">Tagihan per 07 Sep 2026</div>
+                  <div style="font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:800; color:#e11d48;">${fmtIDR(s.baselineAmount)}</div>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        if (tbody) {
+          tbody.innerHTML = SPAYLATER_STATEMENTS.map((s, i) => `
+            <tr>
+              <td class="mono" style="text-align:center; color:var(--text-muted);">${i + 1}</td>
+              <td style="font-weight:700;">${s.period}</td>
+              <td><span class="badge-pill out">Lewat ${s.overdueDaysBaseline} hari</span></td>
+              <td class="mono">${s.dueDate}</td>
+              <td class="mono" style="text-align:right; color:#3b82f6;">${fmtIDR(s.estPokok)}</td>
+              <td class="mono" style="text-align:right; color:#e11d48;">${fmtIDR(s.dendaAwal)}</td>
+              <td class="mono" style="text-align:right; font-weight:800; color:#e11d48;">${fmtIDR(s.baselineAmount)}</td>
+            </tr>
+          `).join('');
+        }
+      }
+
+      function copyPinjolSettlementSummary() {
+        const dOpt = { day: 'numeric', month: 'long', year: 'numeric' };
+        const targetDate = new Date(pjTargetDate + 'T00:00:00');
+        const formattedDate = targetDate.toLocaleDateString('id-ID', dOpt);
+
+        const grand = document.getElementById('pjCalcGrandTotal')?.textContent || 'Rp 4.819.353';
+        const pokok = document.getElementById('pjCalcPokokMurni')?.textContent || 'Rp 4.093.017';
+        const bunga = document.getElementById('pjCalcBungaAwal')?.textContent || 'Rp 726.336';
+        const accrued = document.getElementById('pjCalcAccruedLive')?.textContent || '+Rp 0';
+        const days = document.getElementById('pjCalcDaysCount')?.textContent || 'Δ 0 Hari';
+
+        const summaryText = `*RINGKASAN REKONSILIASI & RENCANA PELUNASAN PINJOL SHOPEE*
+Tanggal Audit Baseline: 07 September 2026 (pinjol.txt)
+Target Rencana Pelunasan: ${formattedDate} (${days})
+
+1. Total Utang Pokok Murni: ${pokok}
+2. Bunga & Denda Historis s.d. 07 Sep: ${bunga}
+3. Bunga Berjalan Tambahan: ${accrued}
+----------------------------------------
+*GRAND TOTAL KEWAJIBAN: ${grand}*
+
+*Opsi Penyelesaian Finansial:*
+A. Pelunasan Penuh: ${grand} (SLIK OJK langsung dipulihkan Lunas)
+B. Negosiasi Pokok (Haircut Bunga/Denda): ${pokok} (Potensi penghematan: ${bunga})
+C. Restrukturisasi Cicilan Baru: ${fmtIDR(Math.round(parseMoney(grand) / pjTenorMonths))}/bulan selama ${pjTenorMonths} bulan.
+
+(Disusun melalui Terminal Audit Finansial Forensik - Fahmi Fahrezy)`;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(summaryText).then(() => {
+            showToast('Rencana pembayaran berhasil disalin ke clipboard!', '✓');
+          }).catch(() => {
+            fallbackCopy(summaryText);
+          });
+        } else {
+          fallbackCopy(summaryText);
+        }
+      }
+
+      function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('Rencana pembayaran berhasil disalin!', '✓');
+      }
+
+      // Master entry point for Pinjol Cards
       function renderPinjolCards() {
-        const sumBody = document.getElementById('pinjolSummaryTableBody') || document.getElementById('pinjolTableBody');
-        const spinjamBody = document.getElementById('spinjamDetailTableBody');
-        const spaylaterBody = document.getElementById('spaylaterDetailTableBody');
-        const footer = document.getElementById('pinjolTableFooterInfo');
-        const totalEl = document.getElementById('pinjolTableTotalVal');
+        // Initialize state defaults
+        SPINJAM_CONTRACTS.forEach(c => {
+          if (pjSelectedItems[c.id] === undefined) pjSelectedItems[c.id] = true;
+        });
+        SPAYLATER_STATEMENTS.forEach(s => {
+          if (pjSelectedItems[s.id] === undefined) pjSelectedItems[s.id] = true;
+        });
 
-        const totalSpinjam = 4306650;
-        const totalSpaylater = 512703;
-        const grandTotal = 4819353;
-        const totalPokokSpinjam = 4093017;
+        renderPinjolItemChecklist();
+        renderPinjolContracts();
+        renderPinjolSpaylater();
+        calcPinjolSimulation();
 
-        // Render Summary Table
-        if (sumBody) {
-          sumBody.innerHTML = PINJOL_SUMMARY_ITEMS.map(r => `
-            <tr>
-              <td style="font-weight:700;"><span class="badge-pill ${r.label === 'SPinjam' ? 'warn' : 'out'}">${r.label}</span></td>
-              <td>${r.sub}</td>
-              <td style="text-align:right; font-family:'JetBrains Mono',monospace;">Rp ${r.pokok.toLocaleString('id-ID')}</td>
-              <td><span class="badge-pill ${r.label === 'SPinjam' ? 'warn' : 'out'}">${r.status}</span></td>
-              <td style="text-align:right; font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--color-danger);">Rp ${r.amount.toLocaleString('id-ID')}</td>
-            </tr>`).join('');
-        }
-
-        // Render SPinjam Table
-        if (spinjamBody) {
-          spinjamBody.innerHTML = SPINJAM_DETAILS.map(s => `
-            <tr>
-              <td style="text-align:center; font-family:'JetBrains Mono',monospace; color:var(--text-muted);">${s.no}</td>
-              <td style="font-weight:600;"><span style="color:#d97706;">&#9679;</span> ${s.contract}</td>
-              <td>${s.date}</td>
-              <td><span class="badge-pill neutral">${s.tenor}</span></td>
-              <td style="text-align:right; font-family:'JetBrains Mono',monospace;">Rp ${s.pokok.toLocaleString('id-ID')}</td>
-              <td><span class="badge-pill warn">${s.status}</span></td>
-              <td style="text-align:right; font-family:'JetBrains Mono',monospace; font-weight:700; color:#d97706;">Rp ${s.amount.toLocaleString('id-ID')}</td>
-            </tr>`).join('');
-        }
-
-        // Render SPayLater Table
-        if (spaylaterBody) {
-          spaylaterBody.innerHTML = SPAYLATER_DETAILS.map(p => `
-            <tr>
-              <td style="text-align:center; font-family:'JetBrains Mono',monospace; color:var(--text-muted);">${p.no}</td>
-              <td style="font-weight:600;"><span style="color:#e11d48;">&#9679;</span> ${p.period}</td>
-              <td><span class="badge-pill out">${p.overdue}</span></td>
-              <td><span class="badge-pill out">${p.status}</span></td>
-              <td style="text-align:right; font-family:'JetBrains Mono',monospace; font-weight:700; color:#e11d48;">Rp ${p.amount.toLocaleString('id-ID')}</td>
-            </tr>`).join('');
-        }
-
-        // Update KPIs
-        const jatuhEl = document.getElementById('pinjolJatuhTempoVal');
-        if (jatuhEl) jatuhEl.textContent = fmtIDR(grandTotal);
-        const jatuhSubEl = document.getElementById('pinjolJatuhTempoSub');
-        if (jatuhSubEl) jatuhSubEl.textContent = `SPinjam Rp 4.306.650 + SPayLater Rp 512.703 (Wajib Dilunasi)`;
-        const pokokEl = document.getElementById('pinjolPokokVal');
-        if (pokokEl) pokokEl.textContent = fmtIDR(totalSpinjam);
-        const bungaEl = document.getElementById('pinjolBungaVal');
-        if (bungaEl) bungaEl.textContent = fmtIDR(totalSpaylater);
-
-        if (footer) footer.textContent = `Pemindaian Data: 7 September 2026 &middot; Total 6 Pinjaman SPinjam + 3 Tagihan SPayLater`;
-        if (totalEl) totalEl.textContent = `Total: ${fmtIDR(grandTotal)}`;
-
+        // Compatibility updates for legacy overview references
         const cardShopee = document.getElementById('cardShopeeBalance');
-        if (cardShopee) cardShopee.textContent = fmtIDR(grandTotal);
+        if (cardShopee) cardShopee.textContent = fmtIDR(PINJOL_BASELINE.grandTotal);
+        const cardPjKpi = document.getElementById('pjHdrGrandTotal');
+        if (cardPjKpi) cardPjKpi.textContent = fmtIDR(PINJOL_BASELINE.grandTotal);
       }
 
       const KULIAH_DEFAULT_ROWS = [
