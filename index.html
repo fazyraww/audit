@@ -3088,7 +3088,7 @@
                   </div>
                   <div class="emv-chip-box"></div>
                   <div class="card-footer-info">
-                    <div class="card-number-line">Rp 4.766.903</div>
+                    <div class="card-number-line" id="cardShopeeBalance">Rp 4.819.353</div>
                     <div class="card-holder-name">SHOPEE FINANCIAL</div>
                   </div>
                 </div>
@@ -3337,84 +3337,183 @@
            PANEL 4: PINJOL SHOPEE
            ═════════════════════════════════════════════════════════════════════ -->
         <section id="panel-pinjol" class="panel-view">
+          <!-- Top Info Banner -->
+          <div style="background:linear-gradient(135deg, rgba(238, 77, 45, 0.08), rgba(245, 158, 11, 0.08)); border:1px solid rgba(238, 77, 45, 0.2); border-radius:12px; padding:14px 18px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:36px; height:36px; border-radius:8px; background:#ee4d2d; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:14px; flex-shrink:0;">SP</div>
+              <div>
+                <div style="font-weight:700; font-size:14px; color:var(--text-main);">Rekapitulasi Tagihan Shopee Financial (SPinjam &amp; SPayLater)</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Audit Pemindaian Data: <strong>7 September 2026</strong> &middot; Data sinkron 100% dengan catatan tagihan resmi</div>
+              </div>
+            </div>
+            <div>
+              <span class="badge-pill out" style="font-size:12px; padding:4px 10px;">Status: Menunggak (&gt;500 Hari)</span>
+            </div>
+          </div>
+
           <div class="kpi-row-4">
             <div class="metric-card">
-              <div class="metric-card-label">TOTAL JATUH TEMPO HARI INI</div>
-              <div class="metric-card-val" style="color:var(--color-danger);" id="pinjolJatuhTempoVal">Rp 0</div>
-              <div class="metric-card-sub" id="pinjolJatuhTempoSub">Pokok + bunga berjalan</div>
+              <div class="metric-card-label">GRAND TOTAL HARUS DIBAYAR</div>
+              <div class="metric-card-val" style="color:var(--color-danger);" id="pinjolJatuhTempoVal">Rp 4.819.353</div>
+              <div class="metric-card-sub" id="pinjolJatuhTempoSub">SPinjam + SPayLater (Wajib Dilunasi)</div>
             </div>
             <div class="metric-card">
-              <div class="metric-card-label">Pokok (Nilai Tercatat)</div>
-              <div class="metric-card-val" id="pinjolPokokVal">Rp 4.766.903</div>
-              <div class="metric-card-sub">2 produk: SPayLater + SPinjam</div>
+              <div class="metric-card-label">TOTAL SPINJAM (6 PINJAMAN)</div>
+              <div class="metric-card-val" style="color:#d97706;" id="pinjolPokokVal">Rp 4.306.650</div>
+              <div class="metric-card-sub">Plafon Rp 4.093.017 + Denda Berjalan</div>
             </div>
             <div class="metric-card">
-              <div class="metric-card-label">Bunga Berjalan</div>
-              <div class="metric-card-val" style="color:var(--color-warning);" id="pinjolBungaVal">Rp 0</div>
-              <div class="metric-card-sub">Bertambah tiap hari</div>
+              <div class="metric-card-label">TOTAL SPAYLATER (3 BULAN)</div>
+              <div class="metric-card-val" style="color:#e11d48;" id="pinjolBungaVal">Rp 512.703</div>
+              <div class="metric-card-sub">Jan, Feb, Mar 2025 + Denda &gt;500 Hari</div>
             </div>
             <div class="metric-card">
-              <div class="metric-card-label">Status</div>
-              <div class="metric-card-val" style="color:var(--color-warning);">Menunggak</div>
-              <div class="metric-card-sub">Belum ada pelunasan</div>
+              <div class="metric-card-label">STATUS JATUH TEMPO</div>
+              <div class="metric-card-val" style="color:var(--color-danger);">100% Terlambat</div>
+              <div class="metric-card-sub">Jatuh tempo sejak Feb 2025</div>
             </div>
           </div>
 
           <div class="grid-2-charts" style="margin-bottom:20px;">
             <div class="chart-card">
-              <div class="chart-card-title">Bunga SPinjam (Pinjaman Tunai)</div>
-              <div class="chart-card-sub">Perkiraan berdasar ketentuan umum Shopee</div>
+              <div class="chart-card-title">Ketentuan Bunga &amp; Denda SPinjam</div>
+              <div class="chart-card-sub">Pinjaman dana tunai Shopee Financial</div>
               <div style="margin-top:12px; font-size:12.5px; line-height:1.7; color:var(--text-main);">
-                <div
-                  style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--border-color);">
-                  <span style="color:var(--text-muted);">Bunga per bulan</span><strong>&plusmn;1,95%</strong>
+                <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--border-color);">
+                  <span style="color:var(--text-muted);">Suku bunga dasar</span><strong>1,8% &ndash; 3,95% / bulan</strong>
                 </div>
-                <div
-                  style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--border-color);">
-                  <span style="color:var(--text-muted);">Biaya penanganan (di awal)</span><strong>1%</strong>
+                <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--border-color);">
+                  <span style="color:var(--text-muted);">Ketentuan denda</span><strong style="color:var(--color-danger);">Akumulasi harian/bulanan</strong>
                 </div>
                 <div style="display:flex; justify-content:space-between; padding:5px 0;">
-                  <span style="color:var(--text-muted);">Denda keterlambatan</span><strong style="color:#b91c1c;">5%
-                    dari tagihan</strong>
+                  <span style="color:var(--text-muted);">Status jatuh tempo</span><strong style="color:var(--color-danger);">Terlewat sejak Februari 2025</strong>
                 </div>
               </div>
             </div>
             <div class="chart-card">
-              <div class="chart-card-title">Bunga SPayLater (Bayar Nanti)</div>
-              <div class="chart-card-sub">Cicilan 3&ndash;24 bulan (0% khusus program 1 bulan)</div>
+              <div class="chart-card-title">Ketentuan Bunga &amp; Denda SPayLater</div>
+              <div class="chart-card-sub">Fasilitas pembiayaan belanja PayLater</div>
               <div style="margin-top:12px; font-size:12.5px; line-height:1.7; color:var(--text-main);">
-                <div
-                  style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--border-color);">
-                  <span style="color:var(--text-muted);">Bunga per bulan</span><strong>&plusmn;2,95%</strong>
+                <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--border-color);">
+                  <span style="color:var(--text-muted);">Suku bunga cicilan</span><strong>&plusmn;2,95% / bulan standar</strong>
                 </div>
-                <div
-                  style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--border-color);">
-                  <span style="color:var(--text-muted);">Biaya penanganan (per transaksi)</span><strong>1%</strong>
+                <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--border-color);">
+                  <span style="color:var(--text-muted);">Denda keterlambatan</span><strong style="color:var(--color-danger);">Akumulatif (&gt;500 hari lewat JT)</strong>
                 </div>
                 <div style="display:flex; justify-content:space-between; padding:5px 0;">
-                  <span style="color:var(--text-muted);">Denda keterlambatan</span><strong style="color:#b91c1c;">5%
-                    dari tagihan</strong>
+                  <span style="color:var(--text-muted);">Periode tunggakan</span><strong style="color:var(--color-danger);">Tagihan Jan, Feb, Mar 2025</strong>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="table-box">
+          <!-- Tabel 1: Rekapitulasi Ringkas Produk -->
+          <div class="table-box" style="margin-bottom:24px;">
+            <div style="padding:14px 18px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div>
+                <div style="font-weight:700; font-size:14px; color:var(--text-main);">Ringkasan Portofolio Pinjol Shopee</div>
+                <div style="font-size:12px; color:var(--text-muted);">Komposisi kewajiban antara fasilitas SPinjam dan SPayLater</div>
+              </div>
+              <span class="badge-pill neutral">2 Fasilitas Aktif Menunggak</span>
+            </div>
             <table>
               <thead>
                 <tr>
-                  <th>Produk</th>
-                  <th>Keterangan</th>
-                  <th style="text-align:right;">Nilai Terhutang</th>
-                  <th style="text-align:right;">Bunga Berjalan</th>
-                  <th style="text-align:right;">Total</th>
+                  <th>Fasilitas / Produk</th>
+                  <th>Cakupan Pinjaman</th>
+                  <th style="text-align:right;">Plafon Pokok</th>
+                  <th>Status &amp; Keterlambatan</th>
+                  <th style="text-align:right;">Tagihan Berjalan</th>
                 </tr>
               </thead>
-              <tbody id="pinjolTableBody"></tbody>
+              <tbody id="pinjolSummaryTableBody"></tbody>
             </table>
             <div class="table-footer">
-              <span id="pinjolTableFooterInfo"></span>
-              <span style="font-weight:700;" id="pinjolTableTotalVal">Total jatuh tempo</span>
+              <span id="pinjolTableFooterInfo">Pemindaian: 7 September 2026 &middot; Data akurat sesuai pinjol.txt</span>
+              <span style="font-weight:800; font-size:13px; color:var(--color-danger);" id="pinjolTableTotalVal">Total: Rp 4.819.353</span>
+            </div>
+          </div>
+
+          <!-- Tabel 2: Rincian 6 Pinjaman SPinjam Belum Lunas -->
+          <div class="table-box" style="margin-bottom:24px;">
+            <div style="padding:14px 18px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div>
+                <div style="font-weight:700; font-size:14px; color:var(--text-main);">I. Rincian 6 Pinjaman SPinjam (Belum Lunas)</div>
+                <div style="font-size:12px; color:var(--text-muted);">Total Tagihan Berjalan: <strong>Rp 4.306.650</strong> &middot; Seluruh pinjaman diajukan November 2024</div>
+              </div>
+              <span class="badge-pill warn">6 Pinjaman Terlambat</span>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:40px; text-align:center;">No</th>
+                  <th>No. Kontrak Pinjaman</th>
+                  <th>Waktu Pengajuan</th>
+                  <th>Tenor</th>
+                  <th style="text-align:right;">Plafon Pokok</th>
+                  <th>Status Cicilan &amp; Jatuh Tempo</th>
+                  <th style="text-align:right;">Tagihan Berjalan</th>
+                </tr>
+              </thead>
+              <tbody id="spinjamDetailTableBody"></tbody>
+            </table>
+            <div class="table-footer">
+              <span>Total Plafon Pokok SPinjam: <strong style="font-family:'JetBrains Mono',monospace;">Rp 4.093.017</strong></span>
+              <span style="font-weight:800; font-size:13px; color:#d97706;">Subtotal SPinjam: Rp 4.306.650</span>
+            </div>
+          </div>
+
+          <!-- Tabel 3: Rincian Tagihan Bulanan SPayLater -->
+          <div class="table-box" style="margin-bottom:24px;">
+            <div style="padding:14px 18px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div>
+                <div style="font-weight:700; font-size:14px; color:var(--text-main);">II. Rincian Tagihan Bulanan SPayLater</div>
+                <div style="font-size:12px; color:var(--text-muted);">Total Tagihan Berjalan: <strong>Rp 512.703</strong> &middot; Denda akumulatif akibat lewat jatuh tempo &gt;500 hari</div>
+              </div>
+              <span class="badge-pill out">3 Bulan Menunggak</span>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:40px; text-align:center;">No</th>
+                  <th>Periode Tagihan</th>
+                  <th>Status Keterlambatan</th>
+                  <th>Status Penagihan</th>
+                  <th style="text-align:right;">Nominal Tagihan</th>
+                </tr>
+              </thead>
+              <tbody id="spaylaterDetailTableBody"></tbody>
+            </table>
+            <div class="table-footer">
+              <span>3 Tagihan Bulanan (Januari, Februari, Maret 2025)</span>
+              <span style="font-weight:800; font-size:13px; color:#e11d48;">Subtotal SPayLater: Rp 512.703</span>
+            </div>
+          </div>
+
+          <!-- III. Kesimpulan Utang Card -->
+          <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; padding:18px 20px;">
+            <div style="font-weight:800; font-size:14px; color:var(--text-main); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+              <span style="color:#ee4d2d;">&#9888;&#65039;</span> III. KESIMPULAN UTANG KESELURUHAN &amp; CATATAN AUDIT
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; margin-bottom:16px;">
+              <div style="background:var(--bg-input); padding:12px 14px; border-radius:8px; border:1px solid var(--border-subtle);">
+                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Total SPinjam</div>
+                <div style="font-size:18px; font-weight:800; color:#d97706; font-family:'JetBrains Mono',monospace; margin-top:2px;">Rp 4.306.650</div>
+                <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">6 pinjaman terlambat (89,4%)</div>
+              </div>
+              <div style="background:var(--bg-input); padding:12px 14px; border-radius:8px; border:1px solid var(--border-subtle);">
+                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Total SPayLater</div>
+                <div style="font-size:18px; font-weight:800; color:#e11d48; font-family:'JetBrains Mono',monospace; margin-top:2px;">Rp 512.703</div>
+                <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">3 bulan lewat &gt;500 hari (10,6%)</div>
+              </div>
+              <div style="background:var(--bg-input); padding:12px 14px; border-radius:8px; border:1px solid var(--border-subtle);">
+                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Grand Total Wajib Bayar</div>
+                <div style="font-size:18px; font-weight:800; color:var(--color-danger); font-family:'JetBrains Mono',monospace; margin-top:2px;">Rp 4.819.353</div>
+                <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">Seluruh pokok + bunga &amp; denda</div>
+              </div>
+            </div>
+            <div style="font-size:12px; line-height:1.6; color:var(--text-secondary);">
+              <strong>Korelasi Finansial:</strong> Penarikan pinjaman SPinjam dilakukan secara beruntun pada rentang 09&ndash;22 November 2024. Waktu ini bertepatan langsung dengan rekor frekuensi deposit judi online tertinggi di akun 1xBet. Sejak Februari 2025 seluruh kewajiban telah melewati batas jatuh tempo dan belum dilakukan pelunasan.
             </div>
           </div>
         </section>
@@ -4389,6 +4488,7 @@
         if (tab === 'jadwal') renderJadwalView();
         if (tab === 'simpanuang') renderSimpanUangView();
         if (tab === 'selfguard') renderSelfGuardView();
+        if (tab === 'pinjol') renderPinjolCards();
 
         // Animasikan KPI & statistik panel yang sedang tampil (tumbuh satu-satu)
         if (target) countUpMetrics(target);
@@ -4685,13 +4785,17 @@
         }
 
         const pinjolList = [
-          { date: '2024-11-09', desc: 'SPinjam Penarikan Dana 09 Nov 2024', amount: 471107 },
-          { date: '2024-11-10', desc: 'SPinjam Penarikan Dana 10 Nov 2024', amount: 471107 },
-          { date: '2024-11-11', desc: 'SPinjam Penarikan Dana 11 Nov 2024 (500rb)', amount: 461683 },
-          { date: '2024-11-11', desc: 'SPinjam Penarikan Dana 11 Nov 2024 (1 Juta)', amount: 942206 },
-          { date: '2024-11-14', desc: 'SPinjam Penarikan Dana 14 Nov 2024 (1 Juta)', amount: 942206 },
-          { date: '2024-11-22', desc: 'SPinjam Angsuran Terlambat 22 Nov 2024 (~Rp 81k/bln)', amount: 981947 },
-          { date: '2025-01-15', desc: 'SPayLater Tagihan Jan, Feb, Mar 2025 + Denda', amount: 496647 }
+          // I. SPINJAM (Total Tagihan Berjalan: Rp 4.306.650)
+          { date: '2024-11-09', desc: 'SPinjam Rp500.000 (No. ...43120) - Tenor 3 Bln (Cicilan 3/3 Terlambat, JT: 09 Feb 2025)', amount: 471107 },
+          { date: '2024-11-10', desc: 'SPinjam Rp500.000 (No. ...74003) - Tenor 3 Bln (Cicilan 3/3 Terlambat, JT: 10 Feb 2025)', amount: 471107 },
+          { date: '2024-11-11', desc: 'SPinjam Rp500.000 (No. ...33366) - Tenor 3 Bln (Cicilan 3/3 Terlambat, JT: 11 Feb 2025)', amount: 461683 },
+          { date: '2024-11-11', desc: 'SPinjam Rp1.000.000 (No. ...2793) - Tenor 3 Bln (Cicilan 3/3 Terlambat, JT: 11 Feb 2025)', amount: 942206 },
+          { date: '2024-11-14', desc: 'SPinjam Rp1.000.000 (No. ...4652) - Tenor 3 Bln (Cicilan 3/3 Terlambat, JT: 14 Feb 2025)', amount: 942206 },
+          { date: '2024-11-22', desc: 'SPinjam Rp593.017 (No. ...47332) - Tenor 12 Bln (Cicilan 12/12 Terlambat)', amount: 1018341 },
+          // II. SPAYLATER (Total Tagihan Berjalan: Rp 512.703)
+          { date: '2025-01-15', desc: 'SPayLater Tagihan Januari 2025 (Lewat jatuh tempo 583 hari)', amount: 117920 },
+          { date: '2025-02-15', desc: 'SPayLater Tagihan Februari 2025 (Lewat jatuh tempo 555 hari)', amount: 287827 },
+          { date: '2025-03-15', desc: 'SPayLater Tagihan Maret 2025 (Lewat jatuh tempo 524 hari)', amount: 106956 }
         ];
         pinjolList.forEach((p, idx) => {
           allMasterTransactions.push({
@@ -4794,76 +4898,91 @@
       }
 
       /* ─── Render Pinjol & Kuliah Cards ─── */
-      const PINJOL_ITEMS = [
-        { label: 'SPayLater', rate: 0.0295, amount: 496647, sub: 'Tagihan Jan, Feb, Mar 2025' },
-        { label: 'SPinjam', rate: 0.0195, amount: 4270256, sub: 'Akumulasi beberapa pinjaman Nov 2024' }
+      const PINJOL_SUMMARY_ITEMS = [
+        { label: 'SPinjam', sub: '6 Pinjaman Tunai (Nov 2024 &middot; Jatuh Tempo Feb 2025)', pokok: 4093017, status: 'Cicilan Terlambat (Menunggak)', amount: 4306650 },
+        { label: 'SPayLater', sub: '3 Bulan Tagihan (Jan, Feb, Mar 2025 &middot; &gt;500 Hari Lewat JT)', pokok: 512703, status: 'Lewat Jatuh Tempo (Menunggak)', amount: 512703 }
       ];
 
-      function pinjolStartOfDay(d) {
-        return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-      }
+      const SPINJAM_DETAILS = [
+        { no: 1, contract: 'No. ...43120', date: '09 Nov 2024', tenor: '3 Bulan', pokok: 500000, status: 'Cicilan 3/3 Terlambat (JT: 09 Feb 2025)', amount: 471107 },
+        { no: 2, contract: 'No. ...74003', date: '10 Nov 2024', tenor: '3 Bulan', pokok: 500000, status: 'Cicilan 3/3 Terlambat (JT: 10 Feb 2025)', amount: 471107 },
+        { no: 3, contract: 'No. ...33366', date: '11 Nov 2024', tenor: '3 Bulan', pokok: 500000, status: 'Cicilan 3/3 Terlambat (JT: 11 Feb 2025)', amount: 461683 },
+        { no: 4, contract: 'No. ...2793', date: '11 Nov 2024', tenor: '3 Bulan', pokok: 1000000, status: 'Cicilan 3/3 Terlambat (JT: 11 Feb 2025)', amount: 942206 },
+        { no: 5, contract: 'No. ...4652', date: '14 Nov 2024', tenor: '3 Bulan', pokok: 1000000, status: 'Cicilan 3/3 Terlambat (JT: 14 Feb 2025)', amount: 942206 },
+        { no: 6, contract: 'No. ...47332', date: '22 Nov 2024', tenor: '12 Bulan', pokok: 593017, status: 'Cicilan 12/12 Terlambat', amount: 1018341 }
+      ];
 
-      function pinjolBaselineDate() {
-        let iso = localStorage.getItem('PINJOL_BASELINE_DATE');
-        if (!iso) {
-          const today = new Date();
-          iso = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-          localStorage.setItem('PINJOL_BASELINE_DATE', iso);
-        }
-        const parts = iso.split('-');
-        return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-      }
-
-      function pinjolDaysSinceBaseline() {
-        const base = pinjolStartOfDay(pinjolBaselineDate());
-        const today = pinjolStartOfDay(new Date());
-        const diff = Math.floor((today - base) / 86400000);
-        return Math.max(0, diff);
-      }
+      const SPAYLATER_DETAILS = [
+        { no: 1, period: 'Tagihan Januari 2025', overdue: 'Lewat jatuh tempo 583 hari', status: 'Tertunggak', amount: 117920 },
+        { no: 2, period: 'Tagihan Februari 2025', overdue: 'Lewat jatuh tempo 555 hari', status: 'Tertunggak', amount: 287827 },
+        { no: 3, period: 'Tagihan Maret 2025', overdue: 'Lewat jatuh tempo 524 hari', status: 'Tertunggak', amount: 106956 }
+      ];
 
       function renderPinjolCards() {
-        const body = document.getElementById('pinjolTableBody');
+        const sumBody = document.getElementById('pinjolSummaryTableBody') || document.getElementById('pinjolTableBody');
+        const spinjamBody = document.getElementById('spinjamDetailTableBody');
+        const spaylaterBody = document.getElementById('spaylaterDetailTableBody');
         const footer = document.getElementById('pinjolTableFooterInfo');
-        const now = new Date();
-        const todayLabel = now.toLocaleDateString('id-ID');
+        const totalEl = document.getElementById('pinjolTableTotalVal');
 
-        const days = pinjolDaysSinceBaseline();
-        let sumBunga = 0;
-        const rows = PINJOL_ITEMS.map(p => {
-          const pokok = p.amount;
-          const bungaHarian = pokok * (p.rate / 30);
-          const bungaBerjalan = bungaHarian * days;
-          sumBunga += bungaBerjalan;
-          return {
-            label: p.label, sub: p.sub, pokok, bungaBerjalan, total: pokok + bungaBerjalan, addPerDay: bungaHarian
-          };
-        });
+        const totalSpinjam = 4306650;
+        const totalSpaylater = 512703;
+        const grandTotal = 4819353;
+        const totalPokokSpinjam = 4093017;
 
-        const sumPokok = rows.reduce((s, r) => s + r.pokok, 0);
-        const grandTotal = sumPokok + sumBunga;
-        const addPerDayTotal = rows.reduce((s, r) => s + r.addPerDay, 0);
+        // Render Summary Table
+        if (sumBody) {
+          sumBody.innerHTML = PINJOL_SUMMARY_ITEMS.map(r => `
+            <tr>
+              <td style="font-weight:700;"><span class="badge-pill ${r.label === 'SPinjam' ? 'warn' : 'out'}">${r.label}</span></td>
+              <td>${r.sub}</td>
+              <td style="text-align:right; font-family:'JetBrains Mono',monospace;">Rp ${r.pokok.toLocaleString('id-ID')}</td>
+              <td><span class="badge-pill ${r.label === 'SPinjam' ? 'warn' : 'out'}">${r.status}</span></td>
+              <td style="text-align:right; font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--color-danger);">Rp ${r.amount.toLocaleString('id-ID')}</td>
+            </tr>`).join('');
+        }
 
-        body.innerHTML = rows.map(r => `
-    <tr>
-      <td>${r.label}</td>
-      <td>${r.sub}</td>
-      <td style="text-align:right; font-family:'JetBrains Mono',monospace; white-space:nowrap;">Rp ${Math.round(r.pokok).toLocaleString('id-ID')}</td>
-      <td style="text-align:right; font-family:'JetBrains Mono',monospace; white-space:nowrap; color:#b45309;">+Rp ${Math.round(r.bungaBerjalan).toLocaleString('id-ID')}</td>
-      <td style="text-align:right; font-family:'JetBrains Mono',monospace; white-space:nowrap; font-weight:700;">Rp ${Math.round(r.total).toLocaleString('id-ID')}</td>
-    </tr>`).join('');
+        // Render SPinjam Table
+        if (spinjamBody) {
+          spinjamBody.innerHTML = SPINJAM_DETAILS.map(s => `
+            <tr>
+              <td style="text-align:center; font-family:'JetBrains Mono',monospace; color:var(--text-muted);">${s.no}</td>
+              <td style="font-weight:600;"><span style="color:#d97706;">&#9679;</span> ${s.contract}</td>
+              <td>${s.date}</td>
+              <td><span class="badge-pill neutral">${s.tenor}</span></td>
+              <td style="text-align:right; font-family:'JetBrains Mono',monospace;">Rp ${s.pokok.toLocaleString('id-ID')}</td>
+              <td><span class="badge-pill warn">${s.status}</span></td>
+              <td style="text-align:right; font-family:'JetBrains Mono',monospace; font-weight:700; color:#d97706;">Rp ${s.amount.toLocaleString('id-ID')}</td>
+            </tr>`).join('');
+        }
 
+        // Render SPayLater Table
+        if (spaylaterBody) {
+          spaylaterBody.innerHTML = SPAYLATER_DETAILS.map(p => `
+            <tr>
+              <td style="text-align:center; font-family:'JetBrains Mono',monospace; color:var(--text-muted);">${p.no}</td>
+              <td style="font-weight:600;"><span style="color:#e11d48;">&#9679;</span> ${p.period}</td>
+              <td><span class="badge-pill out">${p.overdue}</span></td>
+              <td><span class="badge-pill out">${p.status}</span></td>
+              <td style="text-align:right; font-family:'JetBrains Mono',monospace; font-weight:700; color:#e11d48;">Rp ${p.amount.toLocaleString('id-ID')}</td>
+            </tr>`).join('');
+        }
+
+        // Update KPIs
         const jatuhEl = document.getElementById('pinjolJatuhTempoVal');
         if (jatuhEl) jatuhEl.textContent = fmtIDR(grandTotal);
         const jatuhSubEl = document.getElementById('pinjolJatuhTempoSub');
-        if (jatuhSubEl) jatuhSubEl.textContent = `Nilai terhutang ${fmtIDR(sumPokok)} + bunga ${fmtIDR(sumBunga)} berjalan · +${fmtIDR(addPerDayTotal)}/hari`;
+        if (jatuhSubEl) jatuhSubEl.textContent = `SPinjam Rp 4.306.650 + SPayLater Rp 512.703 (Wajib Dilunasi)`;
         const pokokEl = document.getElementById('pinjolPokokVal');
-        if (pokokEl) pokokEl.textContent = fmtIDR(sumPokok);
+        if (pokokEl) pokokEl.textContent = fmtIDR(totalSpinjam);
         const bungaEl = document.getElementById('pinjolBungaVal');
-        if (bungaEl) bungaEl.textContent = `${fmtIDR(sumBunga)} (sejak baseline)`;
+        if (bungaEl) bungaEl.textContent = fmtIDR(totalSpaylater);
 
-        if (footer) footer.textContent = `Per ${todayLabel} · nilai terhutang ${fmtIDR(sumPokok)} sudah termasuk bunga 2024 · + bunga flat harian (SPinjam 1,95%/bln, SPayLater 2,95%/bln) bertambah tiap hari`;
-        const totalEl = document.getElementById('pinjolTableTotalVal');
-        if (totalEl) totalEl.textContent = `Total jatuh tempo: ${fmtIDR(grandTotal)}`;
+        if (footer) footer.textContent = `Pemindaian Data: 7 September 2026 &middot; Total 6 Pinjaman SPinjam + 3 Tagihan SPayLater`;
+        if (totalEl) totalEl.textContent = `Total: ${fmtIDR(grandTotal)}`;
+
+        const cardShopee = document.getElementById('cardShopeeBalance');
+        if (cardShopee) cardShopee.textContent = fmtIDR(grandTotal);
       }
 
       const KULIAH_DEFAULT_ROWS = [
@@ -5321,7 +5440,7 @@
             data: {
               labels: ['Biaya Kuliah (7 Sem)', 'Kerugian judol 1xBet', 'Pinjol Shopee'],
               datasets: [{
-                data: [38800000, 4760602, 4766903],
+                data: [38800000, 4760602, 4819353],
                 backgroundColor: ['#6366f1', '#e11d48', '#f59e0b'],
                 borderWidth: 2,
                 borderColor: 'transparent',
@@ -5353,7 +5472,7 @@
               labels: ['judol Hilang', 'SPP 1 Sem', 'Pinjol Total', 'SPP 1.25x', 'Total Kuliah'],
               datasets: [{
                 label: 'Rp',
-                data: [4760602, 3800000, 4766903, 4750000, 38800000],
+                data: [4760602, 3800000, 4819353, 4750000, 38800000],
                 backgroundColor: ['#e11d48', '#3b82f6', '#f59e0b', '#e11d48aa', '#6366f1'],
                 borderRadius: 7,
                 borderSkipped: false
