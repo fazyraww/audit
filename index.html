@@ -2808,261 +2808,744 @@
       }
     }
     /* ═════════════════════════════════════════════════════════════════════════
-       PINJOL AUDIT FORENSIK SHOPEE (SPINJAM & SPAYLATER)
+       SHOPEE DEBT PLAN - BESPOKE FINANCIAL TERMINAL (ROCKET MONEY AESTHETICS)
+       Palet: Shopee Orange (#ee4d2d), Jet Black (#18181b / #09090b), Clean Whites
        ═════════════════════════════════════════════════════════════════════════ */
-    .pj-suite-header {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 22px 24px;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow-subtle);
-      position: relative;
-      overflow: hidden;
-    }
-    .pj-suite-header::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #ee4d2d 0%, #f97316 50%, #e11d48 100%);
-    }
-    .pj-brand-badge-spinjam {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      background: rgba(238, 77, 45, 0.09);
-      color: #ee4d2d;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      border: 1px solid rgba(238, 77, 45, 0.22);
-    }
-    .pj-brand-badge-spaylater {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      background: rgba(225, 29, 72, 0.09);
-      color: #e11d48;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      border: 1px solid rgba(225, 29, 72, 0.22);
-    }
-
-    /* ── KPI Summary Cards ── */
-    .pj-kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-    .pj-kpi-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 13px;
-      padding: 16px 18px;
-      box-shadow: var(--shadow-subtle);
+    .dp-container {
+      max-width: 1360px;
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      position: relative;
-    }
-    .pj-kpi-label {
-      font-size: 10.5px;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .pj-kpi-val {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 21px;
-      font-weight: 800;
-      line-height: 1.2;
-      margin-top: 2px;
-    }
-    .pj-kpi-sub {
-      font-size: 11px;
-      color: var(--text-secondary);
-      margin-top: 2px;
+      gap: 22px;
     }
 
-    /* ── Segmented Navigation Tabs ── */
-    .pj-subtab-nav {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px;
-      background: var(--bg-input);
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      margin-bottom: 20px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .pj-subtab-nav::-webkit-scrollbar { display: none; }
-    .pj-subtab-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 8px 16px;
-      border-radius: 7px;
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.15s ease;
-      font-family: inherit;
-    }
-    .pj-subtab-btn:hover {
-      color: var(--text-main);
-      background: var(--bg-hover);
-    }
-    .pj-subtab-btn.active {
-      background: var(--bg-card);
-      color: var(--text-main);
-      font-weight: 700;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    }
-    .pj-subtab-btn .tab-count {
-      font-size: 10px;
-      padding: 1px 7px;
-      border-radius: 999px;
-      background: var(--border-color);
-      color: var(--text-muted);
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-    }
-    .pj-subtab-btn.active .tab-count {
-      background: rgba(37, 99, 235, 0.12);
-      color: var(--accent-blue);
-    }
-    .pj-tab-pane {
-      display: none;
-      animation: pjFadeIn 0.2s ease-out;
-    }
-    .pj-tab-pane.active {
-      display: block;
-    }
-    @keyframes pjFadeIn {
-      from { opacity: 0; transform: translateY(3px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── Contract Cards Grid ── */
-    .pj-contract-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-      gap: 14px;
-      margin-bottom: 22px;
-    }
-    .pj-contract-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-shadow: var(--shadow-subtle);
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-      position: relative;
-    }
-    .pj-contract-card:hover {
-      border-color: rgba(238, 77, 45, 0.35);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-    }
-    .pj-contract-card.spaylater-card:hover {
-      border-color: rgba(225, 29, 72, 0.35);
-    }
-    .pj-contract-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-    .pj-contract-id {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      font-size: 13px;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .pj-contract-meta {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 12px;
-      font-size: 11.5px;
-      color: var(--text-secondary);
-      background: var(--bg-input);
-      padding: 11px 13px;
-      border-radius: 8px;
-      border: 1px solid var(--border-subtle);
-    }
-    .pj-contract-meta > div > strong {
-      color: var(--text-main);
-      display: block;
-      margin-top: 1px;
-    }
-    .pj-contract-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      border-top: 1px solid var(--border-subtle);
-      padding-top: 11px;
-    }
-
-    /* ── Action Toolbar ── */
-    .pj-toolbar {
+    /* ── Header Suite ── */
+    .dp-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 4px;
+    }
+    .dp-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .dp-brand-row {
+      display: flex;
+      align-items: center;
       gap: 12px;
-      padding: 14px 18px;
+    }
+    .dp-shopee-logo-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      padding: 0 10px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid rgba(238, 77, 45, 0.22);
+      box-shadow: 0 2px 6px rgba(238, 77, 45, 0.08);
+    }
+    :root[data-theme="dark"] .dp-shopee-logo-badge {
+      background: #18181b;
+      border-color: rgba(238, 77, 45, 0.35);
+    }
+    .dp-shopee-logo-img {
+      height: 18px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+    .dp-main-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.6px;
+      line-height: 1.15;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .dp-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+    .dp-header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .dp-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 700;
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--color-danger);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    /* ── Main 2-Column Grid Layout ── */
+    .dp-grid {
+      display: grid;
+      grid-template-columns: 1.58fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 1060px) {
+      .dp-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .dp-col {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .dp-section-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dp-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 12px;
-      margin-top: 20px;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      position: relative;
     }
-    .pj-btn-action {
+
+    /* ── Card 1: Goal Progress ── */
+    .dp-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .dp-card-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.3px;
+    }
+    .dp-goal-body {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+    @media (max-width: 720px) {
+      .dp-goal-body {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dp-gauge-wrap {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .dp-gauge-circle-box {
+      position: relative;
+      width: 136px;
+      height: 136px;
+      flex-shrink: 0;
+    }
+    .dp-gauge-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    .dp-gauge-bg {
+      fill: none;
+      stroke: var(--border-color);
+      stroke-width: 14;
+    }
+    .dp-gauge-bar {
+      fill: none;
+      stroke: #ee4d2d;
+      stroke-width: 14;
+      stroke-linecap: round;
+      stroke-dasharray: 377;
+      stroke-dashoffset: 377;
+      transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dp-gauge-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      pointer-events: none;
+    }
+    .dp-gauge-center-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+    }
+    .dp-gauge-center-val {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin-top: 2px;
+      line-height: 1;
+    }
+
+    .dp-gauge-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .dp-metric-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .dp-metric-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .dp-metric-amount {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      letter-spacing: -0.4px;
+      line-height: 1.15;
+    }
+    .dp-metric-target {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    /* Tips to Consider Sub-card */
+    .dp-tips-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+    }
+    .dp-tips-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .dp-tips-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .dp-tips-icon-box {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: rgba(238, 77, 45, 0.12);
+      color: #ee4d2d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .dp-tips-dots {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .dp-tips-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border-color);
+      transition: background 0.2s;
+    }
+    .dp-tips-dot.active {
+      background: #18181b;
+      width: 8px;
+      border-radius: 4px;
+    }
+    :root[data-theme="dark"] .dp-tips-dot.active {
+      background: #ffffff;
+    }
+    .dp-tips-body {
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    .dp-tips-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ee4d2d;
+      text-decoration: none;
+      cursor: pointer;
+      transition: gap 0.15s ease;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+    }
+    .dp-tips-link:hover {
+      gap: 8px;
+    }
+
+    .dp-btn-outline {
+      align-self: flex-start;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 8px 16px;
       border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .dp-btn-outline:hover {
+      background: var(--bg-hover);
+      border-color: #ee4d2d;
+      color: #ee4d2d;
+    }
+
+    /* ── Card 2: Active Accounts (Summary) ── */
+    .dp-summary-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .dp-summary-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .dp-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
       font-size: 12px;
       font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
       border: 1px solid var(--border-color);
       background: var(--bg-input);
       color: var(--text-main);
+      cursor: pointer;
       transition: all 0.15s ease;
+      font-family: inherit;
     }
-    .pj-btn-action:hover {
+    .dp-pill-btn:hover {
       background: var(--bg-hover);
-      border-color: var(--accent-blue);
+      border-color: var(--text-muted);
     }
-    .pj-btn-action.primary {
-      background: var(--accent-blue);
+    .dp-pill-btn.primary {
+      background: #18181b;
+      color: #ffffff;
+      border-color: #18181b;
+    }
+    :root[data-theme="dark"] .dp-pill-btn.primary {
+      background: #ffffff;
+      color: #09090b;
+      border-color: #ffffff;
+    }
+    .dp-filter-tabs {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px;
+      background: var(--bg-input);
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+    }
+    .dp-filter-tab {
+      padding: 5px 11px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .dp-filter-tab:hover {
+      color: var(--text-main);
+    }
+    .dp-filter-tab.active {
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-weight: 700;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .dp-table-wrap {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+    .dp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      text-align: left;
+    }
+    .dp-table th {
+      background: var(--bg-input);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+    .dp-table td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .dp-table tr:last-child td {
+      border-bottom: none;
+    }
+    .dp-table tr:hover td {
+      background: var(--bg-hover);
+    }
+    .dp-account-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dp-acc-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .dp-acc-icon.spinjam {
+      background: rgba(238, 77, 45, 0.12);
+      color: #ee4d2d;
+      border: 1px solid rgba(238, 77, 45, 0.25);
+    }
+    .dp-acc-icon.spaylater {
+      background: rgba(24, 24, 27, 0.08);
+      color: #18181b;
+      border: 1px solid rgba(24, 24, 27, 0.2);
+    }
+    :root[data-theme="dark"] .dp-acc-icon.spaylater {
+      background: rgba(255, 255, 255, 0.08);
+      color: #f4f4f6;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .dp-acc-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .dp-acc-name {
+      font-weight: 700;
+      color: var(--text-main);
+      font-size: 13px;
+    }
+    .dp-acc-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .dp-total-row td {
+      background: var(--bg-input) !important;
+      font-weight: 800;
+      border-top: 2px solid var(--border-color);
+    }
+    .dp-overdue-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #f97316;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    /* ── Card 3: Payoff Methods ── */
+    .dp-methods-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      gap: 24px;
+    }
+    .dp-method-tab {
+      background: none;
+      border: none;
+      padding: 0 0 12px 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+      font-family: inherit;
+      transition: color 0.15s;
+    }
+    .dp-method-tab:hover {
+      color: var(--text-main);
+    }
+    .dp-method-tab.active {
+      color: #ee4d2d;
+    }
+    .dp-method-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #ee4d2d;
+      border-radius: 2px;
+    }
+    .dp-method-desc {
+      font-size: 12.5px;
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
+
+    .dp-subcard {
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .dp-badge-lowest {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(238, 77, 45, 0.12);
+      color: #ee4d2d;
+    }
+    .dp-subcard-account {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dp-subcard-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #18181b;
       color: #fff;
-      border-color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 11px;
+      flex-shrink: 0;
     }
-    .pj-btn-action.primary:hover { opacity: 0.9; }
+    .dp-subcard-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    .dp-subcard-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dp-subcard-row span:first-child {
+      color: var(--text-muted);
+    }
+    .dp-subcard-row span:last-child {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* ── Card 4: Payments Breakdown (Orange & Black Donut) ── */
+    .dp-breakdown-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      gap: 24px;
+    }
+    .dp-breakdown-tab {
+      background: none;
+      border: none;
+      padding: 0 0 12px 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+      font-family: inherit;
+      transition: color 0.15s;
+    }
+    .dp-breakdown-tab:hover {
+      color: var(--text-main);
+    }
+    .dp-breakdown-tab.active {
+      color: #18181b;
+    }
+    :root[data-theme="dark"] .dp-breakdown-tab.active {
+      color: #ffffff;
+    }
+    .dp-breakdown-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #18181b;
+      border-radius: 2px;
+    }
+    :root[data-theme="dark"] .dp-breakdown-tab.active::after {
+      background: #ffffff;
+    }
+
+    .dp-breakdown-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .dp-donut-box {
+      position: relative;
+      width: 170px;
+      height: 170px;
+      flex-shrink: 0;
+    }
+    .dp-donut-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      pointer-events: none;
+    }
+    .dp-donut-amount {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      line-height: 1.1;
+    }
+    .dp-donut-sub {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    .dp-donut-date {
+      font-size: 9.5px;
+      color: var(--text-dim);
+      margin-top: 1px;
+    }
+
+    .dp-donut-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+      min-width: 140px;
+    }
+    .dp-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dp-legend-circle {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dp-legend-circle.orange {
+      background: #ee4d2d;
+      box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.18);
+    }
+    .dp-legend-circle.black {
+      background: #18181b;
+      box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.18);
+    }
+    :root[data-theme="dark"] .dp-legend-circle.black {
+      background: #f4f4f6;
+      box-shadow: 0 0 0 3px rgba(244, 244, 246, 0.2);
+    }
+    .dp-legend-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .dp-legend-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .dp-legend-val {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--text-main);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .dp-footer-note {
+      text-align: right;
+      font-size: 10.5px;
+      color: var(--text-muted);
+      margin-top: -8px;
+    }
   </style>
 
 <body>
@@ -3592,247 +4075,283 @@
         <!-- ═════════════════════════════════════════════════════════════════════
            PANEL 4: PINJOL SHOPEE (BESPOKE FINANCIAL TERMINAL)
            ═════════════════════════════════════════════════════════════════════ -->
+        <!-- ═════════════════════════════════════════════════════════════════════
+           PANEL 4: PINJOL SHOPEE - DEBT PLAN DASHBOARD (ROCKET MONEY AESTHETICS)
+           ═════════════════════════════════════════════════════════════════════ -->
         <section id="panel-pinjol" class="panel-view">
-          <!-- Suite Header Banner -->
-          <div class="pj-suite-header">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
-              <div style="display:flex; align-items:center; gap:12px;">
-                <div style="width:42px; height:42px; border-radius:10px; background:linear-gradient(135deg, #ee4d2d, #f97316); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:900; font-size:16px; box-shadow:0 3px 10px rgba(238,77,45,0.25); flex-shrink:0;">SP</div>
+          <div class="dp-container">
+            <!-- Suite Header -->
+            <div class="dp-header">
+              <div class="dp-header-left">
+                <div class="dp-brand-row">
+                  <div class="dp-shopee-logo-badge" title="Shopee Financial">
+                    <img src="assets/images/shopee.svg" alt="Shopee Logo" class="dp-shopee-logo-img">
+                  </div>
+                  <h1 class="dp-main-title">Shopee Debt Plan</h1>
+                </div>
+                <div class="dp-subtitle">
+                  Konsolidasi Portofolio Tagihan SPinjam &amp; SPayLater &bull; Hasil Pemindaian: <strong>07 September 2026</strong>
+                </div>
+              </div>
+              <div class="dp-header-right">
+                <span class="dp-status-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Kolektibilitas 5 (Macet &gt;500 Hari)
+                </span>
+                <button type="button" class="dp-pill-btn primary" onclick="copyPinjolAuditSummary()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  Salin Rekapitulasi
+                </button>
+              </div>
+            </div>
+
+            <!-- 2-Column Grid Layout -->
+            <div class="dp-grid">
+              <!-- Left Column: Goal Progress + Active Accounts -->
+              <div class="dp-col">
+                <!-- Section 1: Goal Progress -->
                 <div>
-                  <h2 style="font-size:18px; font-weight:800; color:var(--text-main); letter-spacing:-0.4px; margin-bottom:2px;">Rekapitulasi Audit Tagihan Shopee Financial</h2>
-                  <div style="font-size:12px; color:var(--text-muted);">
-                    Konsolidasi Utang Menunggak: <strong>SPinjam</strong> &amp; <strong>SPayLater</strong> &middot; Tanggal Pemindaian Data: <strong>7 September 2026</strong>
+                  <div class="dp-section-label">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                    Goal Progress
+                  </div>
+                  <div class="dp-card">
+                    <div class="dp-card-header">
+                      <div class="dp-card-title">Pay Down Total Debt</div>
+                      <span class="badge-pill out" style="font-size:11px;">Status Macet</span>
+                    </div>
+
+                    <div class="dp-goal-body">
+                      <!-- Gauge Progress Box -->
+                      <div class="dp-gauge-wrap">
+                        <div class="dp-gauge-circle-box">
+                          <svg class="dp-gauge-svg" viewBox="0 0 140 140">
+                            <circle class="dp-gauge-bg" cx="70" cy="70" r="54"></circle>
+                            <circle id="dpGaugeCircle" class="dp-gauge-bar" cx="70" cy="70" r="54"></circle>
+                          </svg>
+                          <div class="dp-gauge-center">
+                            <span class="dp-gauge-center-label">Payoff Progress</span>
+                            <span class="dp-gauge-center-val" id="dpGaugePercentText">0%</span>
+                          </div>
+                        </div>
+
+                        <div class="dp-gauge-metrics">
+                          <div class="dp-metric-block">
+                            <span class="dp-metric-label">Amount Paid</span>
+                            <span class="dp-metric-amount" id="dpAmountPaidText">Rp 0</span>
+                          </div>
+                          <div class="dp-metric-block">
+                            <span class="dp-metric-label">Goal Amount</span>
+                            <span class="dp-metric-amount" style="color:#ee4d2d;" id="dpGoalAmountText">Rp 4.819.353</span>
+                            <span class="dp-metric-target">Target Haircut 2026</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Tips to Consider Sub-card -->
+                      <div class="dp-tips-card">
+                        <div class="dp-tips-top">
+                          <div class="dp-tips-title-wrap">
+                            <div class="dp-tips-icon-box">
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            </div>
+                            <span>Tips to Consider</span>
+                          </div>
+                          <div class="dp-tips-dots">
+                            <span class="dp-tips-dot active" id="dpTipDot1"></span>
+                            <span class="dp-tips-dot" id="dpTipDot2"></span>
+                          </div>
+                        </div>
+                        <div class="dp-tips-body" id="dpTipsBodyText">
+                          Status kredit telah lewat jatuh tempo &gt;500 hari (Kolektibilitas 5). Disarankan mengajukan permohonan <strong>haircut pokok</strong> (penghapusan 100% bunga dan denda) langsung ke legal resmi Shopee.
+                        </div>
+                        <div>
+                          <button type="button" class="dp-tips-link" onclick="togglePinjolTip()">
+                            <span>Pelajari Opsi Haircut</span>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <button type="button" class="dp-btn-outline" onclick="openSimulasiPelunasan()">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        Simulasi Pelunasan &amp; Haircut
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Section 2: Active Accounts -->
+                <div>
+                  <div class="dp-section-label">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    Active Accounts
+                  </div>
+                  <div class="dp-card">
+                    <div class="dp-summary-header">
+                      <div>
+                        <div class="dp-card-title">Summary</div>
+                        <div style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">
+                          9 Portofolio Kewajiban Aktif (PT Lentera Dana Nusantara &amp; PT Commerce Finance)
+                        </div>
+                      </div>
+                      <div class="dp-summary-actions">
+                        <div class="dp-filter-tabs">
+                          <button type="button" class="dp-filter-tab active" id="dpFiltAll" onclick="filterPinjolTable('all')">Semua (9)</button>
+                          <button type="button" class="dp-filter-tab" id="dpFiltSpinjam" onclick="filterPinjolTable('spinjam')">SPinjam (6)</button>
+                          <button type="button" class="dp-filter-tab" id="dpFiltSpaylater" onclick="filterPinjolTable('spaylater')">SPayLater (3)</button>
+                        </div>
+                        <button type="button" class="dp-pill-btn" onclick="openSimulasiPelunasan()">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                          Simulasi Bayar
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Clean Accounts Table -->
+                    <div class="dp-table-wrap">
+                      <table class="dp-table">
+                        <thead>
+                          <tr>
+                            <th>Account</th>
+                            <th style="text-align:right;">Total Balance</th>
+                            <th style="text-align:center;">APR / Interest</th>
+                            <th style="text-align:right;">Plafon / Min</th>
+                            <th>Due Date</th>
+                            <th style="text-align:center; width:30px;"></th>
+                          </tr>
+                        </thead>
+                        <tbody id="dpAccountsTableBody">
+                          <!-- Rendered dynamically -->
+                        </tbody>
+                        <tfoot>
+                          <tr class="dp-total-row">
+                            <td>Total (9 Akun)</td>
+                            <td class="mono" style="text-align:right; color:var(--color-danger); font-size:14px;" id="dpTableTotalBalance">Rp 4.819.353</td>
+                            <td class="mono" style="text-align:center; color:var(--text-muted);">Avg ~2.8%</td>
+                            <td class="mono" style="text-align:right; color:var(--text-main);">Rp 4.093.017</td>
+                            <td><span class="badge-pill out" style="font-size:10.5px;">Macet &gt;500 hr</span></td>
+                            <td></td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+
+                    <div class="dp-footer-note">
+                      Powered by Shopee Audit Engine &middot; PT Lentera Dana Nusantara &amp; PT Commerce Finance
+                    </div>
                   </div>
                 </div>
               </div>
-              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <span class="pj-brand-badge-spinjam">PT Lentera Dana Nusantara (SPinjam)</span>
-                <span class="pj-brand-badge-spaylater">PT Commerce Finance (SPayLater)</span>
-                <span class="badge-pill out" style="padding:4px 10px; font-size:11px;">Kolektibilitas 5 (Macet &gt;500 Hari)</span>
-              </div>
-            </div>
-          </div>
 
-          <!-- 4 KPI Summary Cards -->
-          <div class="pj-kpi-grid">
-            <div class="pj-kpi-card" style="border-left:3px solid var(--color-danger);">
-              <div class="pj-kpi-label">
-                <span>Grand Total Wajib Bayar</span>
-                <span class="badge-pill out" style="font-size:9.5px; padding:2px 6px;">Total Wajib</span>
-              </div>
-              <div class="pj-kpi-val" style="color:var(--color-danger);" id="pjHdrGrandTotal">Rp 4.819.353</div>
-              <div class="pj-kpi-sub">Total tagihan berjalan (pokok + bunga + denda)</div>
-            </div>
-
-            <div class="pj-kpi-card" style="border-left:3px solid #ee4d2d;">
-              <div class="pj-kpi-label">
-                <span>Total SPinjam (6 Kontrak)</span>
-                <span class="badge-pill warn" style="font-size:9.5px; padding:2px 6px;">89,4%</span>
-              </div>
-              <div class="pj-kpi-val" style="color:#ee4d2d;">Rp 4.306.650</div>
-              <div class="pj-kpi-sub">Plafon awal Rp 4.093.017 &middot; Cicilan terlambat</div>
-            </div>
-
-            <div class="pj-kpi-card" style="border-left:3px solid #e11d48;">
-              <div class="pj-kpi-label">
-                <span>Total SPayLater (3 Bln)</span>
-                <span class="badge-pill out" style="font-size:9.5px; padding:2px 6px;">10,6%</span>
-              </div>
-              <div class="pj-kpi-val" style="color:#e11d48;">Rp 512.703</div>
-              <div class="pj-kpi-sub">Tagihan Jan, Feb, Mar 2025 &middot; Lewat JT &gt;500 hari</div>
-            </div>
-
-            <div class="pj-kpi-card" style="border-left:3px solid #8b5cf6;">
-              <div class="pj-kpi-label">
-                <span>Status Kolektibilitas</span>
-                <span class="badge-pill out" style="font-size:9.5px; padding:2px 6px;">SLIK OJK</span>
-              </div>
-              <div class="pj-kpi-val" style="color:#8b5cf6; font-size:18px;">Kolektibilitas 5</div>
-              <div class="pj-kpi-sub">Kredit Macet sejak Februari 2025 (&gt;550 hari)</div>
-            </div>
-          </div>
-
-          <!-- Segmented Navigation Tabs -->
-          <div class="pj-subtab-nav">
-            <button type="button" class="pj-subtab-btn active" id="pjTabBtnOverview" onclick="switchPinjolSubTab('overview')">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
-              <span>Ringkasan Portofolio &amp; Korelasi</span>
-            </button>
-            <button type="button" class="pj-subtab-btn" id="pjTabBtnSpinjam" onclick="switchPinjolSubTab('spinjam')">
-              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ee4d2d;"></span>
-              <span>Rincian SPinjam</span>
-              <span class="tab-count">6</span>
-            </button>
-            <button type="button" class="pj-subtab-btn" id="pjTabBtnSpaylater" onclick="switchPinjolSubTab('spaylater')">
-              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#e11d48;"></span>
-              <span>Rincian SPayLater</span>
-              <span class="tab-count">3</span>
-            </button>
-          </div>
-
-          <!-- ═══════════════════════════════════════════════════════════════════
-             SUB-TAB 1: RINGKASAN PORTOFOLIO & KORELASI FORENSIK
-             ═══════════════════════════════════════════════════════════════════ -->
-          <div id="pjPaneOverview" class="pj-tab-pane active">
-            <!-- Table: Portofolio Pinjol Shopee -->
-            <div class="table-box" style="margin-bottom:20px;">
-              <div style="padding:15px 18px; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <!-- Right Column: Payoff Methods + Payments Breakdown -->
+              <div class="dp-col">
+                <!-- Section 3: Payoff Methods -->
                 <div>
-                  <div style="font-weight:800; font-size:14px; color:var(--text-main);">Konsolidasi Portofolio Pinjaman Shopee Financial</div>
-                  <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Hasil Pemindaian Data: 7 September 2026 (sesuai data/notes/pinjol.txt)</div>
-                </div>
-                <span class="badge-pill neutral">2 Fasilitas Menunggak</span>
-              </div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Fasilitas &amp; Badan Hukum</th>
-                    <th>Cakupan &amp; Plafon Pengajuan</th>
-                    <th>Ketentuan Suku Bunga &amp; Denda</th>
-                    <th>Status Tunggakan</th>
-                    <th style="text-align:right;">Tagihan Berjalan (07 Sep 2026)</th>
-                  </tr>
-                </thead>
-                <tbody id="pinjolSummaryTableBody">
-                  <!-- Rendered dynamically -->
-                </tbody>
-              </table>
-              <div class="table-footer">
-                <span id="pinjolTableFooterInfo">Pemindaian: 7 September 2026 &middot; Data sinkron dengan catatan resmi pinjol.txt</span>
-                <span style="font-weight:800; font-size:14px; color:var(--color-danger);" id="pinjolTableTotalVal">Grand Total: Rp 4.819.353</span>
-              </div>
-            </div>
+                  <div class="dp-section-label">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Payoff Methods
+                  </div>
+                  <div class="dp-card">
+                    <div class="dp-methods-tabs">
+                      <button type="button" class="dp-method-tab active" id="dpMethSnowball" onclick="selectPayoffMethod('snowball')">Snowball Method</button>
+                      <button type="button" class="dp-method-tab" id="dpMethAvalanche" onclick="selectPayoffMethod('avalanche')">Avalanche Method</button>
+                      <button type="button" class="dp-method-tab" id="dpMethHaircut" onclick="selectPayoffMethod('haircut')">Haircut OJK</button>
+                    </div>
 
-            <!-- Catatan Audit & Korelasi Forensik -->
-            <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:14px; padding:20px; box-shadow:var(--shadow-subtle);">
-              <div style="font-weight:800; font-size:14px; color:var(--text-main); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-                <span style="color:#ee4d2d; font-size:16px;">🔍</span>
-                <span>Temuan Audit Forensik &amp; Analisis Beban Utang:</span>
-              </div>
-              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px; font-size:12.5px; line-height:1.65; color:var(--text-secondary);">
-                <div style="background:var(--bg-input); padding:14px 16px; border-radius:10px; border:1px solid var(--border-subtle);">
-                  <strong style="color:var(--text-main); display:block; margin-bottom:6px;">1. Validitas Nilai Tagihan SPinjam:</strong>
-                  Total tagihan berjalan SPinjam sebesar <strong>Rp 4.306.650</strong> per 7 September 2026 adalah nominal riil yang tertera di aplikasi Shopee. Nilai ini <em>bukan</em> sekadar pokok pinjaman, melainkan total kewajiban berjalan yang <strong>sudah mencakup sisa cicilan pokok tertunggak + suku bunga dasar (1,8% – 3,95%/bulan) + denda keterlambatan harian/bulanan</strong> karena telah melewati jatuh tempo sejak Februari 2025.
+                    <div class="dp-method-desc" id="dpMethodDescText">
+                      The snowball method is a strategy that focuses on paying off your smallest balances first before moving on to the larger ones.
+                    </div>
+
+                    <!-- Subcard: Lowest Account Balance -->
+                    <div class="dp-subcard" id="dpMethodSubcard">
+                      <span class="dp-badge-lowest" id="dpSubcardBadge">Lowest Account Balance</span>
+                      <div class="dp-subcard-account">
+                        <div class="dp-subcard-logo" id="dpSubcardIcon">SP</div>
+                        <div>
+                          <div style="font-weight:700; font-size:13px; color:var(--text-main);" id="dpSubcardTitle">SPayLater Tagihan Jan 2025</div>
+                          <div style="font-size:11px; color:var(--text-muted);" id="dpSubcardSubtitle">PT Commerce Finance</div>
+                        </div>
+                      </div>
+                      <div class="dp-subcard-meta">
+                        <div class="dp-subcard-row">
+                          <span>Account Balance</span>
+                          <span class="mono" style="color:var(--color-danger);" id="dpSubcardBalance">Rp 117.920</span>
+                        </div>
+                        <div class="dp-subcard-row">
+                          <span>Annual / Monthly Rate</span>
+                          <span class="mono" id="dpSubcardRate">~2.95% / bln</span>
+                        </div>
+                        <div class="dp-subcard-row">
+                          <span>Jatuh Tempo</span>
+                          <span class="mono" id="dpSubcardDue">15/01/2025 (Lewat 583 hr)</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div style="background:var(--bg-input); padding:14px 16px; border-radius:10px; border:1px solid var(--border-subtle);">
-                  <strong style="color:var(--text-main); display:block; margin-bottom:6px;">2. Validitas Nilai Tagihan SPayLater:</strong>
-                  Total tagihan berjalan SPayLater sebesar <strong>Rp 512.703</strong> merupakan total tagihan resmi untuk 3 bulan (Januari: Rp 117.920, Februari: Rp 287.827, Maret: Rp 106.956). Seluruh nominal tagihan tersebut <strong>sudah mencakup pokok pembelanjaan barang, suku bunga cicilan (~2,95%/bulan), dan denda keterlambatan akumulatif</strong> akibat lewat jatuh tempo lebih dari 500 hari.
-                </div>
-                <div style="background:var(--bg-input); padding:14px 16px; border-radius:10px; border:1px solid var(--border-subtle); grid-column:1 / -1;">
-                  <strong style="color:var(--text-main); display:block; margin-bottom:6px;">3. Korelasi Aliran Dana dengan Platform Judi 1xBet:</strong>
-                  Keenam transaksi pinjaman SPinjam ditarik secara beruntun dalam kurun waktu 13 hari pada <strong>09 s.d. 22 November 2024</strong> (total plafon awal pengajuan Rp 4.093.017). Analisis mutasi rekening membuktikan bahwa dana pencairan SPinjam langsung dipindahkan untuk melakukan top up deposit platform judi online 1xBet pada tanggal yang sama. Sejak Februari 2025, seluruh kewajiban menunggak dan berstatus Kolektibilitas 5 (Macet).
+
+                <!-- Section 4: Payments Breakdown -->
+                <div>
+                  <div class="dp-section-label">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                    Payments Breakdown
+                  </div>
+                  <div class="dp-card">
+                    <div class="dp-breakdown-tabs">
+                      <button type="button" class="dp-breakdown-tab active" id="dpBdTabMonthly" onclick="switchBreakdownMode('monthly')">Monthly</button>
+                      <button type="button" class="dp-breakdown-tab" id="dpBdTabYtd" onclick="switchBreakdownMode('ytd')">Year to Date</button>
+                    </div>
+
+                    <div style="font-size:12.5px; color:var(--text-secondary); line-height:1.5;" id="dpBreakdownDesc">
+                      The amounts below reflect your combined obligations across all Shopee debt accounts.
+                    </div>
+
+                    <div class="dp-breakdown-content">
+                      <!-- Donut Chart Box (Dominant Orange and Black) -->
+                      <div class="dp-donut-box">
+                        <canvas id="chartShopeeBreakdown" width="170" height="170"></canvas>
+                        <div class="dp-donut-center">
+                          <span class="dp-donut-amount" id="dpDonutCenterAmount">Rp 4,8M</span>
+                          <span class="dp-donut-sub" id="dpDonutCenterSub">Total Balance</span>
+                          <span class="dp-donut-date">07/09/26</span>
+                        </div>
+                      </div>
+
+                      <!-- Legend Items beside chart -->
+                      <div class="dp-donut-legend" id="dpDonutLegend">
+                        <div class="dp-legend-item">
+                          <span class="dp-legend-circle orange"></span>
+                          <div class="dp-legend-text">
+                            <span class="dp-legend-label" id="dpLegLabel1">Combined SPinjam</span>
+                            <span class="dp-legend-val" style="color:#ee4d2d;" id="dpLegVal1">Rp 4.306.650</span>
+                          </div>
+                        </div>
+                        <div class="dp-legend-item">
+                          <span class="dp-legend-circle black"></span>
+                          <div class="dp-legend-text">
+                            <span class="dp-legend-label" id="dpLegLabel2">Combined SPayLater</span>
+                            <span class="dp-legend-val" id="dpLegVal2">Rp 512.703</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="dp-footer-note">
+                      Data resmi pinjol.txt &bull; 07 September 2026
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- ═══════════════════════════════════════════════════════════════════
-             SUB-TAB 2: RINCIAN SPINJAM (6 KONTRAK)
-             ═══════════════════════════════════════════════════════════════════ -->
-          <div id="pjPaneSpinjam" class="pj-tab-pane">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
-              <div>
-                <h3 style="font-size:15px; font-weight:800; color:var(--text-main);">Rincian 6 Pinjaman SPinjam Belum Lunas</h3>
-                <p style="font-size:12px; color:var(--text-muted); margin-top:2px;">Diselenggarakan oleh PT Lentera Dana Nusantara &middot; Bunga 1,8% – 3,95%/bln + Denda keterlambatan sejak Februari 2025</p>
-              </div>
-              <div style="display:flex; align-items:center; gap:12px;">
-                <span style="font-size:12px; color:var(--text-muted);">Plafon Pengajuan Awal: <strong style="color:#3b82f6; font-family:'JetBrains Mono',monospace;">Rp 4.093.017</strong></span>
-                <span style="font-size:12px; color:var(--text-muted);">Total Tagihan Berjalan: <strong style="color:#ee4d2d; font-family:'JetBrains Mono',monospace; font-size:14px;">Rp 4.306.650</strong></span>
-              </div>
-            </div>
-
-            <!-- Card Grid -->
-            <div class="pj-contract-grid" id="pjSpinjamCardGrid">
-              <!-- Rendered dynamically -->
-            </div>
-
-            <!-- Detail Table -->
-            <div class="table-box">
-              <div style="padding:14px 18px; border-bottom:1px solid var(--border-color); font-weight:800; font-size:13.5px; color:var(--text-main);">
-                Tabel Audit Kontrak SPinjam
-              </div>
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width:40px; text-align:center;">No</th>
-                    <th>Nomor Kontrak</th>
-                    <th>Waktu Pengajuan</th>
-                    <th>Tenor</th>
-                    <th style="text-align:right;">Plafon Awal</th>
-                    <th>Jatuh Tempo</th>
-                    <th>Status Tunggakan</th>
-                    <th style="text-align:right;">Tagihan Berjalan (07 Sep 2026)</th>
-                  </tr>
-                </thead>
-                <tbody id="spinjamDetailTableBody">
-                  <!-- Rendered dynamically -->
-                </tbody>
-              </table>
-              <div class="table-footer">
-                <span>Plafon Awal: <strong style="font-family:'JetBrains Mono',monospace;">Rp 4.093.017</strong> (6 Pinjaman)</span>
-                <span style="font-weight:800; font-size:13.5px; color:#ee4d2d;">Subtotal SPinjam: Rp 4.306.650</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- ═══════════════════════════════════════════════════════════════════
-             SUB-TAB 3: RINCIAN SPAYLATER (3 PERIODE)
-             ═══════════════════════════════════════════════════════════════════ -->
-          <div id="pjPaneSpaylater" class="pj-tab-pane">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
-              <div>
-                <h3 style="font-size:15px; font-weight:800; color:var(--text-main);">Rincian 3 Tagihan Bulanan SPayLater</h3>
-                <p style="font-size:12px; color:var(--text-muted); margin-top:2px;">Diselenggarakan oleh PT Commerce Finance &middot; Suku bunga cicilan ~2,95%/bln + Denda keterlambatan akumulatif &gt;500 hari</p>
-              </div>
-              <div>
-                <span style="font-size:12px; color:var(--text-muted);">Total Tagihan Berjalan: <strong style="color:#e11d48; font-family:'JetBrains Mono',monospace; font-size:14px;">Rp 512.703</strong></span>
-              </div>
-            </div>
-
-            <!-- Card Grid -->
-            <div class="pj-contract-grid" id="pjSpaylaterCardGrid">
-              <!-- Rendered dynamically -->
-            </div>
-
-            <!-- Detail Table -->
-            <div class="table-box">
-              <div style="padding:14px 18px; border-bottom:1px solid var(--border-color); font-weight:800; font-size:13.5px; color:var(--text-main);">
-                Tabel Audit Tagihan Bulanan SPayLater
-              </div>
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width:40px; text-align:center;">No</th>
-                    <th>Periode Tagihan</th>
-                    <th>Jatuh Tempo Asli</th>
-                    <th>Keterlambatan</th>
-                    <th>Status Penagihan</th>
-                    <th style="text-align:right;">Tagihan Berjalan (07 Sep 2026)</th>
-                  </tr>
-                </thead>
-                <tbody id="spaylaterDetailTableBody">
-                  <!-- Rendered dynamically -->
-                </tbody>
-              </table>
-              <div class="table-footer">
-                <span>3 Periode Tagihan Bulanan (Januari, Februari, Maret 2025)</span>
-                <span style="font-weight:800; font-size:13.5px; color:#e11d48;">Subtotal SPayLater: Rp 512.703</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Action Toolbar: Salin Ringkasan Audit -->
-          <div class="pj-toolbar">
-            <div style="font-size:12px; color:var(--text-muted);">
-              Data dasar audit: <strong>7 September 2026</strong> &middot; Seluruh angka tagihan berjalan sudah mencakup pokok, bunga, dan denda keterlambatan resmi.
-            </div>
-            <button type="button" class="pj-btn-action primary" onclick="copyPinjolAuditSummary()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              <span>Salin Rekapitulasi Audit</span>
-            </button>
-          </div>
-
-          <!-- Hidden elements for backward compatibility bindings -->
+          <!-- Hidden compatibility elements for global bindings -->
+          <span id="pjHdrGrandTotal" style="display:none;">Rp 4.819.353</span>
+          <span id="pinjolTableTotalVal" style="display:none;">Grand Total: Rp 4.819.353</span>
+          <span id="pinjolSummaryTableBody" style="display:none;"></span>
           <span id="pinjolJatuhTempoVal" style="display:none;"></span>
           <span id="pinjolJatuhTempoSub" style="display:none;"></span>
           <span id="pinjolPokokVal" style="display:none;"></span>
@@ -5215,7 +5734,7 @@
       }
 
       /* ═════════════════════════════════════════════════════════════════════
-         PINJOL SHOPEE AUDIT ENGINE (SPINJAM & SPAYLATER)
+         SHOPEE DEBT PLAN ENGINE (ROCKET MONEY DASHBOARD LOGIC)
          Sumber Data: data/notes/pinjol.txt (Hasil Pemindaian 7 September 2026)
          ═════════════════════════════════════════════════════════════════════ */
       const PINJOL_AUDIT_DATA = {
@@ -5223,190 +5742,400 @@
         spinjamTotal: 4306650,
         spinjamPlafonAwal: 4093017,
         spaylaterTotal: 512703,
-        grandTotal: 4819353
+        grandTotal: 4819353,
+        overdueDaysRange: '524 - 583 hari'
       };
 
-      const SPINJAM_CONTRACTS = [
-        { id: '43120', contract: 'No. ...43120', applyDate: '09/11/2024', tenor: '3 Bulan', dueDate: '09/02/2025', pinjamanAwal: 500000,  tagihanBerjalan: 471107,  status: 'Cicilan 3/3 Terlambat' },
-        { id: '74003', contract: 'No. ...74003', applyDate: '10/11/2024', tenor: '3 Bulan', dueDate: '10/02/2025', pinjamanAwal: 500000,  tagihanBerjalan: 471107,  status: 'Cicilan 3/3 Terlambat' },
-        { id: '33366', contract: 'No. ...33366', applyDate: '11/11/2024', tenor: '3 Bulan', dueDate: '11/02/2025', pinjamanAwal: 500000,  tagihanBerjalan: 461683,  status: 'Cicilan 3/3 Terlambat' },
-        { id: '2793',  contract: 'No. ...2793',  applyDate: '11/11/2024', tenor: '3 Bulan', dueDate: '11/02/2025', pinjamanAwal: 1000000, tagihanBerjalan: 942206,  status: 'Cicilan 3/3 Terlambat' },
-        { id: '4652',  contract: 'No. ...4652',  applyDate: '14/11/2024', tenor: '3 Bulan', dueDate: '14/02/2025', pinjamanAwal: 1000000, tagihanBerjalan: 942206,  status: 'Cicilan 3/3 Terlambat' },
-        { id: '47332', contract: 'No. ...47332', applyDate: '22/11/2024', tenor: '12 Bulan', dueDate: '22/11/2025', pinjamanAwal: 593017, tagihanBerjalan: 1018341, status: 'Cicilan 12/12 Terlambat' }
+      const PINJOL_ACCOUNTS = [
+        {
+          id: 'SP-43120',
+          type: 'spinjam',
+          account: 'SPinjam No. ...43120',
+          provider: 'PT Lentera Dana Nusantara',
+          balance: 471107,
+          rate: '2.40% / bln',
+          initial: 500000,
+          tenor: '3 Bulan',
+          dueDate: '09/02/25',
+          overdue: true,
+          status: 'Cicilan 3/3 Terlambat'
+        },
+        {
+          id: 'SP-74003',
+          type: 'spinjam',
+          account: 'SPinjam No. ...74003',
+          provider: 'PT Lentera Dana Nusantara',
+          balance: 471107,
+          rate: '2.40% / bln',
+          initial: 500000,
+          tenor: '3 Bulan',
+          dueDate: '10/02/25',
+          overdue: true,
+          status: 'Cicilan 3/3 Terlambat'
+        },
+        {
+          id: 'SP-33366',
+          type: 'spinjam',
+          account: 'SPinjam No. ...33366',
+          provider: 'PT Lentera Dana Nusantara',
+          balance: 461683,
+          rate: '2.40% / bln',
+          initial: 500000,
+          tenor: '3 Bulan',
+          dueDate: '11/02/25',
+          overdue: true,
+          status: 'Cicilan 3/3 Terlambat'
+        },
+        {
+          id: 'SP-2793',
+          type: 'spinjam',
+          account: 'SPinjam No. ...2793',
+          provider: 'PT Lentera Dana Nusantara',
+          balance: 942206,
+          rate: '2.40% / bln',
+          initial: 1000000,
+          tenor: '3 Bulan',
+          dueDate: '11/02/25',
+          overdue: true,
+          status: 'Cicilan 3/3 Terlambat'
+        },
+        {
+          id: 'SP-4652',
+          type: 'spinjam',
+          account: 'SPinjam No. ...4652',
+          provider: 'PT Lentera Dana Nusantara',
+          balance: 942206,
+          rate: '2.40% / bln',
+          initial: 1000000,
+          tenor: '3 Bulan',
+          dueDate: '14/02/25',
+          overdue: true,
+          status: 'Cicilan 3/3 Terlambat'
+        },
+        {
+          id: 'SP-47332',
+          type: 'spinjam',
+          account: 'SPinjam No. ...47332',
+          provider: 'PT Lentera Dana Nusantara',
+          balance: 1018341,
+          rate: '3.95% / bln',
+          initial: 593017,
+          tenor: '12 Bulan',
+          dueDate: '22/11/25',
+          overdue: true,
+          status: 'Cicilan 12/12 Terlambat'
+        },
+        {
+          id: 'PL-JAN25',
+          type: 'spaylater',
+          account: 'SPayLater Tagihan Jan 2025',
+          provider: 'PT Commerce Finance',
+          balance: 117920,
+          rate: '~2.95% / bln',
+          initial: 117920,
+          tenor: '1 Bulan',
+          dueDate: '15/01/25',
+          overdue: true,
+          status: 'Lewat JT 583 hari'
+        },
+        {
+          id: 'PL-FEB25',
+          type: 'spaylater',
+          account: 'SPayLater Tagihan Feb 2025',
+          provider: 'PT Commerce Finance',
+          balance: 287827,
+          rate: '~2.95% / bln',
+          initial: 287827,
+          tenor: '1 Bulan',
+          dueDate: '15/02/25',
+          overdue: true,
+          status: 'Lewat JT 555 hari'
+        },
+        {
+          id: 'PL-MAR25',
+          type: 'spaylater',
+          account: 'SPayLater Tagihan Mar 2025',
+          provider: 'PT Commerce Finance',
+          balance: 106956,
+          rate: '~2.95% / bln',
+          initial: 106956,
+          tenor: '1 Bulan',
+          dueDate: '15/03/25',
+          overdue: true,
+          status: 'Lewat JT 524 hari'
+        }
       ];
 
-      const SPAYLATER_STATEMENTS = [
-        { id: 'PL-JAN', period: 'Januari 2025', overdueDays: 583, dueDate: '15/01/2025', tagihanBerjalan: 117920, status: 'Lewat jatuh tempo 583 hari' },
-        { id: 'PL-FEB', period: 'Februari 2025', overdueDays: 555, dueDate: '15/02/2025', tagihanBerjalan: 287827, status: 'Lewat jatuh tempo 555 hari' },
-        { id: 'PL-MAR', period: 'Maret 2025',    overdueDays: 524, dueDate: '15/03/2025', tagihanBerjalan: 106956, status: 'Lewat jatuh tempo 524 hari' }
-      ];
+      let currentPinjolTableFilter = 'all';
+      let currentTipIndex = 0;
+      let currentBreakdownMode = 'monthly';
+      let pinjolSimulatedPaid = 0;
 
-      function switchPinjolSubTab(tabKey) {
-        document.querySelectorAll('.pj-subtab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.pj-tab-pane').forEach(pane => pane.classList.remove('active'));
-
-        const btnMap = {
-          overview: 'pjTabBtnOverview',
-          spinjam: 'pjTabBtnSpinjam',
-          spaylater: 'pjTabBtnSpaylater'
-        };
-        const paneMap = {
-          overview: 'pjPaneOverview',
-          spinjam: 'pjPaneSpinjam',
-          spaylater: 'pjPaneSpaylater'
-        };
-
-        const targetBtn = document.getElementById(btnMap[tabKey]);
-        const targetPane = document.getElementById(paneMap[tabKey]);
-        if (targetBtn) targetBtn.classList.add('active');
-        if (targetPane) targetPane.classList.add('active');
-      }
-
-      function renderPinjolSummaryTable() {
-        const tbody = document.getElementById('pinjolSummaryTableBody');
+      function renderPinjolAccountsTable(filter = 'all') {
+        currentPinjolTableFilter = filter;
+        const tbody = document.getElementById('dpAccountsTableBody');
         if (!tbody) return;
 
-        tbody.innerHTML = `
+        let filtered = [...PINJOL_ACCOUNTS];
+        if (filter === 'spinjam') {
+          filtered = filtered.filter(a => a.type === 'spinjam');
+        } else if (filter === 'spaylater') {
+          filtered = filtered.filter(a => a.type === 'spaylater');
+        }
+
+        tbody.innerHTML = filtered.map(item => `
           <tr>
             <td>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <span class="pj-brand-badge-spinjam">SPinjam</span>
-                <strong>PT Lentera Dana Nusantara</strong>
+              <div class="dp-account-cell">
+                <div class="dp-acc-icon ${item.type}">
+                  ${item.type === 'spinjam' ? 'SP' : 'PL'}
+                </div>
+                <div class="dp-acc-info">
+                  <span class="dp-acc-name">${escapeHtml(item.account)}</span>
+                  <span class="dp-acc-sub">${item.provider} &bull; ${item.tenor}</span>
+                </div>
               </div>
-              <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Pinjaman Dana Tunai Langsung ke Rekening Bank</div>
+            </td>
+            <td class="mono" style="text-align:right; font-weight:700; color:var(--text-main); font-size:13px;">
+              ${fmtIDR(item.balance)}
+            </td>
+            <td class="mono" style="text-align:center; color:var(--text-secondary); font-size:12px;">
+              ${item.rate}
+            </td>
+            <td class="mono" style="text-align:right; color:var(--text-secondary); font-size:12px;">
+              ${fmtIDR(item.initial)}
             </td>
             <td>
-              <div><strong>6 Pinjaman Tunai</strong></div>
-              <div style="font-size:11.5px; color:var(--text-muted);">Plafon Awal: ${fmtIDR(PINJOL_AUDIT_DATA.spinjamPlafonAwal)}</div>
+              <span class="dp-overdue-tag" title="${escapeHtml(item.status)}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                ${item.dueDate}
+              </span>
             </td>
-            <td style="font-size:12px; color:var(--text-secondary);">
-              Suku bunga dasar 1,8% – 3,95%/bulan + denda keterlambatan akumulatif
-            </td>
-            <td>
-              <span class="badge-pill warn">Cicilan Terlambat (JT Feb 2025)</span>
-            </td>
-            <td class="mono" style="text-align:right; font-weight:800; color:#ee4d2d; font-size:14px;">
-              ${fmtIDR(PINJOL_AUDIT_DATA.spinjamTotal)}
+            <td style="text-align:center; color:var(--text-muted); cursor:pointer;" onclick="openSimulasiPelunasan('${item.id}')" title="Lihat Opsi">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
             </td>
           </tr>
-          <tr>
-            <td>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <span class="pj-brand-badge-spaylater">SPayLater</span>
-                <strong>PT Commerce Finance</strong>
-              </div>
-              <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Pembiayaan Transaksi Belanja (BNPL) di Shopee</div>
-            </td>
-            <td>
-              <div><strong>3 Bulan Tagihan</strong></div>
-              <div style="font-size:11.5px; color:var(--text-muted);">Tagihan Jan, Feb, Mar 2025</div>
-            </td>
-            <td style="font-size:12px; color:var(--text-secondary);">
-              Suku bunga cicilan standar ~2,95%/bulan + denda keterlambatan >500 hari
-            </td>
-            <td>
-              <span class="badge-pill out">Lewat JT &gt;500 Hari</span>
-            </td>
-            <td class="mono" style="text-align:right; font-weight:800; color:#e11d48; font-size:14px;">
-              ${fmtIDR(PINJOL_AUDIT_DATA.spaylaterTotal)}
-            </td>
-          </tr>
-        `;
+        `).join('');
+
+        // Update Total row in footer
+        const totalBal = filtered.reduce((s, a) => s + a.balance, 0);
+        const totalInit = filtered.reduce((s, a) => s + a.initial, 0);
+        const totalBalEl = document.getElementById('dpTableTotalBalance');
+        if (totalBalEl) totalBalEl.textContent = fmtIDR(totalBal);
       }
 
-      function renderPinjolContracts() {
-        const grid = document.getElementById('pjSpinjamCardGrid');
-        const tbody = document.getElementById('spinjamDetailTableBody');
+      function filterPinjolTable(type) {
+        ['all', 'spinjam', 'spaylater'].forEach(t => {
+          const btn = document.getElementById('dpFilt' + t.charAt(0).toUpperCase() + t.slice(1));
+          if (btn) btn.classList.toggle('active', t === type);
+        });
+        renderPinjolAccountsTable(type);
+      }
 
-        if (grid) {
-          grid.innerHTML = SPINJAM_CONTRACTS.map((c, i) => `
-            <div class="pj-contract-card">
-              <div class="pj-contract-top">
-                <span class="pj-contract-id">
-                  <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ee4d2d; flex-shrink:0;"></span>
-                  SPinjam ${c.contract}
-                </span>
-                <span class="badge-pill warn" style="font-size:10px; padding:3px 8px;">${c.status}</span>
-              </div>
-              <div class="pj-contract-meta">
-                <div>Pengajuan: <strong>${c.applyDate}</strong></div>
-                <div>Tenor: <strong>${c.tenor}</strong></div>
-                <div>Pinjaman Awal: <strong style="color:#3b82f6;">${fmtIDR(c.pinjamanAwal)}</strong></div>
-                <div>Jatuh Tempo: <strong>${c.dueDate}</strong></div>
-              </div>
-              <div class="pj-contract-footer">
-                <div>
-                  <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.4px;">Tagihan Berjalan (07 Sep 2026)</div>
-                  <div style="font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:800; color:#ee4d2d; margin-top:2px;">${fmtIDR(c.tagihanBerjalan)}</div>
-                </div>
-                <div style="text-align:right; font-size:10.5px; color:var(--text-muted);">
-                  Pokok + bunga + denda
-                </div>
-              </div>
-            </div>
-          `).join('');
-        }
+      function selectPayoffMethod(method) {
+        ['Snowball', 'Avalanche', 'Haircut'].forEach(m => {
+          const btn = document.getElementById('dpMeth' + m);
+          if (btn) btn.classList.toggle('active', m.toLowerCase() === method);
+        });
 
-        if (tbody) {
-          tbody.innerHTML = SPINJAM_CONTRACTS.map((c, i) => `
-            <tr>
-              <td class="mono" style="text-align:center; color:var(--text-muted);">${i + 1}</td>
-              <td style="font-weight:700; font-family:'JetBrains Mono',monospace;">${c.contract}</td>
-              <td class="mono">${c.applyDate}</td>
-              <td><span class="badge-pill neutral">${c.tenor}</span></td>
-              <td class="mono" style="text-align:right; font-weight:600; color:#3b82f6;">${fmtIDR(c.pinjamanAwal)}</td>
-              <td class="mono">${c.dueDate}</td>
-              <td><span class="badge-pill warn">${c.status}</span></td>
-              <td class="mono" style="text-align:right; font-weight:800; color:#ee4d2d;">${fmtIDR(c.tagihanBerjalan)}</td>
-            </tr>
-          `).join('');
+        const descEl = document.getElementById('dpMethodDescText');
+        const badgeEl = document.getElementById('dpSubcardBadge');
+        const titleEl = document.getElementById('dpSubcardTitle');
+        const subEl = document.getElementById('dpSubcardSubtitle');
+        const balEl = document.getElementById('dpSubcardBalance');
+        const rateEl = document.getElementById('dpSubcardRate');
+        const dueEl = document.getElementById('dpSubcardDue');
+
+        if (method === 'snowball') {
+          if (descEl) descEl.textContent = 'The snowball method is a strategy that focuses on paying off your smallest balances first before moving on to the larger ones.';
+          if (badgeEl) { badgeEl.textContent = 'Lowest Account Balance'; badgeEl.style.color = '#ee4d2d'; badgeEl.style.background = 'rgba(238, 77, 45, 0.12)'; }
+          if (titleEl) titleEl.textContent = 'SPayLater Tagihan Mar 2025';
+          if (subEl) subEl.textContent = 'PT Commerce Finance';
+          if (balEl) balEl.textContent = 'Rp 106.956';
+          if (rateEl) rateEl.textContent = '~2.95% / bln';
+          if (dueEl) dueEl.textContent = '15/03/2025 (Lewat 524 hr)';
+        } else if (method === 'avalanche') {
+          if (descEl) descEl.textContent = 'The avalanche method prioritizes paying off the debts with the highest interest rates and penalties first to minimize long-term total loss.';
+          if (badgeEl) { badgeEl.textContent = 'Highest Interest Facility'; badgeEl.style.color = '#f97316'; badgeEl.style.background = 'rgba(249, 115, 22, 0.12)'; }
+          if (titleEl) titleEl.textContent = 'SPinjam No. ...47332 (12 Bln)';
+          if (subEl) subEl.textContent = 'PT Lentera Dana Nusantara';
+          if (balEl) balEl.textContent = 'Rp 1.018.341';
+          if (rateEl) rateEl.textContent = '3.95% / bln (Maksimal)';
+          if (dueEl) dueEl.textContent = '22/11/2025 (Cicilan 12/12)';
+        } else if (method === 'haircut') {
+          if (descEl) descEl.textContent = 'Strategi restrukturisasi khusus kredit macet Kolektibilitas 5 OJK (>500 hari) melalui negosiasi pelunasan pokok dengan pemutihan 100% bunga dan denda.';
+          if (badgeEl) { badgeEl.textContent = 'Simulasi Negosiasi Haircut'; badgeEl.style.color = '#10b981'; badgeEl.style.background = 'rgba(16, 185, 129, 0.12)'; }
+          if (titleEl) titleEl.textContent = 'Pelunasan Pokok Tanpa Denda';
+          if (subEl) subEl.textContent = 'SPinjam & SPayLater Terpadu';
+          if (balEl) balEl.textContent = 'Rp 4.093.017 (Hemat Rp 726.336)';
+          if (rateEl) rateEl.textContent = '0.00% (Pemutihan 100%)';
+          if (dueEl) dueEl.textContent = 'Target Q4 2026';
         }
       }
 
-      function renderPinjolSpaylater() {
-        const grid = document.getElementById('pjSpaylaterCardGrid');
-        const tbody = document.getElementById('spaylaterDetailTableBody');
+      function togglePinjolTip() {
+        currentTipIndex = currentTipIndex === 0 ? 1 : 0;
+        const dot1 = document.getElementById('dpTipDot1');
+        const dot2 = document.getElementById('dpTipDot2');
+        const body = document.getElementById('dpTipsBodyText');
 
-        if (grid) {
-          grid.innerHTML = SPAYLATER_STATEMENTS.map((s, i) => `
-            <div class="pj-contract-card spaylater-card">
-              <div class="pj-contract-top">
-                <span class="pj-contract-id">
-                  <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#e11d48; flex-shrink:0;"></span>
-                  SPayLater ${s.period}
-                </span>
-                <span class="badge-pill out" style="font-size:10px; padding:3px 8px;">Lewat JT ${s.overdueDays} hari</span>
-              </div>
-              <div class="pj-contract-meta">
-                <div>Periode Tagihan: <strong>${s.period}</strong></div>
-                <div>Jatuh Tempo Asli: <strong>${s.dueDate}</strong></div>
-                <div>Keterlambatan: <strong style="color:var(--color-danger);">${s.overdueDays} hari</strong></div>
-                <div>Status Penagihan: <strong style="color:var(--color-danger);">Menunggak</strong></div>
-              </div>
-              <div class="pj-contract-footer">
-                <div>
-                  <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.4px;">Tagihan Berjalan (07 Sep 2026)</div>
-                  <div style="font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:800; color:#e11d48; margin-top:2px;">${fmtIDR(s.tagihanBerjalan)}</div>
-                </div>
-                <div style="text-align:right; font-size:10.5px; color:var(--text-muted);">
-                  Pokok + bunga + denda
-                </div>
-              </div>
-            </div>
-          `).join('');
+        if (dot1) dot1.classList.toggle('active', currentTipIndex === 0);
+        if (dot2) dot2.classList.toggle('active', currentTipIndex === 1);
+
+        if (body) {
+          if (currentTipIndex === 0) {
+            body.innerHTML = 'Status kredit telah lewat jatuh tempo &gt;500 hari (Kolektibilitas 5). Disarankan mengajukan permohonan <strong>haircut pokok</strong> (penghapusan 100% bunga dan denda) langsung ke legal resmi Shopee.';
+          } else {
+            body.innerHTML = 'Jangan mencicil parsial tanpa perjanjian tertulis! Pembayaran sebagian hanya akan memotong denda harian tanpa mengurangi sisa pokok pinjaman yang tercatat di SLIK OJK.';
+          }
+        }
+      }
+
+      function switchBreakdownMode(mode) {
+        currentBreakdownMode = mode;
+        const tabM = document.getElementById('dpBdTabMonthly');
+        const tabY = document.getElementById('dpBdTabYtd');
+        if (tabM) tabM.classList.toggle('active', mode === 'monthly');
+        if (tabY) tabY.classList.toggle('active', mode === 'ytd');
+
+        const desc = document.getElementById('dpBreakdownDesc');
+        if (desc) {
+          desc.textContent = mode === 'monthly'
+            ? 'The amounts below reflect your combined obligations across all Shopee debt accounts.'
+            : 'Perbandingan antara pokok pinjaman awal dan akumulasi denda serta suku bunga berjalan.';
         }
 
-        if (tbody) {
-          tbody.innerHTML = SPAYLATER_STATEMENTS.map((s, i) => `
-            <tr>
-              <td class="mono" style="text-align:center; color:var(--text-muted);">${i + 1}</td>
-              <td style="font-weight:700;">${s.period}</td>
-              <td class="mono">${s.dueDate}</td>
-              <td><span class="badge-pill out">Lewat ${s.overdueDays} hari</span></td>
-              <td><span class="badge-pill out">Menunggak</span></td>
-              <td class="mono" style="text-align:right; font-weight:800; color:#e11d48;">${fmtIDR(s.tagihanBerjalan)}</td>
-            </tr>
-          `).join('');
+        initShopeeBreakdownChart(mode);
+      }
+
+      /* ─── Donut Chart: Dominant Orange (#ee4d2d) and Black (#18181b) ─── */
+      function initShopeeBreakdownChart(mode = 'monthly') {
+        const canvas = document.getElementById('chartShopeeBreakdown');
+        if (!canvas) return;
+
+        if (window._chartShopeeBreakdown) {
+          window._chartShopeeBreakdown.destroy();
+          window._chartShopeeBreakdown = null;
+        }
+
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const blackColor = isDark ? '#27272a' : '#18181b';
+        const orangeColor = '#ee4d2d';
+
+        let chartData, chartLabels, centerAmt, centerSub, legLabel1, legVal1, legLabel2, legVal2;
+
+        if (mode === 'monthly') {
+          chartLabels = ['SPinjam (6 Kontrak)', 'SPayLater (3 Bln)'];
+          chartData = [PINJOL_AUDIT_DATA.spinjamTotal, PINJOL_AUDIT_DATA.spaylaterTotal];
+          centerAmt = 'Rp 4,8M';
+          centerSub = 'Total Balance';
+          legLabel1 = 'Combined SPinjam';
+          legVal1 = fmtIDR(PINJOL_AUDIT_DATA.spinjamTotal);
+          legLabel2 = 'Combined SPayLater';
+          legVal2 = fmtIDR(PINJOL_AUDIT_DATA.spaylaterTotal);
+        } else {
+          const pokokAwal = PINJOL_AUDIT_DATA.spinjamPlafonAwal;
+          const bungaDenda = PINJOL_AUDIT_DATA.grandTotal - pokokAwal;
+          chartLabels = ['Plafon Pokok Awal', 'Bunga & Denda'];
+          chartData = [pokokAwal, bungaDenda];
+          centerAmt = 'Rp 4,09M';
+          centerSub = 'Pokok Awal';
+          legLabel1 = 'Pokok Pengajuan Awal';
+          legVal1 = fmtIDR(pokokAwal);
+          legLabel2 = 'Akumulasi Bunga & Denda';
+          legVal2 = fmtIDR(bungaDenda);
+        }
+
+        const centerAmtEl = document.getElementById('dpDonutCenterAmount');
+        if (centerAmtEl) centerAmtEl.textContent = centerAmt;
+        const centerSubEl = document.getElementById('dpDonutCenterSub');
+        if (centerSubEl) centerSubEl.textContent = centerSub;
+
+        const legL1 = document.getElementById('dpLegLabel1');
+        if (legL1) legL1.textContent = legLabel1;
+        const legV1 = document.getElementById('dpLegVal1');
+        if (legV1) legV1.textContent = legVal1;
+        const legL2 = document.getElementById('dpLegLabel2');
+        if (legL2) legL2.textContent = legLabel2;
+        const legV2 = document.getElementById('dpLegVal2');
+        if (legV2) legV2.textContent = legVal2;
+
+        window._chartShopeeBreakdown = new Chart(canvas, {
+          type: 'doughnut',
+          data: {
+            labels: chartLabels,
+            datasets: [{
+              data: chartData,
+              backgroundColor: [orangeColor, blackColor],
+              hoverBackgroundColor: ['#f97316', isDark ? '#3f3f46' : '#27272a'],
+              borderWidth: 0,
+              borderRadius: 4,
+              spacing: 3
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '74%',
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ` ${ctx.label}: ${fmtIDR(ctx.raw)} (${((ctx.raw / PINJOL_AUDIT_DATA.grandTotal) * 100).toFixed(1)}%)`
+                }
+              }
+            },
+            animation: {
+              duration: 700
+            }
+          }
+        });
+      }
+
+      /* ─── Circular Payoff Gauge ─── */
+      function renderPinjolGauge() {
+        const circle = document.getElementById('dpGaugeCircle');
+        const text = document.getElementById('dpGaugePercentText');
+        const paidEl = document.getElementById('dpAmountPaidText');
+
+        const radius = 54;
+        const circumference = 2 * Math.PI * radius; // ~339.29
+
+        if (circle) {
+          circle.style.strokeDasharray = `${circumference} ${circumference}`;
+          const pct = Math.min(100, Math.max(0, (pinjolSimulatedPaid / PINJOL_AUDIT_DATA.grandTotal) * 100));
+          const offset = circumference - (pct / 100) * circumference;
+          circle.style.strokeDashoffset = offset;
+        }
+
+        if (text) {
+          const pct = Math.round((pinjolSimulatedPaid / PINJOL_AUDIT_DATA.grandTotal) * 100);
+          text.textContent = `${pct}%`;
+        }
+        if (paidEl) {
+          paidEl.textContent = fmtIDR(pinjolSimulatedPaid);
+        }
+      }
+
+      function openSimulasiPelunasan(accId = null) {
+        let accInfo = '';
+        if (accId) {
+          const acc = PINJOL_ACCOUNTS.find(a => a.id === accId);
+          if (acc) {
+            accInfo = `\nAkun Terpilih: ${acc.account} (${fmtIDR(acc.balance)})`;
+          }
+        }
+
+        const msg = `PILIHAN SIMULASI PELUNASAN SHOPEE DEBT PLAN:${accInfo}\n` +
+          `1. Pelunasan Penuh (Total): ${fmtIDR(PINJOL_AUDIT_DATA.grandTotal)}\n` +
+          `2. Permohonan Haircut Pokok OJK (Diskon 100% bunga & denda): ${fmtIDR(PINJOL_AUDIT_DATA.spinjamPlafonAwal)} (Hemat Rp 726.336)\n` +
+          `3. Program Cicilan Keringanan 3x: Rp 1.364.339 / bulan\n\n` +
+          `Apakah Anda ingin mensimulasikan pembayaran haircut pokok sekarang?`;
+
+        if (confirm(msg)) {
+          pinjolSimulatedPaid = PINJOL_AUDIT_DATA.spinjamPlafonAwal;
+          renderPinjolGauge();
+          showToast('Simulasi pelunasan haircut pokok berhasil diterapkan ke gauge!', '✓');
         }
       }
 
@@ -5464,11 +6193,17 @@ III. KESIMPULAN UTANG KESELURUHAN:
         showToast('Rekapitulasi audit pinjol berhasil disalin!', '✓');
       }
 
+      // Backward compatibility wrappers
+      function switchPinjolSubTab() {}
+      function renderPinjolSummaryTable() {}
+      function renderPinjolContracts() {}
+      function renderPinjolSpaylater() {}
+
       // Master entry point for Pinjol Cards
       function renderPinjolCards() {
-        renderPinjolSummaryTable();
-        renderPinjolContracts();
-        renderPinjolSpaylater();
+        renderPinjolAccountsTable(currentPinjolTableFilter || 'all');
+        initShopeeBreakdownChart(currentBreakdownMode || 'monthly');
+        renderPinjolGauge();
 
         // Update Overview & Header balances
         const cardShopee = document.getElementById('cardShopeeBalance');
