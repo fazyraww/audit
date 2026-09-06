@@ -3815,6 +3815,289 @@
       color: var(--text-muted);
       margin-top: -8px;
     }
+
+    /* ═════════════════════════════════════════════════════════════════════
+       SHOPEE PINJOL & MODAL MOBILE RESPONSIVE ENGINE
+       ═════════════════════════════════════════════════════════════════════ */
+    .dp-detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 8px;
+      gap: 12px;
+    }
+    .dp-detail-row-lbl {
+      color: var(--text-muted);
+      flex-shrink: 0;
+      font-size: 12px;
+    }
+    .dp-detail-row-val {
+      font-weight: 700;
+      color: var(--text-main);
+      text-align: right;
+      word-break: break-word;
+      font-size: 12.5px;
+    }
+
+    @media (max-width: 768px) {
+      .dp-container {
+        padding: 0;
+      }
+      .dp-header-card {
+        padding: 16px 14px;
+        border-radius: 14px;
+      }
+      .dp-header-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+      }
+      .dp-brand-row {
+        gap: 10px;
+      }
+      .dp-main-title {
+        font-size: 20px;
+        letter-spacing: -0.4px;
+      }
+      .dp-subtitle {
+        font-size: 11.5px;
+        line-height: 1.4;
+      }
+      .dp-header-right {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        gap: 8px;
+      }
+      .dp-meta-status {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        padding: 8px 12px;
+        font-size: 11.5px;
+      }
+      .dp-header-right .dp-pill-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 14px;
+      }
+      .dp-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .dp-col {
+        gap: 16px;
+      }
+      .dp-card {
+        padding: 16px 14px;
+        border-radius: 14px;
+        gap: 14px;
+      }
+      .dp-card-title {
+        font-size: 16px;
+      }
+      .dp-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .dp-goal-body {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .dp-gauge-wrap {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 14px;
+      }
+      .dp-gauge-metrics {
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+      }
+      .dp-metric-amount {
+        font-size: 20px;
+      }
+      .dp-btn-outline {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        padding: 9px 14px;
+      }
+      .dp-filter-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        max-width: 100%;
+        width: 100%;
+      }
+      .dp-filter-tabs::-webkit-scrollbar {
+        display: none;
+      }
+      .dp-filter-tab {
+        flex-shrink: 0;
+        padding: 6px 11px;
+        font-size: 11px;
+      }
+      .dp-methods-tabs,
+      .dp-breakdown-tabs {
+        gap: 16px;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 6px;
+      }
+      .dp-methods-tabs::-webkit-scrollbar,
+      .dp-breakdown-tabs::-webkit-scrollbar {
+        display: none;
+      }
+      .dp-breakdown-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .dp-donut-box {
+        margin: 0 auto;
+      }
+      .dp-donut-legend {
+        width: 100%;
+        gap: 10px;
+      }
+      .dp-legend-item {
+        justify-content: space-between;
+        width: 100%;
+      }
+      .dp-table-wrap {
+        -webkit-overflow-scrolling: touch;
+        position: relative;
+        border-radius: 10px;
+      }
+      .dp-table {
+        min-width: 620px;
+      }
+      .dp-timeline-wrap {
+        padding-left: 14px;
+        gap: 10px;
+      }
+      .dp-timeline-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        padding: 10px 12px;
+      }
+      .dp-timeline-item .mono {
+        align-self: flex-end;
+      }
+      .dp-legal-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .dp-legal-card {
+        padding: 12px;
+      }
+
+      /* Modal Mobile Layout */
+      .modal-card {
+        width: 95% !important;
+        max-width: 95% !important;
+        padding: 18px 14px !important;
+        max-height: 88vh !important;
+        overflow-y: auto !important;
+        border-radius: 14px !important;
+      }
+      .dp-sim-scenarios {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .dp-sim-card {
+        padding: 12px;
+      }
+      .dp-sim-budget-box {
+        padding: 12px;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .dp-sim-slider-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+      .dp-sim-slider {
+        width: 100%;
+      }
+      .dp-sim-input {
+        width: 100%;
+        text-align: center;
+        font-size: 15px;
+        padding: 10px;
+      }
+      .dp-sim-metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+      .dp-sim-metric {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+      }
+      .dp-sim-account-list {
+        max-height: 140px;
+      }
+      .dp-sim-acc-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        padding: 8px 10px;
+      }
+      .dp-sim-acc-item > div:last-child {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .modal-action-footer {
+        flex-direction: column-reverse;
+        gap: 8px;
+      }
+      .modal-action-footer > div {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .modal-action-footer button {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 14px;
+      }
+      .dp-detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3px;
+      }
+      .dp-detail-row-val {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .dp-main-title {
+        font-size: 18px;
+      }
+      .dp-sim-quick-chips {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+      }
+      .dp-sim-chip {
+        text-align: center;
+        padding: 6px 4px;
+        font-size: 10.5px;
+      }
+    }
   </style>
 
 <body>
@@ -4356,7 +4639,7 @@
                   <div class="dp-shopee-logo-badge" title="Shopee Financial">
                     <img src="assets/images/shopee.svg" alt="Shopee Logo" class="dp-shopee-logo-img">
                   </div>
-                  <h1 class="dp-main-title">Shopee Debt Plan</h1>
+                  <h1 class="dp-main-title">Rencana Pelunasan Utang Shopee</h1>
                 </div>
                 <div class="dp-subtitle">
                   Konsolidasi Portofolio Tagihan SPinjam &amp; SPayLater &bull; Hasil Pemindaian: <strong>07 September 2026</strong>
@@ -4373,24 +4656,24 @@
                 </button>
                 <button type="button" class="dp-pill-btn" onclick="copyPinjolAuditSummary()">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                  Salin Audit
+                  Salin Rekapitulasi
                 </button>
               </div>
             </div>
 
             <!-- 2-Column Grid Layout -->
             <div class="dp-grid">
-              <!-- Left Column: Goal Progress + Active Accounts -->
+              <!-- Left Column: Target Pelunasan + Portofolio Akun -->
               <div class="dp-col">
-                <!-- Section 1: Goal Progress -->
+                <!-- Section 1: Target & Progres Pelunasan -->
                 <div>
                   <div class="dp-section-label">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                    Goal Progress
+                    Target &amp; Progres Pelunasan
                   </div>
                   <div class="dp-card">
                     <div class="dp-card-header">
-                      <div class="dp-card-title">Pay Down Total Debt</div>
+                      <div class="dp-card-title">Target Pelunasan Portofolio</div>
                       <span class="badge-pill out" style="font-size:11px;">Status Macet &gt;500 Hari</span>
                     </div>
 
@@ -4403,32 +4686,32 @@
                             <circle id="dpGaugeCircle" class="dp-gauge-bar" cx="70" cy="70" r="54"></circle>
                           </svg>
                           <div class="dp-gauge-center">
-                            <span class="dp-gauge-center-label">Payoff Progress</span>
+                            <span class="dp-gauge-center-label">Progres Pelunasan</span>
                             <span class="dp-gauge-center-val" id="dpGaugePercentText">0%</span>
                           </div>
                         </div>
 
                         <div class="dp-gauge-metrics">
                           <div class="dp-metric-block">
-                            <span class="dp-metric-label">Amount Paid</span>
+                            <span class="dp-metric-label">Dana Disimulasikan</span>
                             <span class="dp-metric-amount" id="dpAmountPaidText">Rp 0</span>
                           </div>
                           <div class="dp-metric-block">
-                            <span class="dp-metric-label">Goal Amount</span>
+                            <span class="dp-metric-label">Total Kewajiban Berjalan</span>
                             <span class="dp-metric-amount" style="color:#ee4d2d;" id="dpGoalAmountText">Rp 4.819.353</span>
-                            <span class="dp-metric-target">Target Haircut 2026</span>
+                            <span class="dp-metric-target">Target Negosiasi Pokok: Rp 4.093.017</span>
                           </div>
                         </div>
                       </div>
 
-                      <!-- Tips to Consider Sub-card -->
+                      <!-- Catatan Strategis & Mitigasi Risiko -->
                       <div class="dp-tips-card">
                         <div class="dp-tips-top">
                           <div class="dp-tips-title-wrap">
                             <div class="dp-tips-icon-box">
                               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                             </div>
-                            <span>Tips to Consider</span>
+                            <span>Catatan Strategis &amp; Mitigasi Risiko</span>
                           </div>
                           <div class="dp-tips-dots">
                             <span class="dp-tips-dot active" id="dpTipDot1"></span>
@@ -4436,11 +4719,11 @@
                           </div>
                         </div>
                         <div class="dp-tips-body" id="dpTipsBodyText">
-                          Status kredit telah lewat jatuh tempo &gt;500 hari (Kolektibilitas 5). Disarankan mengajukan permohonan <strong>haircut pokok</strong> (penghapusan 100% bunga dan denda) langsung ke legal resmi Shopee.
+                          Status kredit telah lewat jatuh tempo &gt;500 hari (Kolektibilitas 5). Berdasarkan POJK, debitur berhak mengajukan permohonan <strong>haircut pokok</strong> (penghapusan 100% bunga dan denda) langsung ke perwakilan legal resmi Shopee.
                         </div>
                         <div>
                           <button type="button" class="dp-tips-link" onclick="togglePinjolTip()">
-                            <span>Pelajari Opsi Haircut</span>
+                            <span>Pelajari Opsi Keringanan Pokok</span>
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                           </button>
                         </div>
@@ -4450,21 +4733,21 @@
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
                       <button type="button" class="dp-btn-outline" onclick="openSimulasiModal()">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                        Buka Kalkulator Pelunasan &amp; Haircut
+                        Buka Kalkulator Pelunasan &amp; Restrukturisasi
                       </button>
                       <button type="button" class="dp-btn-outline" onclick="applyPresetScenario('haircut'); applySimulasiToDashboard();">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
-                        Simulasi Cepat: Haircut Pokok (Rp 4.093.017)
+                        Terapkan Simulasi Pokok Saja (Haircut: Rp 4.093.017)
                       </button>
                     </div>
                   </div>
                 </div>
 
-                <!-- Section 2: Active Accounts -->
+                <!-- Section 2: Portofolio Fasilitas Terdaftar -->
                 <div>
                   <div class="dp-section-label">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-                    Active Accounts
+                    Portofolio Fasilitas Terverifikasi (9 Akun)
                   </div>
                   <div class="dp-card">
                     <!-- Multi-view selector tabs -->
@@ -4487,7 +4770,7 @@
                     <div id="dpViewSummary" class="dp-accounts-view-pane active">
                       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
                         <div style="font-size:12px; color:var(--text-muted);">
-                          Klik baris akun untuk melihat rincian legal lengkap dari <code style="font-family:'JetBrains Mono',monospace;">pinjol.txt</code>
+                          Klik baris fasilitas untuk melihat berkas forensik terverifikasi dari <code style="font-family:'JetBrains Mono',monospace;">pinjol.txt</code>
                         </div>
                         <div class="dp-filter-tabs">
                           <button type="button" class="dp-filter-tab active" id="dpFiltAll" onclick="filterPinjolTable('all')">Semua (9)</button>
@@ -4501,11 +4784,11 @@
                         <table class="dp-table">
                           <thead>
                             <tr>
-                              <th>Account</th>
-                              <th style="text-align:right;">Total Balance</th>
-                              <th style="text-align:center;">APR / Interest</th>
-                              <th style="text-align:right;">Plafon / Min</th>
-                              <th>Due Date</th>
+                              <th>Fasilitas &amp; Penyelenggara</th>
+                              <th style="text-align:right;">Tagihan Berjalan</th>
+                              <th style="text-align:center;">Suku Bunga</th>
+                              <th style="text-align:right;">Plafon Awal</th>
+                              <th>Jatuh Tempo Asli</th>
                               <th style="text-align:center; width:30px;"></th>
                             </tr>
                           </thead>
@@ -4514,9 +4797,9 @@
                           </tbody>
                           <tfoot>
                             <tr class="dp-total-row">
-                              <td>Total (9 Akun)</td>
+                              <td>Total Kewajiban (9 Akun)</td>
                               <td class="mono" style="text-align:right; color:var(--color-danger); font-size:14px;" id="dpTableTotalBalance">Rp 4.819.353</td>
-                              <td class="mono" style="text-align:center; color:var(--text-muted);">Avg ~2.8%</td>
+                              <td class="mono" style="text-align:center; color:var(--text-muted);">Rata-rata ~2.8%/bln</td>
                               <td class="mono" style="text-align:right; color:var(--text-main);">Rp 4.093.017</td>
                               <td><span class="badge-pill out" style="font-size:10.5px;">Macet &gt;500 hr</span></td>
                               <td></td>
@@ -4604,34 +4887,34 @@
                     </div>
 
                     <div class="dp-footer-note">
-                      Powered by Shopee Audit Engine &middot; PT Lentera Dana Nusantara &amp; PT Commerce Finance
+                      Audit Forensik Shopee Financial &middot; PT Lentera Dana Nusantara &amp; PT Commerce Finance
                     </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Right Column: Payoff Methods + Payments Breakdown -->
+              <!-- Right Column: Skema Pelunasan + Struktur Portofolio -->
               <div class="dp-col">
-                <!-- Section 3: Payoff Methods -->
+                <!-- Section 3: Strategi Skema Pelunasan -->
                 <div>
                   <div class="dp-section-label">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    Payoff Methods
+                    Strategi Skema Pelunasan
                   </div>
                   <div class="dp-card">
                     <div class="dp-methods-tabs">
-                      <button type="button" class="dp-method-tab active" id="dpMethSnowball" onclick="selectPayoffMethod('snowball')">Snowball Method</button>
-                      <button type="button" class="dp-method-tab" id="dpMethAvalanche" onclick="selectPayoffMethod('avalanche')">Avalanche Method</button>
-                      <button type="button" class="dp-method-tab" id="dpMethHaircut" onclick="selectPayoffMethod('haircut')">Haircut OJK</button>
+                      <button type="button" class="dp-method-tab active" id="dpMethSnowball" onclick="selectPayoffMethod('snowball')">Metode Snowball</button>
+                      <button type="button" class="dp-method-tab" id="dpMethAvalanche" onclick="selectPayoffMethod('avalanche')">Metode Avalanche</button>
+                      <button type="button" class="dp-method-tab" id="dpMethHaircut" onclick="selectPayoffMethod('haircut')">Negosiasi Haircut OJK</button>
                     </div>
 
                     <div class="dp-method-desc" id="dpMethodDescText">
-                      The snowball method is a strategy that focuses on paying off your smallest balances first before moving on to the larger ones.
+                      Metode Snowball memprioritaskan pelunasan fasilitas dengan saldo terkecil terlebih dahulu untuk mengeliminasi jumlah akun menunggak secara bertahap dan meringankan beban psikologis.
                     </div>
 
                     <!-- Subcard: Lowest Account Balance -->
                     <div class="dp-subcard" id="dpMethodSubcard">
-                      <span class="dp-badge-lowest" id="dpSubcardBadge">Lowest Account Balance</span>
+                      <span class="dp-badge-lowest" id="dpSubcardBadge">Fasilitas Saldo Terendah</span>
                       <div class="dp-subcard-account">
                         <div class="dp-subcard-logo" id="dpSubcardIcon">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><rect x="6" y="14" width="4" height="2" rx="0.5"/></svg>
@@ -4643,15 +4926,15 @@
                       </div>
                       <div class="dp-subcard-meta">
                         <div class="dp-subcard-row">
-                          <span>Account Balance</span>
+                          <span>Sisa Tagihan Berjalan</span>
                           <span class="mono" style="color:var(--color-danger);" id="dpSubcardBalance">Rp 117.920</span>
                         </div>
                         <div class="dp-subcard-row">
-                          <span>Annual / Monthly Rate</span>
+                          <span>Suku Bunga Kontrak</span>
                           <span class="mono" id="dpSubcardRate">~2.95% / bln</span>
                         </div>
                         <div class="dp-subcard-row">
-                          <span>Jatuh Tempo</span>
+                          <span>Jatuh Tempo Asli</span>
                           <span class="mono" id="dpSubcardDue">15/01/2025 (Lewat 583 hr)</span>
                         </div>
                       </div>
@@ -4659,20 +4942,20 @@
                   </div>
                 </div>
 
-                <!-- Section 4: Payments Breakdown -->
+                <!-- Section 4: Struktur Portofolio Utang -->
                 <div>
                   <div class="dp-section-label">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
-                    Payments Breakdown
+                    Struktur Portofolio Utang
                   </div>
                   <div class="dp-card">
                     <div class="dp-breakdown-tabs">
-                      <button type="button" class="dp-breakdown-tab active" id="dpBdTabMonthly" onclick="switchBreakdownMode('monthly')">Monthly</button>
-                      <button type="button" class="dp-breakdown-tab" id="dpBdTabYtd" onclick="switchBreakdownMode('ytd')">Year to Date</button>
+                      <button type="button" class="dp-breakdown-tab active" id="dpBdTabMonthly" onclick="switchBreakdownMode('monthly')">Rincian Layanan</button>
+                      <button type="button" class="dp-breakdown-tab" id="dpBdTabYtd" onclick="switchBreakdownMode('ytd')">Pokok vs Bunga</button>
                     </div>
 
                     <div style="font-size:12.5px; color:var(--text-secondary); line-height:1.5;" id="dpBreakdownDesc">
-                      The amounts below reflect your combined obligations across all Shopee debt accounts.
+                      Komposisi perbandingan total kewajiban berjalan antara fasilitas pinjaman tunai SPinjam dan pembiayaan belanja SPayLater.
                     </div>
 
                     <div class="dp-breakdown-content">
@@ -4681,26 +4964,26 @@
                         <canvas id="chartShopeeBreakdown" width="170" height="170"></canvas>
                         <div class="dp-donut-center">
                           <span class="dp-donut-amount" id="dpDonutCenterAmount">Rp 4,8M</span>
-                          <span class="dp-donut-sub" id="dpDonutCenterSub">Total Balance</span>
-                          <span class="dp-donut-date">07/09/26</span>
+                          <span class="dp-donut-sub" id="dpDonutCenterSub">Total Utang</span>
+                          <span class="dp-donut-date">07 Sep 2026</span>
                         </div>
                       </div>
 
                       <!-- Legend Items beside chart -->
                       <div class="dp-donut-legend" id="dpDonutLegend">
                         <div class="dp-legend-item">
-                          <span class="dp-legend-circle orange"></span>
-                          <div class="dp-legend-text">
-                            <span class="dp-legend-label" id="dpLegLabel1">Combined SPinjam</span>
-                            <span class="dp-legend-val" style="color:#ee4d2d;" id="dpLegVal1">Rp 4.306.650</span>
+                          <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="dp-legend-circle orange"></span>
+                            <span class="dp-legend-label" id="dpLegLabel1">Total SPinjam (6 Kontrak)</span>
                           </div>
+                          <span class="dp-legend-val" style="color:#ee4d2d;" id="dpLegVal1">Rp 4.306.650</span>
                         </div>
                         <div class="dp-legend-item">
-                          <span class="dp-legend-circle black"></span>
-                          <div class="dp-legend-text">
-                            <span class="dp-legend-label" id="dpLegLabel2">Combined SPayLater</span>
-                            <span class="dp-legend-val" id="dpLegVal2">Rp 512.703</span>
+                          <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="dp-legend-circle black"></span>
+                            <span class="dp-legend-label" id="dpLegLabel2">Total SPayLater (3 Periode)</span>
                           </div>
+                          <span class="dp-legend-val" id="dpLegVal2">Rp 512.703</span>
                         </div>
                       </div>
                     </div>
@@ -5147,7 +5430,7 @@
         <div>
           <div class="modal-heading-title" style="display:flex; align-items:center; gap:8px;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ee4d2d" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            <span>Simulasi &amp; Strategi Pelunasan Shopee</span>
+            <span>Kalkulator &amp; Simulasi Pelunasan Shopee</span>
           </div>
           <div class="modal-heading-sub">Model kalkulasi pelunasan utang terpadu berbasis data resmi pinjol.txt (Total: Rp 4.819.353)</div>
         </div>
@@ -5190,9 +5473,9 @@
       <!-- Interactive Budget Allocation Box -->
       <div class="dp-sim-budget-box">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-          <span style="font-size:12.5px; font-weight:700; color:var(--text-main);">Alokasi Dana Pelunasan:</span>
+          <span style="font-size:12.5px; font-weight:700; color:var(--text-main);">Alokasi Anggaran Pelunasan:</span>
           <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:11px; color:var(--text-muted);">Urutan Pelunasan:</span>
+            <span style="font-size:11px; color:var(--text-muted);">Prioritas Urutan:</span>
             <select id="dpSimStrategySelect" class="sel" style="padding:4px 8px; font-size:11.5px; height:auto;" onchange="onSimBudgetChange()">
               <option value="snowball">Snowball (Saldo Terkecil Duluan)</option>
               <option value="avalanche">Avalanche (Bunga Tertinggi Duluan)</option>
@@ -5205,8 +5488,8 @@
           <button type="button" class="dp-sim-chip" onclick="setSimBudget(500000)">+Rp 500rb</button>
           <button type="button" class="dp-sim-chip" onclick="setSimBudget(1000000)">+Rp 1 Juta</button>
           <button type="button" class="dp-sim-chip" onclick="setSimBudget(2000000)">+Rp 2 Juta</button>
-          <button type="button" class="dp-sim-chip" onclick="setSimBudget(4093017)">Haircut (Rp 4,09M)</button>
-          <button type="button" class="dp-sim-chip" onclick="setSimBudget(4819353)">Lunas Semua</button>
+          <button type="button" class="dp-sim-chip" onclick="setSimBudget(4093017)">Pokok Saja (Rp 4,09M)</button>
+          <button type="button" class="dp-sim-chip" onclick="setSimBudget(4819353)">Lunas Total (100%)</button>
         </div>
 
         <!-- Slider + Input -->
@@ -5218,11 +5501,11 @@
         <!-- Real-time Impact Metrics -->
         <div class="dp-sim-metrics-grid">
           <div class="dp-sim-metric">
-            <span class="dp-sim-metric-label">Dana Disimulasikan</span>
+            <span class="dp-sim-metric-label">Alokasi Simulasi</span>
             <span class="dp-sim-metric-val" style="color:#ee4d2d;" id="dpSimMetricPaid">Rp 0</span>
           </div>
           <div class="dp-sim-metric">
-            <span class="dp-sim-metric-label">Sisa Utang Berjalan</span>
+            <span class="dp-sim-metric-label">Sisa Kewajiban</span>
             <span class="dp-sim-metric-val" id="dpSimMetricRemaining">Rp 4.819.353</span>
           </div>
           <div class="dp-sim-metric">
@@ -5235,9 +5518,9 @@
       <!-- Realtime Live Accounts Payoff List -->
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
         <span style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-muted);">
-          Proyeksi Pelunasan per Akun:
+          Simulasi Status per Fasilitas:
         </span>
-        <span style="font-size:11px; color:var(--text-muted);" id="dpSimOrderHint">Prioritas: Snowball (Saldo Terendah)</span>
+        <span style="font-size:11px; color:var(--text-muted);" id="dpSimOrderHint">Prioritas: Snowball (Saldo Terendah Duluan)</span>
       </div>
       <div class="dp-sim-account-list" id="dpSimAccountList">
         <!-- Rendered dynamically -->
@@ -5259,43 +5542,43 @@
     <div class="modal-card" style="max-width:540px;">
       <div class="modal-title-row">
         <div>
-          <div class="modal-heading-title" id="dpModalAccTitle">Detail Kontrak Pinjol</div>
+          <div class="modal-heading-title" id="dpModalAccTitle">Detail Kontrak Fasilitas</div>
           <div class="modal-heading-sub" id="dpModalAccSub">Informasi legal &amp; finansial terverifikasi OJK</div>
         </div>
         <button class="btn-close-modal" onclick="closeAccountDetailModal()">&times;</button>
       </div>
 
-      <div style="display:flex; flex-direction:column; gap:11px; font-size:12.5px; margin-top:6px;">
-        <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:8px;">
-          <span style="color:var(--text-muted);">Penyelenggara &amp; Izin:</span>
-          <span id="dpModalLegalEntity" style="font-weight:700; color:var(--text-main); text-align:right;"></span>
+      <div style="display:flex; flex-direction:column; gap:10px; font-size:12.5px; margin-top:6px;">
+        <div class="dp-detail-row">
+          <span class="dp-detail-row-lbl">Penyelenggara &amp; Izin:</span>
+          <span class="dp-detail-row-val" id="dpModalLegalEntity"></span>
         </div>
-        <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:8px;">
-          <span style="color:var(--text-muted);">Nomor Kontrak / Referensi:</span>
-          <span class="mono" id="dpModalContractNo" style="font-weight:700; color:var(--text-main);"></span>
+        <div class="dp-detail-row">
+          <span class="dp-detail-row-lbl">Nomor Kontrak / Referensi:</span>
+          <span class="mono dp-detail-row-val" id="dpModalContractNo"></span>
         </div>
-        <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:8px;">
-          <span style="color:var(--text-muted);">Waktu Pengajuan:</span>
-          <span class="mono" id="dpModalApplyDate"></span>
+        <div class="dp-detail-row">
+          <span class="dp-detail-row-lbl">Waktu Pengajuan:</span>
+          <span class="mono dp-detail-row-val" id="dpModalApplyDate"></span>
         </div>
-        <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:8px;">
-          <span style="color:var(--text-muted);">Tenor Fasilitas:</span>
-          <span id="dpModalTenor" style="font-weight:600;"></span>
+        <div class="dp-detail-row">
+          <span class="dp-detail-row-lbl">Tenor Fasilitas:</span>
+          <span class="dp-detail-row-val" id="dpModalTenor"></span>
         </div>
-        <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:8px;">
-          <span style="color:var(--text-muted);">Plafon Pinjaman Awal:</span>
-          <span class="mono" id="dpModalInitial" style="font-weight:700; color:var(--text-main);"></span>
+        <div class="dp-detail-row">
+          <span class="dp-detail-row-lbl">Plafon Pinjaman Awal:</span>
+          <span class="mono dp-detail-row-val" id="dpModalInitial"></span>
         </div>
-        <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:8px;">
-          <span style="color:var(--text-muted);">Jatuh Tempo Asli:</span>
-          <span class="mono" id="dpModalDueDate" style="color:var(--color-danger); font-weight:700;"></span>
+        <div class="dp-detail-row">
+          <span class="dp-detail-row-lbl">Jatuh Tempo Asli:</span>
+          <span class="mono dp-detail-row-val" id="dpModalDueDate" style="color:var(--color-danger);"></span>
         </div>
-        <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:8px;">
-          <span style="color:var(--text-muted);">Status Hari Menunggak:</span>
-          <span id="dpModalOverdueDays" style="font-weight:700; color:var(--color-danger);"></span>
+        <div class="dp-detail-row">
+          <span class="dp-detail-row-lbl">Status Hari Menunggak:</span>
+          <span class="dp-detail-row-val" id="dpModalOverdueDays" style="color:var(--color-danger);"></span>
         </div>
-        <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:8px; background:var(--bg-input); padding:10px 12px; border-radius:8px;">
-          <span style="font-weight:700; color:var(--text-main);">Tagihan Berjalan (07 Sep 2026):</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-input); padding:10px 12px; border-radius:8px; border:1px solid var(--border-subtle);">
+          <span style="font-weight:700; color:var(--text-main); font-size:12px;">Tagihan Berjalan (07 Sep 2026):</span>
           <span class="mono" id="dpModalBalance" style="font-size:15px; font-weight:800; color:#ee4d2d;"></span>
         </div>
         <div style="background:var(--bg-card-stack); border:1px solid var(--border-color); border-radius:8px; padding:12px; font-size:11.5px; line-height:1.6; color:var(--text-secondary);">
@@ -6573,24 +6856,24 @@
         const dueEl = document.getElementById('dpSubcardDue');
 
         if (method === 'snowball') {
-          if (descEl) descEl.textContent = 'The snowball method is a strategy that focuses on paying off your smallest balances first before moving on to the larger ones.';
-          if (badgeEl) { badgeEl.textContent = 'Lowest Account Balance'; badgeEl.style.color = '#ee4d2d'; badgeEl.style.background = 'rgba(238, 77, 45, 0.12)'; }
+          if (descEl) descEl.textContent = 'Metode Snowball memprioritaskan pelunasan fasilitas dengan nominal saldo terkecil terlebih dahulu untuk mengeliminasi jumlah akun menunggak secara bertahap dan meringankan beban psikologis.';
+          if (badgeEl) { badgeEl.textContent = 'Fasilitas Saldo Terendah'; badgeEl.style.color = '#ee4d2d'; badgeEl.style.background = 'rgba(238, 77, 45, 0.12)'; }
           if (titleEl) titleEl.textContent = 'SPayLater Tagihan Mar 2025';
           if (subEl) subEl.textContent = 'PT Commerce Finance';
           if (balEl) balEl.textContent = 'Rp 106.956';
           if (rateEl) rateEl.textContent = '~2.95% / bln';
           if (dueEl) dueEl.textContent = '15/03/2025 (Lewat 524 hr)';
         } else if (method === 'avalanche') {
-          if (descEl) descEl.textContent = 'The avalanche method prioritizes paying off the debts with the highest interest rates and penalties first to minimize long-term total loss.';
-          if (badgeEl) { badgeEl.textContent = 'Highest Interest Facility'; badgeEl.style.color = '#f97316'; badgeEl.style.background = 'rgba(249, 115, 22, 0.12)'; }
+          if (descEl) descEl.textContent = 'Metode Avalanche memprioritaskan fasilitas dengan suku bunga dan akumulasi denda tertinggi terlebih dahulu untuk menekan kerugian pembengkakan biaya harian secara maksimal.';
+          if (badgeEl) { badgeEl.textContent = 'Suku Bunga Tertinggi'; badgeEl.style.color = '#f97316'; badgeEl.style.background = 'rgba(249, 115, 22, 0.12)'; }
           if (titleEl) titleEl.textContent = 'SPinjam No. ...47332 (12 Bln)';
           if (subEl) subEl.textContent = 'PT Lentera Dana Nusantara';
           if (balEl) balEl.textContent = 'Rp 1.018.341';
           if (rateEl) rateEl.textContent = '3.95% / bln (Maksimal)';
           if (dueEl) dueEl.textContent = '22/11/2025 (Cicilan 12/12)';
         } else if (method === 'haircut') {
-          if (descEl) descEl.textContent = 'Strategi restrukturisasi khusus kredit macet Kolektibilitas 5 OJK (>500 hari) melalui negosiasi pelunasan pokok dengan pemutihan 100% bunga dan denda.';
-          if (badgeEl) { badgeEl.textContent = 'Simulasi Negosiasi Haircut'; badgeEl.style.color = '#10b981'; badgeEl.style.background = 'rgba(16, 185, 129, 0.12)'; }
+          if (descEl) descEl.textContent = 'Strategi restrukturisasi khusus kredit macet Kolektibilitas 5 OJK (>500 hari) melalui negosiasi pelunasan pokok awal dengan pemutihan 100% bunga dan denda.';
+          if (badgeEl) { badgeEl.textContent = 'Simulasi Keringanan Pokok'; badgeEl.style.color = '#10b981'; badgeEl.style.background = 'rgba(16, 185, 129, 0.12)'; }
           if (titleEl) titleEl.textContent = 'Pelunasan Pokok Tanpa Denda';
           if (subEl) subEl.textContent = 'SPinjam & SPayLater Terpadu';
           if (balEl) balEl.textContent = 'Rp 4.093.017 (Hemat Rp 726.336)';
@@ -6610,9 +6893,9 @@
 
         if (body) {
           if (currentTipIndex === 0) {
-            body.innerHTML = 'Status kredit telah lewat jatuh tempo &gt;500 hari (Kolektibilitas 5). Disarankan mengajukan permohonan <strong>haircut pokok</strong> (penghapusan 100% bunga dan denda) langsung ke legal resmi Shopee.';
+            body.innerHTML = 'Status kredit telah lewat jatuh tempo &gt;500 hari (Kolektibilitas 5). Berdasarkan POJK, debitur berhak mengajukan permohonan <strong>haircut pokok</strong> (penghapusan 100% bunga dan denda) langsung ke perwakilan legal resmi Shopee.';
           } else {
-            body.innerHTML = 'Jangan mencicil parsial tanpa perjanjian tertulis! Pembayaran sebagian hanya akan memotong denda harian tanpa mengurangi sisa pokok pinjaman yang tercatat di SLIK OJK.';
+            body.innerHTML = 'Hindari melakukan pembayaran angsuran parsial tanpa surat persetujuan resmi! Pembayaran sebagian tanpa dasar perjanjian hanya akan memotong denda harian tanpa mengurangi sisa pokok pinjaman di SLIK OJK.';
           }
         }
       }
@@ -6627,8 +6910,8 @@
         const desc = document.getElementById('dpBreakdownDesc');
         if (desc) {
           desc.textContent = mode === 'monthly'
-            ? 'The amounts below reflect your combined obligations across all Shopee debt accounts.'
-            : 'Perbandingan antara pokok pinjaman awal dan akumulasi denda serta suku bunga berjalan.';
+            ? 'Komposisi perbandingan total kewajiban berjalan antara fasilitas pinjaman tunai SPinjam dan pembiayaan belanja SPayLater.'
+            : 'Perbandingan antara pokok pinjaman awal dengan akumulasi bunga majemuk dan denda berjalan.';
         }
 
         initShopeeBreakdownChart(mode);
@@ -6651,21 +6934,21 @@
         let chartData, chartLabels, centerAmt, centerSub, legLabel1, legVal1, legLabel2, legVal2;
 
         if (mode === 'monthly') {
-          chartLabels = ['SPinjam (6 Kontrak)', 'SPayLater (3 Bln)'];
+          chartLabels = ['SPinjam (6 Kontrak)', 'SPayLater (3 Periode)'];
           chartData = [PINJOL_AUDIT_DATA.spinjamTotal, PINJOL_AUDIT_DATA.spaylaterTotal];
           centerAmt = 'Rp 4,8M';
-          centerSub = 'Total Balance';
-          legLabel1 = 'Combined SPinjam';
+          centerSub = 'Total Utang';
+          legLabel1 = 'Total SPinjam (6 Kontrak)';
           legVal1 = fmtIDR(PINJOL_AUDIT_DATA.spinjamTotal);
-          legLabel2 = 'Combined SPayLater';
+          legLabel2 = 'Total SPayLater (3 Periode)';
           legVal2 = fmtIDR(PINJOL_AUDIT_DATA.spaylaterTotal);
         } else {
           const pokokAwal = PINJOL_AUDIT_DATA.spinjamPlafonAwal;
           const bungaDenda = PINJOL_AUDIT_DATA.grandTotal - pokokAwal;
-          chartLabels = ['Plafon Pokok Awal', 'Bunga & Denda'];
+          chartLabels = ['Plafon Pokok Awal', 'Akumulasi Bunga & Denda'];
           chartData = [pokokAwal, bungaDenda];
           centerAmt = 'Rp 4,09M';
-          centerSub = 'Pokok Awal';
+          centerSub = 'Plafon Pokok';
           legLabel1 = 'Pokok Pengajuan Awal';
           legVal1 = fmtIDR(pokokAwal);
           legLabel2 = 'Akumulasi Bunga & Denda';
