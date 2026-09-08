@@ -4268,7 +4268,7 @@
 
                 <!-- 5. Biaya Kuliah Card -->
                 <div class="bank-card card-theme-kuliah" onclick="switchTab('kuliah')"
-                  title="Biaya Kuliah Universitas Semester 1-7">
+                  title="Biaya Kuliah Institut Asia Malang Semester 1-7">
                   <div class="card-top-row">
                     <div style="display:flex; align-items:center; gap:6px;">
                       <span style="font-weight:800; font-size:13px; color:#ffffff;">KULIAH</span>
@@ -4277,7 +4277,7 @@
                   <div class="emv-chip-box"></div>
                   <div class="card-footer-info">
                     <div class="card-number-line">Rp 38.800.000</div>
-                    <div class="card-holder-name">SEMESTER 1–7 </div>
+                    <div class="card-holder-name">INSTITUT ASIA MALANG</div>
                   </div>
                 </div>
               </div>
@@ -5932,57 +5932,51 @@
           });
         }
 
-        const pinjolList = [
-          { date: '2024-11-09', desc: 'SPinjam Rp500.000 (No. ...43120)', amount: 471107 },
-          { date: '2024-11-10', desc: 'SPinjam Rp500.000 (No. ...74003)', amount: 471107 },
-          { date: '2024-11-11', desc: 'SPinjam Rp500.000 (No. ...33366)', amount: 461683 },
-          { date: '2024-11-11', desc: 'SPinjam Rp1.000.000 (No. ...2793)', amount: 942206 },
-          { date: '2024-11-14', desc: 'SPinjam Rp1.000.000 (No. ...4652)', amount: 942206 },
-          { date: '2024-11-22', desc: 'SPinjam Rp593.017 (No. ...47332)', amount: 1018341 },
-          { date: '2025-01-15', desc: 'SPayLater Tagihan Januari 2025', amount: 117920 },
-          { date: '2025-02-15', desc: 'SPayLater Tagihan Februari 2025', amount: 287827 },
-          { date: '2025-03-15', desc: 'SPayLater Tagihan Maret 2025', amount: 106956 }
-        ];
-        pinjolList.forEach((p, idx) => {
+        /* Recent Pinjol = cermin PINJOL_ACCOUNTS (pinjol.txt) + denda harian live. */
+        const PINJOL_TX_DATE = {
+          'SP-43120': '2024-11-09', 'SP-74003': '2024-11-10', 'SP-33366': '2024-11-11',
+          'SP-2793': '2024-11-11', 'SP-4652': '2024-11-14', 'SP-47332': '2024-11-22',
+          'PL-JAN25': '2025-01-15', 'PL-FEB25': '2025-02-15', 'PL-MAR25': '2025-03-15'
+        };
+        PINJOL_ACCOUNTS.forEach((a, idx) => {
+          const d = PINJOL_TX_DATE[a.id] || '2025-03-15';
           allMasterTransactions.push({
             id: `PINJOL-${idx + 1}`,
             source: 'PINJOL',
-            date: p.date,
-            displayDate: p.date.split('-').reverse().join('/'),
-            year: Number(p.date.split('-')[0]),
+            date: d,
+            displayDate: d.split('-').reverse().join('/'),
+            year: Number(d.split('-')[0]),
             type: 'out',
-            category: 'Shopee Pinjol',
+            category: a.type === 'spinjam' ? `SPinjam · ${a.tenor}` : 'SPayLater · Tagihan',
             party: 'Shopee Financial',
-            description: p.desc,
-            amount: p.amount,
+            description: `${a.shortAccount} · ${a.tenor}`,
+            amount: pinjolLive(a),
             brandIcon: 'icon-bg-shopee',
-            iconLetter: 'SP'
+            iconLetter: 'SP',
+            iconImg: 'assets/images/shopee.svg',
+            iconImgBg: '#ffffff'
           });
         });
 
-        const kuliahList = [
-          { date: '2023-08-01', desc: 'Biaya Kuliah Semester 1 (SPP + DPP 1,2,3 + Tambahan)', amount: 10250000 },
-          { date: '2024-02-01', desc: 'Biaya Kuliah Semester 2 (SPP + DPP 4,5)', amount: 5800000 },
-          { date: '2024-08-01', desc: 'Biaya Kuliah Semester 3 (SPP + DPP 6,7)', amount: 5300000 },
-          { date: '2025-02-01', desc: 'Biaya Kuliah Semester 4 (SPP + DPP 8,9)', amount: 5300000 },
-          { date: '2025-08-01', desc: 'Biaya Kuliah Semester 5 (SPP)', amount: 3800000 },
-          { date: '2026-02-01', desc: 'Biaya Kuliah Semester 6 (SPP)', amount: 3800000 },
-          { date: '2026-08-01', desc: 'Biaya Kuliah Semester 7 (SPP + Tugas Akhir)', amount: 4550000 }
-        ];
-        kuliahList.forEach((k, idx) => {
+        /* Recent Kuliah = cermin tabel Biaya Kuliah (ikut tabel yang bisa diedit). */
+        const KULIAH_TX_DATES = ['2023-08-01', '2024-02-01', '2024-08-01', '2025-02-01', '2025-08-01', '2026-02-01', '2026-08-01'];
+        getKuliahRows().forEach((r, idx) => {
+          const d = KULIAH_TX_DATES[idx] || '2026-08-01';
           allMasterTransactions.push({
             id: `KULIAH-SEM-${idx + 1}`,
             source: 'KULIAH',
-            date: k.date,
-            displayDate: k.date.split('-').reverse().join('/'),
-            year: Number(k.date.split('-')[0]),
+            date: d,
+            displayDate: d.split('-').reverse().join('/'),
+            year: Number(d.split('-')[0]),
             type: 'out',
-            category: 'Biaya Kuliah',
-            party: 'Universitas',
-            description: k.desc,
-            amount: k.amount,
+            category: r.detail ? `${r.sem} (${r.detail})` : r.sem,
+            party: 'Institut Asia Malang',
+            description: `${r.sem} · ${r.period} · ${r.detail}`,
+            amount: Number(r.amount) || 0,
             brandIcon: 'icon-bg-kuliah',
-            iconLetter: 'UN'
+            iconLetter: 'IA',
+            iconImg: 'assets/images/institut-asia-malang.png',
+            iconImgBg: '#ffffff'
           });
         });
 
@@ -6019,7 +6013,7 @@
         grid.innerHTML = recent.map(item => `
           <div class="tx-item-card" onclick="showMasterDetail('${item.id}')" title="${escapeHtml(item.description)}">
             <div class="tx-item-left">
-              <div class="tx-brand-icon-circle ${item.brandIcon || 'icon-bg-bca'}">${item.iconLetter || 'TX'}</div>
+              <div class="tx-brand-icon-circle ${item.brandIcon || 'icon-bg-bca'}"${item.iconImgBg ? ` style="background:${item.iconImgBg}; padding:7px;"` : ''}>${item.iconImg ? `<img src="${item.iconImg}" alt="" style="width:100%; height:100%; object-fit:contain; display:block; border-radius:50%;">` : (item.iconLetter || 'TX')}</div>
               <div style="min-width:0;">
                 <div class="tx-title-main">${escapeHtml(item.party)}</div>
                 <div class="tx-subtitle-sub">${escapeHtml(item.category)} &bull; <span style="opacity:0.85;">${item.source}</span></div>
