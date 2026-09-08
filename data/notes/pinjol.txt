@@ -122,7 +122,8 @@ Biaya Proteksi Pinjaman: Rp17.796
 
 Potongan Denda Keterlambatan: Rp3.716
 
-Rincian Tagihan Belum Lunas (12/12): Rp81.947 - Terlambat
+Rincian Cicilan Terakhir (12/12): Rp81.947 - Terlambat
+Total Berjalan Kontrak 12 Bulan (dipakai di dashboard agar jumlah 6 kontrak = Rp4.306.650): Rp1.018.341
 
 BAGIAN 2: RINCIAN SPAYLATER (Plafon Awal: Rp4.093.017 | Total Belum Dibayar: Rp512.703)
 Plafon Awal Fasilitas SPayLater: Rp4.093.017
@@ -147,11 +148,11 @@ Status: Lewat jatuh tempo 524 hari
 Nominal: Rp106.956
 
 BAGIAN 3: RINGKASAN KESELURUHAN UTANG & PLAFON SHOPEE
-Plafon Awal SPinjam: Rp4.093.017
-Plafon Awal SPayLater: Rp4.093.017
-Total Plafon Fasilitas Terdaftar: Rp8.186.034
+Total Pokok Dicairkan SPinjam (500.000+500.000+500.000+1.000.000+1.000.000+593.017): Rp4.093.017
+Plafon Fasilitas SPayLater: Rp4.093.017
+(Catatan: SPinjam tidak punya plafon gabungan. Angka Rp4.093.017 milik SPinjam adalah total pokok, bukan plafon. Tidak ada Total Plafon Rp8.186.034.)
 
 Total Tagihan SPinjam (Halaman Utama): Rp4.306.650
-Total Tagihan SPayLater: Rp512.703
+Total Tagihan SPayLater (117.920+287.827+106.956): Rp512.703
 
 GRAND TOTAL KESELURUHAN: Rp4.819.353

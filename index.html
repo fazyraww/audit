@@ -4864,9 +4864,9 @@
               </div>
             </div>
 
-            <!-- Plafon & Limit Overview Cards (SPinjam & SPayLater Sama Rp 4.093.017) -->
+            <!-- Overview: Pokok SPinjam vs Plafon SPayLater vs Total Kewajiban -->
             <div class="dp-plafon-overview">
-              <!-- Card 1: SPinjam Plafon -->
+              <!-- Card 1: SPinjam Pokok (BUKAN plafon) -->
               <div class="dp-plafon-card">
                 <div class="dp-plafon-top">
                   <span class="dp-plafon-badge spinjam">
@@ -4876,7 +4876,7 @@
                   <span class="dp-plafon-tag">PT LDN &bull; 6 Pinjaman</span>
                 </div>
                 <div>
-                  <div class="dp-plafon-lbl" style="margin-bottom:2px;">Plafon Awal Fasilitas:</div>
+                  <div class="dp-plafon-lbl" style="margin-bottom:2px;">Total Pokok Dicairkan:</div>
                   <div class="dp-plafon-main-val">Rp 4.093.017</div>
                 </div>
                 <div class="dp-plafon-progress-bar">
@@ -4887,7 +4887,7 @@
                   <span class="dp-plafon-val text-danger">Rp 4.306.650</span>
                 </div>
                 <div class="dp-plafon-sub">
-                  Rasio: <strong>105,2%</strong> (Overlimit akibat akumulasi denda &gt;500 hari)
+                  Tagihan <strong>105,2%</strong> dari pokok (selisih Rp 213.633 = denda &amp; bunga berjalan)
                 </div>
               </div>
 
@@ -4916,40 +4916,41 @@
                 </div>
               </div>
 
-              <!-- Card 3: Total Plafon Portofolio Konsolidasi -->
+              <!-- Card 3: Total Kewajiban (BUKAN total plafon) -->
               <div class="dp-plafon-card total">
                 <div class="dp-plafon-top">
                   <span class="dp-plafon-badge total">
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                    Total Plafon Terdaftar
+                    Total Kewajiban Utang
                   </span>
                   <span class="dp-plafon-tag">9 Akun Gabungan</span>
                 </div>
                 <div>
-                  <div class="dp-plafon-lbl" style="margin-bottom:2px;">Total Plafon Fasilitas:</div>
-                  <div class="dp-plafon-main-val">Rp 8.186.034</div>
+                  <div class="dp-plafon-lbl" style="margin-bottom:2px;">Grand Total Tagihan:</div>
+                  <div class="dp-plafon-main-val">Rp 4.819.353</div>
                 </div>
                 <div class="dp-plafon-progress-bar">
-                  <div class="dp-plafon-fill total" style="width: 58.9%;"></div>
+                  <div class="dp-plafon-fill total" style="width: 89.4%;"></div>
                 </div>
                 <div class="dp-plafon-data-row">
-                  <span class="dp-plafon-lbl">Total Kewajiban Utang:</span>
-                  <span class="dp-plafon-val text-danger">Rp 4.819.353</span>
+                  <span class="dp-plafon-lbl">SPinjam 89,4% &bull; SPayLater 10,6%</span>
+                  <span class="dp-plafon-val text-danger">Rp 4.306.650 + Rp 512.703</span>
                 </div>
                 <div class="dp-plafon-sub">
-                  Target Haircut Pokok SPinjam: <strong style="color:#10b981;">Rp 4.093.017</strong> (Hemat Rp 726.336)
+                  Target Haircut Pokok SPinjam: <strong style="color:#10b981;">Rp 4.093.017</strong> (Hemat Rp 213.633 dari tagihan SPinjam)
                 </div>
               </div>
             </div>
 
-            <!-- Catatan Forensik Rekonsiliasi (Opsi C: angka tidak diubah) -->
+            <!-- Catatan Forensik Rekonsiliasi (angka tidak diubah) -->
             <div style="background:var(--bg-card-stack); border:1px solid var(--border-color); border-radius:10px; padding:12px 14px; font-size:11.5px; line-height:1.65; color:var(--text-secondary); margin-bottom:24px;">
               <strong style="color:var(--text-main); display:block; margin-bottom:4px;">Catatan Forensik Rekonsiliasi (pinjol.txt, scan 07/09/2026):</strong>
-              Total SPinjam halaman utama <strong class="mono">Rp 4.306.650</strong> dipakai sebagai acuan tagihan berjalan.
-              Jumlah 6 rincian cicilan terakhir (<strong class="mono">Rp 471.107 + Rp 471.107 + Rp 461.683 + Rp 942.206 + Rp 942.206 + Rp 81.947 = Rp 3.370.256</strong>)
-              selisih <strong class="mono">Rp 936.394</strong> terhadap total halaman utama.
-              Selisih dicatat sebagai akumulasi denda &amp; bunga berjalan &gt;500 hari keterlambatan, bukan koreksi angka.
-              SPayLater terverifikasi pas (<strong class="mono">Rp 117.920 + Rp 287.827 + Rp 106.956 = Rp 512.703</strong>).
+              Total SPinjam halaman utama <strong class="mono">Rp 4.306.650</strong> = jumlah 6 kontrak di tabel
+              (<strong class="mono">Rp 471.107 + Rp 471.107 + Rp 461.683 + Rp 942.206 + Rp 942.206 + Rp 1.018.341</strong>).
+              Khusus kontrak 12 bulan (No. ...47332): cicilan terakhir 12/12 = <strong class="mono">Rp 81.947</strong>,
+              total berjalan kontrak = <strong class="mono">Rp 1.018.341</strong> (pokok Rp 593.017 + denda &amp; biaya berjalan, dikurangi Rp 148.650 yang sudah dibayar).
+              Total pokok dicairkan 6 kontrak = <strong class="mono">Rp 4.093.017</strong> (bukan plafon).
+              SPayLater pas (<strong class="mono">Rp 117.920 + Rp 287.827 + Rp 106.956 = Rp 512.703</strong>) dari plafon <strong class="mono">Rp 4.093.017</strong>.
               Grand total tetap <strong class="mono">Rp 4.819.353</strong>.
             </div>
 
@@ -4991,7 +4992,7 @@
                           <div class="dp-metric-block">
                             <span class="dp-metric-label">Total Kewajiban Berjalan</span>
                             <span class="dp-metric-amount" style="color:#ee4d2d;" id="dpGoalAmountText">Rp 4.819.353</span>
-                            <span class="dp-metric-target">Plafon Awal SPinjam &amp; SPayLater: masing-masing Rp 4.093.017</span>
+                            <span class="dp-metric-target">Pokok SPinjam Rp 4.093.017 &bull; Plafon SPayLater Rp 4.093.017 (tidak dijumlahkan)</span>
                           </div>
                         </div>
                       </div>
@@ -5029,7 +5030,7 @@
                       </button>
                       <button type="button" class="dp-btn-outline" onclick="applyPresetScenario('haircut'); applySimulasiToDashboard();">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
-                        Terapkan Simulasi Pokok Saja (Haircut: Rp 4.093.017)
+                        Terapkan Simulasi Pokok SPinjam Saja (Haircut: Rp 4.093.017)
                       </button>
                     </div>
                   </div>
@@ -5079,7 +5080,7 @@
                           <thead>
                             <tr>
                               <th>Fasilitas &amp; No. Pinjaman</th>
-                              <th style="text-align:right;">Plafon Awal</th>
+                              <th style="text-align:right;">Pokok / Plafon</th>
                               <th style="text-align:right;">Terbayar</th>
                               <th style="text-align:right;">Denda &amp; Biaya</th>
                               <th style="text-align:right;">Tagihan Berjalan</th>
@@ -5093,7 +5094,7 @@
                           <tfoot>
                             <tr class="dp-total-row">
                               <td>Total Portofolio (9 Akun)</td>
-                              <td class="mono" style="text-align:right; color:var(--text-main); font-weight:700;">Rp 8.186.034</td>
+                              <td class="mono" style="text-align:right; color:var(--text-main); font-weight:700;" title="SPinjam = total pokok Rp4.093.017; SPayLater = plafon Rp4.093.017; tidak dijumlahkan">Rp 4.093.017 + plafon 4.093.017</td>
                               <td class="mono" style="text-align:right; color:var(--color-success); font-weight:700;">Rp 2.762.940</td>
                               <td class="mono" style="text-align:right; color:#f97316; font-weight:700;">Rp 2.290.988</td>
                               <td class="mono" style="text-align:right; color:var(--color-danger); font-size:13.5px; font-weight:800;" id="dpTableTotalBalance">Rp 4.819.353</td>
@@ -5169,7 +5170,7 @@
                           <div class="dp-legal-title" style="color:#ee4d2d;">PT Lentera Dana Nusantara (SPinjam)</div>
                           <div><strong>Jenis Izin:</strong> Penyelenggara Layanan Pinjam Meminjam Berbasis Teknologi Informasi (Fintech P2P Lending OJK)</div>
                           <div><strong>Status Izin OJK:</strong> Berizin Resmi (SK KEP-19/D.05/2021)</div>
-                          <div><strong>Portofolio Audit:</strong> 6 Kontrak Pinjaman Tunai &bull; Plafon Awal Fasilitas: <strong>Rp 4.093.017</strong> &bull; Tagihan Berjalan: <strong>Rp 4.306.650</strong></div>
+                          <div><strong>Portofolio Audit:</strong> 6 Kontrak Pinjaman Tunai &bull; Total Pokok Dicairkan: <strong>Rp 4.093.017</strong> &bull; Tagihan Berjalan: <strong>Rp 4.306.650</strong></div>
                           <div><strong>Ketentuan Bunga:</strong> Dasar 1,8% &ndash; 3,95%/bulan + denda akumulatif sejak Februari 2025.</div>
                         </div>
                         <div class="dp-legal-card">
@@ -5247,7 +5248,7 @@
                   <div class="dp-card">
                     <div class="dp-breakdown-tabs">
                       <button type="button" class="dp-breakdown-tab active" id="dpBdTabMonthly" onclick="switchBreakdownMode('monthly')">Tagihan Layanan</button>
-                      <button type="button" class="dp-breakdown-tab" id="dpBdTabYtd" onclick="switchBreakdownMode('ytd')">Plafon Fasilitas</button>
+                      <button type="button" class="dp-breakdown-tab" id="dpBdTabYtd" onclick="switchBreakdownMode('ytd')">Pokok vs Plafon</button>
                     </div>
 
                     <div style="font-size:12.5px; color:var(--text-secondary); line-height:1.5;" id="dpBreakdownDesc">
@@ -5848,7 +5849,7 @@
         <!-- Top KPI Mini Cards -->
         <div class="dp-forensic-kpi-row">
           <div class="dp-forensic-kpi-card">
-            <span class="dp-forensic-kpi-lbl">Plafon Pokok Awal</span>
+            <span class="dp-forensic-kpi-lbl">Pokok / Plafon</span>
             <span class="dp-forensic-kpi-val" id="dpModalInitial">Rp 0</span>
           </div>
           <div class="dp-forensic-kpi-card">
@@ -6888,9 +6889,10 @@
          ═════════════════════════════════════════════════════════════════════ */
       const PINJOL_AUDIT_DATA = {
         scanDate: '2026-09-07',
-        spinjamPlafonAwal: 4093017,
-        spaylaterPlafonAwal: 4093017,
-        totalPlafonAwal: 8186034,
+        // Rp4.093.017 milik SPinjam = TOTAL POKOK dicairkan (500rb x3 + 1jt x2 + 593.017), BUKAN plafon.
+        spinjamPokokTotal: 4093017,
+        // Rp4.093.017 milik SPayLater = plafon fasilitas. Tidak dijumlahkan menjadi Rp8.186.034.
+        spaylaterPlafon: 4093017,
         spinjamTotal: 4306650,
         spaylaterTotal: 512703,
         grandTotal: 4819353,
@@ -6907,7 +6909,7 @@
           contractNo: '1966254604224643120',
           provider: 'PT Lentera Dana Nusantara',
           legalEntity: 'PT Lentera Dana Nusantara (Fintech P2P Lending Berizin OJK KEP-19/D.05/2021)',
-          facilityLimit: 4093017,
+          facilityLimit: null, // SPinjam tidak punya plafon gabungan; pokok per kontrak di "initial"
           initial: 500000,
           applyDate: '09 Nov 2024 02:53',
           tenor: '3 Bulan',
@@ -6935,7 +6937,7 @@
           contractNo: '1966669850680574003',
           provider: 'PT Lentera Dana Nusantara',
           legalEntity: 'PT Lentera Dana Nusantara (Fintech P2P Lending Berizin OJK KEP-19/D.05/2021)',
-          facilityLimit: 4093017,
+          facilityLimit: null, // SPinjam tidak punya plafon gabungan; pokok per kontrak di "initial"
           initial: 500000,
           applyDate: '10 Nov 2024 06:23',
           tenor: '3 Bulan',
@@ -6963,7 +6965,7 @@
           contractNo: '1967025458923533366',
           provider: 'PT Lentera Dana Nusantara',
           legalEntity: 'PT Lentera Dana Nusantara (Fintech P2P Lending Berizin OJK KEP-19/D.05/2021)',
-          facilityLimit: 4093017,
+          facilityLimit: null, // SPinjam tidak punya plafon gabungan; pokok per kontrak di "initial"
           initial: 500000,
           applyDate: '11 Nov 2024 05:56',
           tenor: '3 Bulan',
@@ -6991,7 +6993,7 @@
           contractNo: '1967134052977312793',
           provider: 'PT Lentera Dana Nusantara',
           legalEntity: 'PT Lentera Dana Nusantara (Fintech P2P Lending Berizin OJK KEP-19/D.05/2021)',
-          facilityLimit: 4093017,
+          facilityLimit: null, // SPinjam tidak punya plafon gabungan; pokok per kontrak di "initial"
           initial: 1000000,
           applyDate: '11 Nov 2024 13:08',
           tenor: '3 Bulan',
@@ -7008,7 +7010,7 @@
           overdueDays: 573,
           overdue: true,
           status: 'Cicilan 3/3 Terlambat',
-          auditNote: 'Plafon pinjaman pokok Rp 1.000.000 diajukan 11 Nov 2024 13:08. Pembayaran masuk Rp 748.091. Biaya denda Rp 571.704, pencairan Rp 10.000, biaya cicilan Rp 118.593. Tagihan 3/3 terlambat Rp 942.206 jatuh tempo 11 Feb 2025.'
+          auditNote: 'Pokok pinjaman Rp 1.000.000 diajukan 11 Nov 2024 13:08. Pembayaran masuk Rp 748.091. Biaya denda Rp 571.704, pencairan Rp 10.000, biaya cicilan Rp 118.593. Tagihan 3/3 terlambat Rp 942.206 jatuh tempo 11 Feb 2025.'
         },
         {
           id: 'SP-4652',
@@ -7019,7 +7021,7 @@
           contractNo: '1968138751704644652',
           provider: 'PT Lentera Dana Nusantara',
           legalEntity: 'PT Lentera Dana Nusantara (Fintech P2P Lending Berizin OJK KEP-19/D.05/2021)',
-          facilityLimit: 4093017,
+          facilityLimit: null, // SPinjam tidak punya plafon gabungan; pokok per kontrak di "initial"
           initial: 1000000,
           applyDate: '14 Nov 2024 07:40',
           tenor: '3 Bulan',
@@ -7036,7 +7038,7 @@
           overdueDays: 570,
           overdue: true,
           status: 'Cicilan 3/3 Terlambat',
-          auditNote: 'Plafon pokok Rp 1.000.000 diajukan 14 Nov 2024 07:40. Pembayaran masuk Rp 764.373. Biaya denda Rp 587.986 dan biaya pencairan Rp 10.000. Sisa cicilan 3/3 belum lunas Rp 942.206 jatuh tempo 14 Feb 2025.'
+          auditNote: 'Pokok pinjaman Rp 1.000.000 diajukan 14 Nov 2024 07:40. Pembayaran masuk Rp 764.373. Biaya denda Rp 587.986 dan biaya pencairan Rp 10.000. Sisa cicilan 3/3 belum lunas Rp 942.206 jatuh tempo 14 Feb 2025.'
         },
         {
           id: 'SP-47332',
@@ -7047,7 +7049,7 @@
           contractNo: '1971130177195447332',
           provider: 'PT Lentera Dana Nusantara',
           legalEntity: 'PT Lentera Dana Nusantara (Fintech P2P Lending Berizin OJK KEP-19/D.05/2021)',
-          facilityLimit: 4093017,
+          facilityLimit: null, // SPinjam tidak punya plafon gabungan; pokok per kontrak di "initial"
           initial: 593017,
           applyDate: '22 Nov 2024 13:47',
           tenor: '12 Bulan',
@@ -7075,8 +7077,8 @@
           contractNo: 'SPL-20250115-01',
           provider: 'PT Commerce Finance',
           legalEntity: 'PT Commerce Finance (Multifinance Berizin OJK KEP-219/NB.11/2020)',
-          facilityLimit: 4093017,
-          initial: 4093017,
+          facilityLimit: 4093017, // plafon fasilitas SPayLater (dipakai bersama 3 periode)
+          initial: 117920, // tagihan periode Jan 2025
           applyDate: '01 Jan 2025',
           tenor: '1 Bulan',
           paidAmount: 0,
@@ -7103,8 +7105,8 @@
           contractNo: 'SPL-20250215-02',
           provider: 'PT Commerce Finance',
           legalEntity: 'PT Commerce Finance (Multifinance Berizin OJK KEP-219/NB.11/2020)',
-          facilityLimit: 4093017,
-          initial: 4093017,
+          facilityLimit: 4093017, // plafon fasilitas SPayLater (dipakai bersama 3 periode)
+          initial: 287827, // tagihan periode Feb 2025
           applyDate: '01 Feb 2025',
           tenor: '1 Bulan',
           paidAmount: 0,
@@ -7131,8 +7133,8 @@
           contractNo: 'SPL-20250315-03',
           provider: 'PT Commerce Finance',
           legalEntity: 'PT Commerce Finance (Multifinance Berizin OJK KEP-219/NB.11/2020)',
-          facilityLimit: 4093017,
-          initial: 4093017,
+          facilityLimit: 4093017, // plafon fasilitas SPayLater (dipakai bersama 3 periode)
+          initial: 106956, // tagihan periode Mar 2025
           applyDate: '01 Mar 2025',
           tenor: '1 Bulan',
           paidAmount: 0,
@@ -7332,7 +7334,7 @@
         if (desc) {
           desc.textContent = mode === 'monthly'
             ? 'Komposisi perbandingan total kewajiban berjalan antara fasilitas pinjaman tunai SPinjam dan pembiayaan belanja SPayLater.'
-            : 'Perbandingan alokasi plafon awal fasilitas kredit: SPinjam (Rp 4.093.017) dan SPayLater (Rp 4.093.017) dengan rasio setara masing-masing 50%.';
+            : 'Perbandingan basis kredit: total pokok dicairkan SPinjam (Rp 4.093.017) vs plafon fasilitas SPayLater (Rp 4.093.017). Keduanya tidak dijumlahkan sebagai plafon gabungan.';
         }
 
         initShopeeBreakdownChart(mode);
@@ -7364,16 +7366,17 @@
           legLabel2 = 'Total SPayLater (3 Periode)';
           legVal2 = fmtIDR(PINJOL_AUDIT_DATA.spaylaterTotal);
         } else {
-          const spinjamLimit = PINJOL_AUDIT_DATA.spinjamPlafonAwal; // 4.093.017
-          const spaylaterLimit = PINJOL_AUDIT_DATA.spaylaterPlafonAwal; // 4.093.017
-          chartLabels = ['Plafon SPinjam (50%)', 'Plafon SPayLater (50%)'];
-          chartData = [spinjamLimit, spaylaterLimit];
-          centerAmt = 'Rp 8,19M';
-          centerSub = 'Total Plafon';
-          legLabel1 = 'Plafon Awal SPinjam';
-          legVal1 = fmtIDR(spinjamLimit);
-          legLabel2 = 'Plafon Awal SPayLater';
-          legVal2 = fmtIDR(spaylaterLimit);
+          // BUKAN plafon gabungan: bandingkan Pokok SPinjam vs Plafon SPayLater (kebetulan sama-sama Rp4.093.017)
+          const spinjamPokok = PINJOL_AUDIT_DATA.spinjamPokokTotal; // 4.093.017 (pokok)
+          const spaylaterPlafon = PINJOL_AUDIT_DATA.spaylaterPlafon; // 4.093.017 (plafon)
+          chartLabels = ['Pokok SPinjam', 'Plafon SPayLater'];
+          chartData = [spinjamPokok, spaylaterPlafon];
+          centerAmt = 'Rp 4,09M + 4,09M';
+          centerSub = 'Basis (tidak dijumlah)';
+          legLabel1 = 'Pokok Dicairkan SPinjam';
+          legVal1 = fmtIDR(spinjamPokok);
+          legLabel2 = 'Plafon SPayLater';
+          legVal2 = fmtIDR(spaylaterPlafon);
         }
 
         const centerAmtEl = document.getElementById('dpDonutCenterAmount');
@@ -7477,11 +7480,11 @@
         });
 
         if (type === 'haircut') {
-          simBudget = PINJOL_AUDIT_DATA.spinjamPlafonAwal; // 4.093.017
+          simBudget = PINJOL_AUDIT_DATA.spinjamPokokTotal; // 4.093.017 (pokok SPinjam)
         } else if (type === 'full') {
           simBudget = PINJOL_AUDIT_DATA.grandTotal; // 4.819.353
         } else if (type === 'installment') {
-          simBudget = Math.round(PINJOL_AUDIT_DATA.spinjamPlafonAwal / 3); // 1.364.339
+          simBudget = Math.round(PINJOL_AUDIT_DATA.spinjamPokokTotal / 3); // 1.364.339
         }
         updateSimulationUI(true);
       }
@@ -7489,9 +7492,9 @@
       function setSimBudget(amt) {
         simBudget = amt;
         // update scenario cards active state
-        const isHaircut = simBudget === PINJOL_AUDIT_DATA.spinjamPlafonAwal;
+        const isHaircut = simBudget === PINJOL_AUDIT_DATA.spinjamPokokTotal;
         const isFull = simBudget === PINJOL_AUDIT_DATA.grandTotal;
-        const isInstallment = simBudget === Math.round(PINJOL_AUDIT_DATA.spinjamPlafonAwal / 3);
+        const isInstallment = simBudget === Math.round(PINJOL_AUDIT_DATA.spinjamPokokTotal / 3);
 
         const cardH = document.getElementById('dpScenHaircut');
         const cardF = document.getElementById('dpScenFull');
@@ -7739,8 +7742,8 @@ Entitas Hukum: ${acc.legalEntity}
 Nomor Pinjaman Resmi: ${acc.loanNo || acc.contractNo}
 Waktu Pengajuan: ${acc.applyDate}
 Durasi / Tenor: ${acc.tenor} (Suku Bunga: ${acc.rate})
-Plafon Pinjaman Awal: ${fmtIDR(acc.initial)}
-Plafon Fasilitas: ${fmtIDR(acc.facilityLimit || PINJOL_AUDIT_DATA.spinjamPlafonAwal)}
+Pokok Pinjaman: ${fmtIDR(acc.initial)}
+${acc.type === 'spaylater' ? `Plafon Fasilitas SPayLater: ${fmtIDR(acc.facilityLimit)}` : `Total Pokok SPinjam (6 kontrak): ${fmtIDR(PINJOL_AUDIT_DATA.spinjamPokokTotal)}`}
 Riwayat Pembayaran Masuk: ${acc.paidAmount > 0 ? fmtIDR(acc.paidAmount) : 'Rp 0'}
 Biaya Keterlambatan (Denda): ${acc.lateFee > 0 ? fmtIDR(acc.lateFee) : 'Rp 0'}
 Biaya Pencairan Awal: ${acc.disbursementFee > 0 ? fmtIDR(acc.disbursementFee) : 'Rp 0'}
@@ -7765,13 +7768,12 @@ Catatan Forensik: ${acc.auditNote}
 Tanggal Pemindaian Data: 07 September 2026 (Sesuai data/notes/pinjol.txt)
 Status Kredit: Kolektibilitas 5 (Macet 524–583 Hari sejak Februari 2025)
 
-I. RINGKASAN PLAFON AWAL FASILITAS:
-- Plafon Awal SPinjam: Rp 4.093.017 (6 Kontrak Tunai)
-- Plafon Awal SPayLater: Rp 4.093.017 (3 Periode Belanja)
-- Total Plafon Terdaftar: Rp 8.186.034
+I. RINGKASAN POKOK & PLAFON (tidak dijumlahkan):
+- Total Pokok Dicairkan SPinjam: Rp 4.093.017 (6 Kontrak Tunai)
+- Plafon Fasilitas SPayLater: Rp 4.093.017 (3 Periode Belanja)
 
 II. SPINJAM (PT Lentera Dana Nusantara):
-- Total Tagihan Berjalan: Rp 4.306.650 (Rasio: 105,2% dari Plafon)
+- Total Tagihan Berjalan: Rp 4.306.650 (105,2% dari pokok; selisih Rp 213.633 = denda berjalan)
 - Total Pembayaran Masuk: Rp 2.762.940
 - Total Denda Keterlambatan: Rp 2.290.988
 - Rincian 6 Kontrak Pinjaman:
