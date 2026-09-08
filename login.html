@@ -427,6 +427,17 @@
       fill: currentColor;
     }
 
+    .lockout-notice {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+    }
+
     /* Toast notification */
     .toast-msg {
       position: fixed;
@@ -591,26 +602,27 @@
       </div>
 
       <!-- Form -->
-      <form id="authForm" onsubmit="handleAuthSubmit(event)">
+      <form id="authForm" onsubmit="handleAuthSubmit(event)" autocomplete="on">
+        <div id="lockoutNotice" class="lockout-notice" style="display:none" role="alert"></div>
         <!-- Name field for Sign up mode -->
         <div class="auth-form-group" id="nameGroup" style="display: none;">
           <label class="form-label" for="fullName">Name</label>
           <div class="input-wrapper">
-            <input type="text" id="fullName" class="form-input" placeholder="Enter your name">
+            <input type="text" id="fullName" class="form-input" placeholder="Enter your name" autocomplete="name" maxlength="100">
           </div>
         </div>
 
         <div class="auth-form-group">
           <label class="form-label" for="email">Email address</label>
           <div class="input-wrapper">
-            <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+            <input type="email" id="email" class="form-input" placeholder="Enter your email" required autocomplete="email" maxlength="254">
           </div>
         </div>
 
         <div class="auth-form-group">
           <label class="form-label" for="password">Password</label>
           <div class="input-wrapper">
-            <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+            <input type="password" id="password" class="form-input" placeholder="••••••••" required autocomplete="current-password" minlength="6" maxlength="128">
             <button type="button" class="input-toggle-btn" onclick="togglePasswordVisibility()" title="Lihat password">
               <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -699,14 +711,33 @@
     </div>
   </footer>
 
+  <script src="assets/js/auth.js"></script>
   <script>
     let isSignUpMode = false;
 
-    // Check URL query param for ?mode=signup
+    // Check URL query param for ?mode=signup + redirect bila sudah login
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       if (params.get('mode') === 'signup') {
         setSignUpMode(true);
+      }
+      refreshLockoutUI();
+      if (window.FinAuditAuth) {
+        const token = FinAuditAuth.getSessionToken();
+        if (token) {
+          FinAuditAuth.validateToken(token).then((ok) => {
+            if (ok) window.location.href = 'index.html';
+            else FinAuditAuth.clearSession();
+          });
+        } else {
+          // Bersihkan sisa sesi lama format "true" (tidak aman)
+          try {
+            if (sessionStorage.getItem('FINAUDIT_AUTH_SESSION') === 'true' ||
+                localStorage.getItem('FINAUDIT_AUTH_SESSION') === 'true') {
+              FinAuditAuth.clearSession();
+            }
+          } catch (e) {}
+        }
       }
     });
 
@@ -778,71 +809,113 @@
       toast._t = setTimeout(() => { toast.classList.remove('show'); }, 3000);
     }
 
-    function handleAuthSubmit(e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim().toLowerCase();
-      const password = document.getElementById('password').value;
-      const remember = document.getElementById('rememberMe').checked;
+    function setBusy(busy, label) {
       const submitBtn = document.getElementById('submitBtn');
       const submitBtnText = document.getElementById('submitBtnText');
-
-      // Valid Credentials:
-      const VALID_EMAIL = 'fahmifahrezy823@gmail.com';
-      const VALID_PASS = 'fahmi2406';
-
-      submitBtn.disabled = true;
-      submitBtnText.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span> Memvalidasi...';
-
-      setTimeout(() => {
-        if (isSignUpMode) {
-          // Mode Sign Up
-          if (email === VALID_EMAIL && password === VALID_PASS) {
-            saveSession(remember);
-            showToast('Akun berhasil didaftarkan! Mengarahkan...');
-            setTimeout(() => { window.location.href = 'index.html'; }, 800);
-          } else {
-            // Bisa daftarkan akun baru
-            saveSession(remember);
-            showToast('Pendaftaran berhasil! Mengarahkan...');
-            setTimeout(() => { window.location.href = 'index.html'; }, 800);
-          }
-        } else {
-          // Mode Login: Wajib email dan password yang ditentukan
-          if (email === VALID_EMAIL && password === VALID_PASS) {
-            saveSession(remember);
-            showToast('Berhasil login! Mengarahkan ke dashboard...');
-            setTimeout(() => {
-              window.location.href = 'index.html';
-            }, 700);
-          } else {
-            submitBtn.disabled = false;
-            submitBtnText.textContent = 'Login now';
-            showToast('Email atau password salah. Silakan periksa kembali.', 'error');
-
-            // Visual feedback error pada input
-            const emailInput = document.getElementById('email');
-            const passInput = document.getElementById('password');
-            emailInput.style.borderColor = '#ef4444';
-            passInput.style.borderColor = '#ef4444';
-            setTimeout(() => {
-              emailInput.style.borderColor = '';
-              passInput.style.borderColor = '';
-            }, 2500);
-          }
-        }
-      }, 500);
-    }
-
-    function saveSession(remember) {
-      sessionStorage.setItem('FINAUDIT_AUTH_SESSION', 'true');
-      if (remember) {
-        localStorage.setItem('FINAUDIT_AUTH_SESSION', 'true');
+      submitBtn.disabled = busy;
+      if (busy) {
+        submitBtnText.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span> Memvalidasi...';
+      } else if (label) {
+        submitBtnText.textContent = label;
       }
     }
 
-    // Google & GitHub tidak ada aksi (tetap stuck sesuai permintaan)
+    function flagInputError() {
+      const emailInput = document.getElementById('email');
+      const passInput = document.getElementById('password');
+      emailInput.style.borderColor = '#ef4444';
+      passInput.style.borderColor = '#ef4444';
+      setTimeout(() => {
+        emailInput.style.borderColor = '';
+        passInput.style.borderColor = '';
+      }, 2500);
+    }
+
+    function refreshLockoutUI() {
+      const notice = document.getElementById('lockoutNotice');
+      const secs = window.FinAuditAuth ? FinAuditAuth.isLocked() : 0;
+      if (secs > 0) {
+        notice.style.display = 'block';
+        notice.textContent = 'Terlalu banyak percobaan gagal. Coba lagi dalam ' + secs + ' detik.';
+        setBusy(true);
+      } else {
+        notice.style.display = 'none';
+        const submitBtn = document.getElementById('submitBtn');
+        if (submitBtn) submitBtn.disabled = false;
+      }
+      return secs;
+    }
+
+    setInterval(refreshLockoutUI, 1000);
+
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      if (!window.FinAuditAuth) {
+        showToast('Modul auth gagal dimuat. Refresh halaman.', 'error');
+        return;
+      }
+      if (refreshLockoutUI() > 0) return;
+
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const fullName = (document.getElementById('fullName').value || '').trim();
+      const remember = document.getElementById('rememberMe').checked;
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        showToast('Format email tidak valid.', 'error');
+        flagInputError();
+        return;
+      }
+      if (!password || password.length < 6) {
+        showToast('Password minimal 6 karakter.', 'error');
+        flagInputError();
+        return;
+      }
+
+      setBusy(true);
+
+      try {
+        if (isSignUpMode) {
+          if (!fullName) {
+            showToast('Nama wajib diisi untuk daftar.', 'error');
+            setBusy(false, 'Sign up now');
+            return;
+          }
+          // Cegah timpa akun default: signup hanya untuk email baru
+          const existing = await FinAuditAuth.verifyCredentials(email, password);
+          if (existing) {
+            showToast('Email ini sudah terdaftar. Silakan login.', 'error');
+            setBusy(false, 'Sign up now');
+            return;
+          }
+          await FinAuditAuth.registerUser(fullName, email, password);
+          await FinAuditAuth.createSession(email, remember);
+          FinAuditAuth.recordSuccess();
+          showToast('Pendaftaran berhasil! Mengarahkan...');
+          setTimeout(() => { window.location.href = 'index.html'; }, 700);
+        } else {
+          const ok = await FinAuditAuth.verifyCredentials(email, password);
+          if (ok) {
+            await FinAuditAuth.createSession(email, remember);
+            FinAuditAuth.recordSuccess();
+            showToast('Berhasil login! Mengarahkan ke dashboard...');
+            setTimeout(() => { window.location.href = 'index.html'; }, 700);
+          } else {
+            FinAuditAuth.recordFailed();
+            setBusy(false, 'Login now');
+            showToast('Email atau password salah.', 'error');
+            flagInputError();
+            refreshLockoutUI();
+          }
+        }
+      } catch (err) {
+        setBusy(false, isSignUpMode ? 'Sign up now' : 'Login now');
+        showToast('Terjadi kesalahan. Coba lagi.', 'error');
+      }
+    }
+
     function handleSocialAuth(provider) {
-      // Tetap stuck / tidak melakukan apa-apa
+      showToast('Login ' + provider + ' belum tersedia. Gunakan email + password.', 'error');
       return false;
     }
   </script>

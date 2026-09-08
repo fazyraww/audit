@@ -1,51 +1,132 @@
-REKAPITULASI TAGIHAN SHOPEE
-Tanggal Pemindaian Data: 7 September 2026
+REKAPITULASI LENGKAP KEUANGAN PINJAMAN SHOPEE
+BAGIAN 1: RINCIAN SPINJAM (Total Tagihan Saat Ini: Rp4.306.650)
+Berikut adalah data lengkap dari 6 nomor pinjaman yang belum lunas (status terlambat/lewat jatuh tempo sejak Februari 2025):
 
-I. SPINJAM (Total Tagihan Berjalan: Rp4.306.650)
-Ketentuan Bunga: Suku bunga dasar 1,8% – 3,95% per bulan + Akumulasi denda keterlambatan harian/bulanan karena telah melewati jatuh tempo sejak Februari 2025.
+1. Pinjaman Pertama
+No. Pinjaman: 1966254604224643120
 
-Rincian 6 Pinjaman Belum Lunas:
+Total Pinjaman (Pokok): Rp500.000
 
-Pinjaman Rp500.000 (No. ...43120)
+Waktu Pengajuan: 09 Nov 2024 02:53
 
-Waktu Pengajuan: 09 November 2024 (Tenor 3 Bulan)
+Durasi Pinjaman: 3 bulan
 
-Status: Cicilan 3/3 Terlambat (Jatuh Tempo: 09 Februari 2025)
+Jumlah Pembayaran: Rp353.098
 
-Pinjaman Rp500.000 (No. ...74003)
+Biaya Keterlambatan: Rp284.674
 
-Waktu Pengajuan: 10 November 2024 (Tenor 3 Bulan)
+Biaya Pencairan: Rp5.000
 
-Status: Cicilan 3/3 Terlambat (Jatuh Tempo: 10 Februari 2025)
+Biaya Cicilan: Rp39.531 – Rp59.297
 
-Pinjaman Rp500.000 (No. ...33366)
+Rincian Tagihan Belum Lunas (3/3): Rp471.107 (Jatuh Tempo: 09 Feb 2025) - Terlambat
 
-Waktu Pengajuan: 11 November 2024 (Tenor 3 Bulan)
+2. Pinjaman Kedua
+No. Pinjaman: 1966669850680574003
 
-Status: Cicilan 3/3 Terlambat (Jatuh Tempo: 11 Februari 2025)
+Total Pinjaman (Pokok): Rp500.000
 
-Pinjaman Rp1.000.000 (No. ...2793)
+Waktu Pengajuan: 10 Nov 2024 06:23
 
-Waktu Pengajuan: 11 November 2024 (Tenor 3 Bulan)
+Durasi Pinjaman: 3 bulan
 
-Status: Cicilan 3/3 Terlambat (Jatuh Tempo: 11 Februari 2025)
+Jumlah Pembayaran: Rp372.864
 
-Pinjaman Rp1.000.000 (No. ...4652)
+Biaya Keterlambatan: Rp284.674
 
-Waktu Pengajuan: 14 November 2024 (Tenor 3 Bulan)
+Biaya Pencairan: Rp5.000
 
-Status: Cicilan 3/3 Terlambat (Jatuh Tempo: 14 Februari 2025)
+Biaya Cicilan: Rp59.297
 
-Pinjaman Rp593.017 (No. ...47332)
+Rincian Tagihan Belum Lunas (3/3): Rp471.107 (Jatuh Tempo: 10 Feb 2025) - Terlambat
 
-Waktu Pengajuan: 22 November 2024 (Tenor 12 Bulan)
+3. Pinjaman Ketiga
+No. Pinjaman: 1967025458923533366
 
-Status: Cicilan 12/12 Terlambat
+Total Pinjaman (Pokok): Rp500.000
 
-II. SPAYLATER (Total Tagihan Berjalan: Rp512.703)
-Ketentuan Bunga: Suku bunga cicilan standar ~2,95% per bulan + Denda keterlambatan akumulatif akibat lewat jatuh tempo lebih dari 500 hari.
+Waktu Pengajuan: 11 Nov 2024 05:56
 
-Rincian Tagihan Bulanan:
+Durasi Pinjaman: 3 bulan
+
+Jumlah Pembayaran: Rp375.864
+
+Biaya Keterlambatan: Rp273.750
+
+Biaya Pencairan: Rp5.000
+
+Biaya Cicilan: Rp59.297
+
+Biaya Proteksi Pinjaman: Rp4.500
+
+Potongan Denda Keterlambatan: Rp9.397
+
+Rincian Tagihan Belum Lunas (3/3): Rp461.683 - Terlambat
+
+4. Pinjaman Keempat
+No. Pinjaman: 1967134052977312793
+
+Total Pinjaman (Pokok): Rp1.000.000
+
+Waktu Pengajuan: 11 Nov 2024 13:08
+
+Durasi Pinjaman: 3 bulan
+
+Jumlah Pembayaran: Rp748.091
+
+Biaya Keterlambatan: Rp571.704
+
+Biaya Pencairan: Rp10.000
+
+Biaya Cicilan: Rp118.593
+
+Rincian Tagihan Belum Lunas (3/3): Rp942.206 (Jatuh Tempo: 11 Feb 2025) - Terlambat
+
+5. Pinjaman Kelima
+No. Pinjaman: 1968138751704644652
+
+Total Pinjaman (Pokok): Rp1.000.000
+
+Waktu Pengajuan: 14 Nov 2024 07:40
+
+Durasi Pinjaman: 3 bulan
+
+Jumlah Pembayaran: Rp764.373
+
+Biaya Keterlambatan: Rp587.986
+
+Biaya Pencairan: Rp10.000
+
+Biaya Cicilan: Rp118.593
+
+Rincian Tagihan Belum Lunas (3/3): Rp942.206 (Jatuh Tempo: 14 Feb 2025) - Terlambat
+
+6. Pinjaman Keenam
+No. Pinjaman: 1971130177195447332
+
+Total Pinjaman (Pokok): Rp593.017
+
+Waktu Pengajuan: 22 Nov 2024 13:47
+
+Durasi Pinjaman: 12 bulan
+
+Jumlah Pembayaran: Rp148.650
+
+Biaya Keterlambatan: Rp288.200
+
+Biaya Pencairan: Rp5.930
+
+Biaya Cicilan: Rp281.091
+
+Biaya Proteksi Pinjaman: Rp17.796
+
+Potongan Denda Keterlambatan: Rp3.716
+
+Rincian Tagihan Belum Lunas (12/12): Rp81.947 - Terlambat
+
+BAGIAN 2: RINCIAN SPAYLATER (Plafon Awal: Rp4.093.017 | Total Belum Dibayar: Rp512.703)
+Plafon Awal Fasilitas SPayLater: Rp4.093.017
+Berdasarkan rincian tagihan bulanan yang belum dibayar:
 
 Tagihan Januari 2025
 
@@ -65,9 +146,12 @@ Status: Lewat jatuh tempo 524 hari
 
 Nominal: Rp106.956
 
-III. KESIMPULAN UTANG KESELURUHAN
-Total SPinjam: Rp4.306.650
+BAGIAN 3: RINGKASAN KESELURUHAN UTANG & PLAFON SHOPEE
+Plafon Awal SPinjam: Rp4.093.017
+Plafon Awal SPayLater: Rp4.093.017
+Total Plafon Fasilitas Terdaftar: Rp8.186.034
 
-Total SPayLater: Rp512.703
+Total Tagihan SPinjam (Halaman Utama): Rp4.306.650
+Total Tagihan SPayLater: Rp512.703
 
-GRAND TOTAL YANG HARUS DIBAYAR: Rp4.819.353
+GRAND TOTAL KESELURUHAN: Rp4.819.353
