@@ -4535,12 +4535,10 @@
               <option value="spaylater">SPayLater (3)</option>
             </select>
           </div>
-          <div id="pinjolAccrualNote" style="font-size:12px; color:var(--text-muted); margin:-2px 0 12px;"></div>
           <div class="dp-container">
 
             <div class="section-header-bar" style="margin-top:4px;">
               <div class="section-heading-text">Rincian Fasilitas (9 Akun)</div>
-              <span style="font-size:12px; color:var(--text-muted);">Klik baris untuk berkas forensik <code class="mono">pinjol.txt</code></span>
             </div>
 
             <div class="table-box">
@@ -4560,7 +4558,7 @@
               </table>
               <div class="table-footer">
                 <span id="pinjolPaginationInfo">9 akun</span>
-                <span>Kolom Pokok tidak dijumlahkan: SPinjam = pokok per kontrak, SPayLater = 1 plafon bersama</span>
+                <span>Catatan: kolom Pokok tidak dijumlahkan — SPinjam memakai pokok per kontrak, SPayLater memakai satu plafon bersama</span>
               </div>
             </div>
 
@@ -6432,7 +6430,7 @@
         }
 
         const info = document.getElementById('pinjolPaginationInfo');
-        if (info) info.textContent = `Menampilkan ${rows.length} dari 9 akun \u00B7 per ${liveToday} (+${liveDays} hari) \u00B7 sumber pinjol.txt`;
+        if (info) info.textContent = `Menampilkan ${rows.length} dari 9 akun`;
 
         initPinjolCharts();
       }
@@ -6524,10 +6522,6 @@
         set('pinjolKpiSpinjamSub', `Pokok Rp 4.093.017 \u00B7 +${fmtIDR(daySpin)}/hari (2,40\u20133,95%/bln)`);
         set('pinjolKpiSpaylater', fmtIDR(liveSpl));
         set('pinjolKpiSpaylaterSub', `Plafon Rp 4.093.017 \u00B7 +${fmtIDR(daySpl)}/hari (\u00B12,95%/bln)`);
-        const note = document.getElementById('pinjolAccrualNote');
-        if (note) note.textContent = days > 0
-          ? `Saldo dasar 7 Sep 2026 + denda berjalan ${days} hari s.d. ${today} (+${fmtIDR(liveGrand - PINJOL_AUDIT_DATA.grandTotal)}). SPinjam 2,40\u20133,95%/bln \u00B7 SPayLater \u00B12,95%/bln, basis 30 hari.`
-          : 'Saldo per 7 Sep 2026 (pindaian pinjol.txt). Denda harian mulai berjalan keesokan harinya.';
         const cardShopee = document.getElementById('cardShopeeBalance');
         if (cardShopee) cardShopee.textContent = fmtIDR(liveGrand);
         const cardPjKpi = document.getElementById('pjHdrGrandTotal');
