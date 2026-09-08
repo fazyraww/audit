@@ -5908,7 +5908,9 @@
               description: t.description,
               amount: t.amount,
               brandIcon: t.category === 'QRIS' ? 'icon-bg-qris' : (t.category.includes('E-Wallet') ? 'icon-bg-spotify' : 'icon-bg-bca'),
-              iconLetter: t.category === 'QRIS' ? 'QR' : (t.category.includes('E-Wallet') ? 'EW' : 'BCA')
+              iconLetter: t.category === 'QRIS' ? 'QR' : (t.category.includes('E-Wallet') ? 'EW' : 'BCA'),
+              iconImg: (t.category === 'QRIS' || t.category.includes('E-Wallet')) ? null : 'assets/images/bca-logo.png',
+              iconImgBg: (t.category === 'QRIS' || t.category.includes('E-Wallet')) ? null : '#ffffff'
             });
           });
         }
