@@ -4516,7 +4516,7 @@
             </div>
             <div class="metric-card">
               <div class="metric-card-label">Status</div>
-              <div class="metric-card-val" id="pinjolKpiKolVal">Macet &gt;500 Hari</div>
+              <div class="metric-card-val" id="pinjolKpiKolVal">Macet &gt;580 Hari</div>
               <div class="metric-card-sub" id="pinjolKpiKolSub">Kol-5</div>
             </div>
           </div>
@@ -5009,10 +5009,10 @@
         <button class="btn-close-modal" onclick="closeAccountDetailModal()">&times;</button>
       </div>
 
-      <div style="display:flex; flex-direction:column; gap:12px; font-size:12.5px; margin-top:10px;">
+      <div style="display:flex; flex-direction:column; gap:16px; font-size:12.5px; margin-top:12px;">
         <div class="dp-forensic-kpi-row">
           <div class="dp-forensic-kpi-card">
-            <span class="dp-forensic-kpi-lbl" id="dpModalInitialLbl">Pokok</span>
+            <span class="dp-forensic-kpi-lbl" id="dpModalInitialLbl">Tagihan Awal</span>
             <span class="dp-forensic-kpi-val" id="dpModalInitial">Rp 0</span>
           </div>
           <div class="dp-forensic-kpi-card">
@@ -5020,7 +5020,7 @@
             <span class="dp-forensic-kpi-val" style="color:var(--color-success);" id="dpModalPaidAmount">Rp 0</span>
           </div>
           <div class="dp-forensic-kpi-card">
-            <span class="dp-forensic-kpi-lbl">Tagihan</span>
+            <span class="dp-forensic-kpi-lbl">Total Tagihan</span>
             <span class="dp-forensic-kpi-val" style="color:#ee4d2d;" id="dpModalBalance">Rp 0</span>
           </div>
         </div>
@@ -5042,18 +5042,6 @@
             <span class="dp-forensic-lbl">Denda:</span>
             <span class="dp-forensic-val mono" style="color:#f97316;" id="dpModalLateFee">-</span>
           </div>
-          <div class="dp-forensic-item" id="dpModalDisbursementRow">
-            <span class="dp-forensic-lbl">Pencairan:</span>
-            <span class="dp-forensic-val mono" id="dpModalDisbursementFee">-</span>
-          </div>
-          <div class="dp-forensic-item" id="dpModalProtectionRow">
-            <span class="dp-forensic-lbl">Proteksi:</span>
-            <span class="dp-forensic-val mono" id="dpModalProtectionFee">-</span>
-          </div>
-          <div class="dp-forensic-item" id="dpModalDiscountRow">
-            <span class="dp-forensic-lbl">Potongan Denda:</span>
-            <span class="dp-forensic-val mono" style="color:#10b981;" id="dpModalLateDiscount">-</span>
-          </div>
           <div class="dp-forensic-item">
             <span class="dp-forensic-lbl">Jatuh Tempo:</span>
             <span class="dp-forensic-val mono" style="color:var(--color-danger);" id="dpModalDueDate">-</span>
@@ -5064,13 +5052,7 @@
           </div>
         </div>
 
-        <div class="dp-detail-row" style="margin-top:2px;">
-          <span class="dp-detail-row-lbl">Penyelenggara:</span>
-          <span class="dp-detail-row-val" id="dpModalLegalEntity" style="font-size:11.5px;"></span>
-        </div>
-
-        <div style="background:var(--bg-card-stack); border:1px solid var(--border-color); border-radius:10px; padding:12px; font-size:11.5px; line-height:1.6; color:var(--text-secondary);">
-          <strong style="color:var(--text-main); display:block; margin-bottom:3px;">Catatan:</strong>
+        <div style="background:var(--bg-card-stack); border:1px solid var(--border-color); border-radius:10px; padding:12px 14px; font-size:12px; line-height:1.6; color:var(--text-secondary);">
           <span id="dpModalAuditNote"></span>
         </div>
       </div>
@@ -6519,7 +6501,7 @@
         set('pinjolKpiSpinjamSub', `6 kontrak`);
         set('pinjolKpiSpaylater', fmtIDR(liveSpl));
         set('pinjolKpiSpaylaterSub', `3 periode`);
-        set('pinjolKpiKolVal', `Macet >${Math.min(...PINJOL_ACCOUNTS.map(a => pinjolOverdueDays(a)))} Hari`);
+        set('pinjolKpiKolVal', `Macet >${Math.max(...PINJOL_ACCOUNTS.map(a => pinjolOverdueDays(a)))} Hari`);
         const cardShopee = document.getElementById('cardShopeeBalance');
         if (cardShopee) cardShopee.textContent = fmtIDR(liveGrand);
         const cardPjKpi = document.getElementById('pjHdrGrandTotal');
@@ -6558,7 +6540,6 @@
 
         const titleEl = document.getElementById('dpModalAccTitle');
         const subEl = document.getElementById('dpModalAccSub');
-        const legalEl = document.getElementById('dpModalLegalEntity');
         const noEl = document.getElementById('dpModalContractNo');
         const dateEl = document.getElementById('dpModalApplyDate');
         const tenorEl = document.getElementById('dpModalTenor');
@@ -6570,16 +6551,9 @@
         const balEl = document.getElementById('dpModalBalance');
         const noteEl = document.getElementById('dpModalAuditNote');
         const lateFeeEl = document.getElementById('dpModalLateFee');
-        const disbEl = document.getElementById('dpModalDisbursementFee');
-        const disbRow = document.getElementById('dpModalDisbursementRow');
-        const protRow = document.getElementById('dpModalProtectionRow');
-        const protEl = document.getElementById('dpModalProtectionFee');
-        const discRow = document.getElementById('dpModalDiscountRow');
-        const discEl = document.getElementById('dpModalLateDiscount');
 
         if (titleEl) titleEl.textContent = acc.account;
         if (subEl) subEl.innerHTML = `${acc.provider} &bull; ${acc.type === 'spinjam' ? 'SPinjam' : 'SPayLater'}`;
-        if (legalEl) legalEl.textContent = acc.type === 'spinjam' ? 'PT Lentera Dana Nusantara' : 'PT Commerce Finance';
         if (noEl) noEl.textContent = acc.loanNo || acc.contractNo;
         if (dateEl) dateEl.textContent = acc.applyDate;
         if (tenorEl) tenorEl.textContent = `${acc.tenor}`;
@@ -6594,36 +6568,10 @@
         const mAdd = pinjolAccrued(acc, mDays);
         if (balEl) balEl.textContent = fmtIDR(acc.balance + mAdd);
         if (lateFeeEl) lateFeeEl.textContent = (acc.lateFee + mAdd) > 0 ? fmtIDR(acc.lateFee + mAdd) : 'Rp 0';
-        if (disbRow && disbEl) {
-          if (acc.disbursementFee > 0) {
-            disbRow.style.display = 'flex';
-            disbEl.textContent = fmtIDR(acc.disbursementFee);
-          } else {
-            disbRow.style.display = 'none';
-          }
-        }
-
-        if (protRow && protEl) {
-          if (acc.protectionFee > 0) {
-            protRow.style.display = 'flex';
-            protEl.textContent = fmtIDR(acc.protectionFee);
-          } else {
-            protRow.style.display = 'none';
-          }
-        }
-
-        if (discRow && discEl) {
-          if (acc.lateDiscount > 0) {
-            discRow.style.display = 'flex';
-            discEl.textContent = '-' + fmtIDR(acc.lateDiscount);
-          } else {
-            discRow.style.display = 'none';
-          }
-        }
 
         if (dueEl) dueEl.textContent = acc.dueDate;
         if (ovrEl) ovrEl.textContent = `Kol-5`;
-        if (noteEl) noteEl.textContent = acc.auditNote;
+        if (noteEl) noteEl.textContent = `${acc.status}, denda berjalan aktif sejak ${acc.dueDate}.`;
 
         const modal = document.getElementById('dpAccountDetailModal');
         if (modal) modal.classList.add('open');
