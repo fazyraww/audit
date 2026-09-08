@@ -4500,36 +4500,36 @@
         <section id="panel-pinjol" class="panel-view">
           <div class="kpi-row-4">
             <div class="metric-card">
-              <div class="metric-card-label">Total Tagihan Berjalan (9 Akun)</div>
+              <div class="metric-card-label">Total Tagihan (9 Akun)</div>
               <div class="metric-card-val" style="color:var(--color-danger);" id="pinjolKpiTotal">Rp 4.819.353</div>
-              <div class="metric-card-sub" id="pinjolKpiTotalSub">SPinjam Rp 4.306.650 + SPayLater Rp 512.703</div>
+              <div class="metric-card-sub" id="pinjolKpiTotalSub">SPinjam + SPayLater</div>
             </div>
             <div class="metric-card">
               <div class="metric-card-label">SPinjam &mdash; 6 Pinjaman</div>
               <div class="metric-card-val" id="pinjolKpiSpinjam">Rp 4.306.650</div>
-              <div class="metric-card-sub" id="pinjolKpiSpinjamSub">Pokok dicairkan Rp 4.093.017</div>
+              <div class="metric-card-sub" id="pinjolKpiSpinjamSub">6 kontrak</div>
             </div>
             <div class="metric-card">
               <div class="metric-card-label">SPayLater &mdash; 3 Periode</div>
               <div class="metric-card-val" id="pinjolKpiSpaylater">Rp 512.703</div>
-              <div class="metric-card-sub" id="pinjolKpiSpaylaterSub">Dari plafon Rp 4.093.017 (terpakai 12,5%)</div>
+              <div class="metric-card-sub" id="pinjolKpiSpaylaterSub">3 periode</div>
             </div>
             <div class="metric-card">
-              <div class="metric-card-label">Status Kolektibilitas</div>
+              <div class="metric-card-label">Status</div>
               <div class="metric-card-val" id="pinjolKpiKolVal">Macet &gt;500 Hari</div>
-              <div class="metric-card-sub" id="pinjolKpiKolSub">Kol-5 &middot; JT Feb 2025 &ndash; Nov 2025</div>
+              <div class="metric-card-sub" id="pinjolKpiKolSub">Kol-5</div>
             </div>
           </div>
 
           <div class="grid-2-charts">
             <div class="chart-card">
               <div class="chart-card-title">Komposisi Tagihan</div>
-              <div class="chart-card-sub">Porsi SPinjam vs SPayLater dari total Rp 4,82 Jt</div>
+              <div class="chart-card-sub">SPinjam vs SPayLater</div>
               <div class="chart-container"><canvas id="chartPinjolMix"></canvas></div>
             </div>
             <div class="chart-card">
               <div class="chart-card-title">Pokok vs Denda per Kontrak</div>
-              <div class="chart-card-sub">6 SPinjam + 3 SPayLater &middot; sumber pinjol.txt</div>
+              <div class="chart-card-sub">9 akun</div>
               <div class="chart-container"><canvas id="chartPinjolBurden"></canvas></div>
             </div>
           </div>
@@ -4554,8 +4554,8 @@
                 <thead>
                   <tr>
                     <th>Fasilitas &amp; No. Pinjaman</th>
-                    <th style="text-align:right;">Pokok</th>
-                    <th style="text-align:right;">Dibayar</th>
+                    <th style="text-align:right;">Tagihan Awal</th>
+                    <th style="text-align:right;">Jumlah Pembayaran</th>
                     <th style="text-align:right;">Denda</th>
                     <th style="text-align:right;">Tagihan</th>
                     <th>Jatuh Tempo</th>
@@ -4566,7 +4566,7 @@
               </table>
               <div class="table-footer">
                 <span id="pinjolPaginationInfo">9 akun</span>
-                <span>Catatan: kolom Pokok tidak dijumlahkan — SPinjam memakai pokok per kontrak, SPayLater memakai satu plafon bersama</span>
+                <span>Total terutang per hari ini.</span>
               </div>
             </div>
 
@@ -5003,8 +5003,8 @@
     <div class="modal-card flat-pinjol" style="max-width:520px;">
       <div class="modal-title-row">
         <div>
-          <div class="modal-heading-title" id="dpModalAccTitle">Detail Kontrak Fasilitas</div>
-          <div class="modal-heading-sub" id="dpModalAccSub">Ringkasan kontrak &middot; pinjol.txt</div>
+          <div class="modal-heading-title" id="dpModalAccTitle">Detail Tagihan</div>
+          <div class="modal-heading-sub" id="dpModalAccSub">Ringkasan tagihan</div>
         </div>
         <button class="btn-close-modal" onclick="closeAccountDetailModal()">&times;</button>
       </div>
@@ -5016,11 +5016,11 @@
             <span class="dp-forensic-kpi-val" id="dpModalInitial">Rp 0</span>
           </div>
           <div class="dp-forensic-kpi-card">
-            <span class="dp-forensic-kpi-lbl">Sudah Dibayar</span>
+            <span class="dp-forensic-kpi-lbl">Jumlah Pembayaran</span>
             <span class="dp-forensic-kpi-val" style="color:var(--color-success);" id="dpModalPaidAmount">Rp 0</span>
           </div>
           <div class="dp-forensic-kpi-card">
-            <span class="dp-forensic-kpi-lbl">Tagihan Hari Ini</span>
+            <span class="dp-forensic-kpi-lbl">Tagihan</span>
             <span class="dp-forensic-kpi-val" style="color:#ee4d2d;" id="dpModalBalance">Rp 0</span>
           </div>
         </div>
@@ -6356,24 +6356,20 @@
         });
 
         const liveDays = pinjolDaysElapsed();
-        const liveToday = pinjolTodayLabel();
 
         tbody.innerHTML = rows.map(item => {
           const isSpinjam = item.type === 'spinjam';
-          const pokokSub = isSpinjam ? 'pokok pinjaman' : 'tagihan periode';
           const accAdd = pinjolAccrued(item, liveDays);
-          const accDaily = Math.round(pinjolDailyRate(item));
           const accLive = item.balance + accAdd;
-          const accSub = liveDays > 0 ? `<br><span style="font-size:10.5px; color:#f97316; font-weight:400;">+${fmtIDR(accAdd)} (${fmtIDR(accDaily)}/hari &times; ${liveDays} hari)</span>` : '';
           const dibayar = item.paidAmount > 0
             ? `<span style="color:var(--color-success); font-weight:700;">${fmtIDR(item.paidAmount)}</span>`
             : '<span style="color:var(--text-dim);">-</span>';
           const dendaLive = item.lateFee + accAdd;
           const denda = dendaLive > 0
-            ? `<span style="color:#f97316; font-weight:700;">${fmtIDR(dendaLive)}</span>${accSub}`
+            ? `<span style="color:#f97316; font-weight:700;">${fmtIDR(dendaLive)}</span>`
             : '<span style="color:var(--text-dim);">-</span>';
           return `
-            <tr onclick="openAccountDetailModal('${item.id}')" style="cursor:pointer;" title="Klik untuk berkas forensik">
+            <tr onclick="openAccountDetailModal('${item.id}')" style="cursor:pointer;" title="Klik untuk detail">
               <td>
                 <div style="display:flex; align-items:center; gap:10px;">
                   <span class="badge-pill ${isSpinjam ? 'out' : 'warn'}">${isSpinjam ? 'SP' : 'SPL'}</span>
@@ -6383,15 +6379,15 @@
                   </span>
                 </div>
               </td>
-              <td class="mono" style="text-align:right;">${fmtIDR(item.initial)}<br><span style="font-size:10.5px; color:var(--text-muted); font-weight:400;">${pokokSub}</span></td>
+              <td class="mono" style="text-align:right;">${fmtIDR(item.initial)}</td>
               <td class="mono" style="text-align:right;">${dibayar}</td>
               <td class="mono" style="text-align:right;">${denda}</td>
-              <td class="mono" style="text-align:right; font-weight:800; color:var(--color-danger);">${fmtIDR(accLive)}${accSub}</td>
-              <td><span style="font-weight:600;">${escapeHtml(item.dueDate)}</span><br><span style="font-size:11px; color:var(--text-muted);">${pinjolOverdueDays(item)} hari lewat JT</span></td>
+              <td class="mono" style="text-align:right; font-weight:800; color:var(--color-danger);">${fmtIDR(accLive)}</td>
+              <td><span style="font-weight:600;">${escapeHtml(item.dueDate)}</span></td>
             </tr>`;
         }).join('') || `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:22px;">Tidak ada akun yang cocok dengan pencarian.</td></tr>`;
 
-        /* Footer: subtotal per jenis + grand total, semuanya LIVE per hari ini. */
+        /* Footer: subtotal per jenis + grand total. Angka tetap live, tampilan bersih. */
         const foot = document.getElementById('pinjolTableFoot');
         if (foot) {
           const spin = PINJOL_ACCOUNTS.filter(a => a.type === 'spinjam');
@@ -6399,38 +6395,35 @@
           const sum = (arr, k) => arr.reduce((s, a) => s + (Number(a[k]) || 0), 0);
           const liveSum = (arr) => arr.reduce((s, a) => s + pinjolLive(a, liveDays), 0);
           const addSum = (arr) => arr.reduce((s, a) => s + pinjolAccrued(a, liveDays), 0);
-          const daySum = (arr) => Math.round(arr.reduce((s, a) => s + pinjolDailyRate(a), 0));
           const spinAdd = addSum(spin), splAdd = addSum(spl);
-          const spinDay = daySum(spin), splDay = daySum(spl);
-          const baseSub = (v) => `<br><span style="font-size:10.5px; color:var(--text-muted); font-weight:400;">awal ${fmtIDR(v)}</span>`;
-          const addSub = (v, d) => liveDays > 0 ? `<br><span style="font-size:10.5px; color:#f97316; font-weight:400;">+${fmtIDR(v)} (${fmtIDR(d)}/hari &times; ${liveDays} hari)</span>` : '';
           let f = '';
           if (filter !== 'spaylater') {
             f += `<tr style="background:var(--bg-input); font-weight:700;">
-              <td>Subtotal SPinjam (6 kontrak)</td>
-              <td class="mono" style="text-align:right;">${fmtIDR(sum(spin, 'initial'))}<br><span style="font-size:10.5px; color:var(--text-muted); font-weight:400;">total pokok</span></td>
+              <td>Subtotal SPinjam</td>
+              <td class="mono" style="text-align:right;">${fmtIDR(sum(spin, 'initial'))}</td>
               <td class="mono" style="text-align:right; color:var(--color-success);">${fmtIDR(sum(spin, 'paidAmount'))}</td>
-              <td class="mono" style="text-align:right; color:#f97316;">${fmtIDR(sum(spin, 'lateFee') + spinAdd)}${addSub(spinAdd, spinDay)}</td>
-              <td class="mono" style="text-align:right; color:var(--color-danger);">${fmtIDR(liveSum(spin))}${baseSub(sum(spin, 'balance'))}${addSub(spinAdd, spinDay)}</td>
+              <td class="mono" style="text-align:right; color:#f97316;">${fmtIDR(sum(spin, 'lateFee') + spinAdd)}</td>
+              <td class="mono" style="text-align:right; color:var(--color-danger);">${fmtIDR(liveSum(spin))}</td>
               <td></td>
             </tr>`;
           }
           if (filter !== 'spinjam') {
             f += `<tr style="background:var(--bg-input); font-weight:700;">
-              <td>Subtotal SPayLater (3 periode)</td>
-              <td class="mono" style="text-align:right;"><span style="font-size:12px;">Plafon Rp 4.093.017</span><br><span style="font-size:10.5px; color:var(--text-muted); font-weight:400;">fasilitas, bukan tagihan</span></td>
+              <td>Subtotal SPayLater</td>
+              <td class="mono" style="text-align:right;">${fmtIDR(sum(spl, 'balance'))}</td>
               <td class="mono" style="text-align:right; color:var(--text-muted);">-</td>
-              <td class="mono" style="text-align:right; color:#f97316;">${splAdd > 0 ? fmtIDR(splAdd) + addSub(splAdd, splDay) : '<span style="color:var(--text-muted);">-</span>'}</td>
-              <td class="mono" style="text-align:right; color:var(--color-danger);">${fmtIDR(liveSum(spl))}${baseSub(sum(spl, 'balance'))}${addSub(splAdd, splDay)}</td>
+              <td class="mono" style="text-align:right; color:#f97316;">${splAdd > 0 ? fmtIDR(splAdd) : '<span style="color:var(--text-muted);">-</span>'}</td>
+              <td class="mono" style="text-align:right; color:var(--color-danger);">${fmtIDR(liveSum(spl))}</td>
               <td></td>
             </tr>`;
           }
           if (filter === 'all' && !keyword) {
             const liveGrand = liveSum(spin) + liveSum(spl);
             f += `<tr style="background:var(--bg-input);">
-              <td colspan="4" style="font-weight:800;">Total Tagihan (9 Akun) per ${liveToday} &middot; <span style="font-weight:400; color:var(--text-muted);">SPinjam ${fmtIDR(liveSum(spin))} + SPayLater ${fmtIDR(liveSum(spl))}${liveDays > 0 ? ` (+${fmtIDR(spinAdd + splAdd)} &middot; ${liveDays} hari)` : ''}</span></td>
-              <td class="mono" style="text-align:right; font-weight:800; font-size:14px; color:var(--color-danger);">${fmtIDR(liveGrand)}</td>
-              <td><span class="badge-pill out">Macet &gt;500 hr</span></td>
+              <td style="font-weight:800;">Total Tagihan (9 Akun)</td>
+              <td class="mono" style="text-align:right; font-weight:800; font-size:14px; color:var(--color-danger);" colspan="3">${fmtIDR(liveGrand)}</td>
+              <td></td>
+              <td><span class="badge-pill out">Macet</span></td>
             </tr>`;
           }
           foot.innerHTML = f;
@@ -6510,25 +6503,22 @@
         }
       }
 
-      /* Entry point tab Pinjol (dipanggil switchTab). Sekaligus sinkronkan KPI + catatan akrual. */
+      /* Entry point tab Pinjol (dipanggil switchTab). Sekaligus sinkronkan KPI. */
       function renderPinjolCards() {
         renderPinjolAccountsTable();
         const days = pinjolDaysElapsed();
-        const today = pinjolTodayLabel();
         const spin = PINJOL_ACCOUNTS.filter(a => a.type === 'spinjam');
         const spl = PINJOL_ACCOUNTS.filter(a => a.type === 'spaylater');
         const liveSpin = spin.reduce((s, a) => s + pinjolLive(a, days), 0);
         const liveSpl = spl.reduce((s, a) => s + pinjolLive(a, days), 0);
         const liveGrand = liveSpin + liveSpl;
-        const daySpin = Math.round(spin.reduce((s, a) => s + pinjolDailyRate(a), 0));
-        const daySpl = Math.round(spl.reduce((s, a) => s + pinjolDailyRate(a), 0));
         const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
         set('pinjolKpiTotal', fmtIDR(liveGrand));
-        set('pinjolKpiTotalSub', `SPinjam ${fmtIDR(liveSpin)} + SPayLater ${fmtIDR(liveSpl)} \u00B7 per ${today}`);
+        set('pinjolKpiTotalSub', `SPinjam ${fmtIDR(liveSpin)} + SPayLater ${fmtIDR(liveSpl)}`);
         set('pinjolKpiSpinjam', fmtIDR(liveSpin));
-        set('pinjolKpiSpinjamSub', `Pokok Rp 4.093.017 \u00B7 +${fmtIDR(daySpin)}/hari (2,40\u20133,95%/bln)`);
+        set('pinjolKpiSpinjamSub', `6 kontrak`);
         set('pinjolKpiSpaylater', fmtIDR(liveSpl));
-        set('pinjolKpiSpaylaterSub', `Plafon Rp 4.093.017 \u00B7 +${fmtIDR(daySpl)}/hari (\u00B12,95%/bln)`);
+        set('pinjolKpiSpaylaterSub', `3 periode`);
         set('pinjolKpiKolVal', `Macet >${Math.min(...PINJOL_ACCOUNTS.map(a => pinjolOverdueDays(a)))} Hari`);
         const cardShopee = document.getElementById('cardShopeeBalance');
         if (cardShopee) cardShopee.textContent = fmtIDR(liveGrand);
@@ -6588,12 +6578,12 @@
         const discEl = document.getElementById('dpModalLateDiscount');
 
         if (titleEl) titleEl.textContent = acc.account;
-        if (subEl) subEl.innerHTML = `${acc.provider} &bull; Fasilitas ${acc.type === 'spinjam' ? 'Pinjaman Tunai P2P' : 'Buy Now Pay Later'}`;
-        if (legalEl) legalEl.textContent = acc.type === 'spinjam' ? 'PT Lentera Dana Nusantara · P2P OJK KEP-19/D.05/2021' : 'PT Commerce Finance · Multifinance OJK KEP-219/NB.11/2020';
+        if (subEl) subEl.innerHTML = `${acc.provider} &bull; ${acc.type === 'spinjam' ? 'SPinjam' : 'SPayLater'}`;
+        if (legalEl) legalEl.textContent = acc.type === 'spinjam' ? 'PT Lentera Dana Nusantara' : 'PT Commerce Finance';
         if (noEl) noEl.textContent = acc.loanNo || acc.contractNo;
         if (dateEl) dateEl.textContent = acc.applyDate;
-        if (tenorEl) tenorEl.textContent = `${acc.tenor} · ${acc.rate}`;
-        if (initLbl) initLbl.textContent = acc.type === 'spinjam' ? 'Pokok' : 'Plafon';
+        if (tenorEl) tenorEl.textContent = `${acc.tenor}`;
+        if (initLbl) initLbl.textContent = acc.type === 'spinjam' ? 'Tagihan Awal' : 'Plafon';
         if (initEl) {
           initEl.textContent = acc.type === 'spinjam' ? fmtIDR(acc.initial) : fmtIDR(acc.facilityLimit);
         }
@@ -6602,7 +6592,6 @@
         }
         const mDays = pinjolDaysElapsed();
         const mAdd = pinjolAccrued(acc, mDays);
-        const mDaily = Math.round(pinjolDailyRate(acc));
         if (balEl) balEl.textContent = fmtIDR(acc.balance + mAdd);
         if (lateFeeEl) lateFeeEl.textContent = (acc.lateFee + mAdd) > 0 ? fmtIDR(acc.lateFee + mAdd) : 'Rp 0';
         if (disbRow && disbEl) {
@@ -6633,8 +6622,8 @@
         }
 
         if (dueEl) dueEl.textContent = acc.dueDate;
-        if (ovrEl) ovrEl.textContent = `Kol-5 · ${pinjolOverdueDays(acc)} hari`;
-        if (noteEl) noteEl.textContent = acc.auditNote + (mDays > 0 ? ` Denda berjalan +${fmtIDR(mAdd)} (${fmtIDR(mDaily)}/hari × ${mDays} hari, ${acc.rate}).` : '');
+        if (ovrEl) ovrEl.textContent = `Kol-5`;
+        if (noteEl) noteEl.textContent = acc.auditNote;
 
         const modal = document.getElementById('dpAccountDetailModal');
         if (modal) modal.classList.add('open');
@@ -6651,17 +6640,16 @@
         if (!acc) return;
         const cDays = pinjolDaysElapsed();
         const cAdd = pinjolAccrued(acc, cDays);
-        const cDaily = Math.round(pinjolDailyRate(acc));
 
         const text = `${acc.account} (${acc.type === 'spinjam' ? 'SPinjam' : 'SPayLater'})
-${acc.type === 'spinjam' ? 'Pokok' : 'Plafon'}: ${fmtIDR(acc.type === 'spinjam' ? acc.initial : acc.facilityLimit)} | Dibayar: ${acc.paidAmount > 0 ? fmtIDR(acc.paidAmount) : 'Rp 0'}
-Denda s.d. ${pinjolTodayLabel()}: +${fmtIDR(acc.lateFee + cAdd)} (${fmtIDR(cDaily)}/hari × ${cDays} hari, ${acc.rate})
-Tagihan: ${fmtIDR(acc.balance + cAdd)} | JT ${acc.dueDate} (Kol-5, ${pinjolOverdueDays(acc)} hari)
+${acc.type === 'spinjam' ? 'Tagihan Awal' : 'Plafon'}: ${fmtIDR(acc.type === 'spinjam' ? acc.initial : acc.facilityLimit)} | Jumlah Pembayaran: ${acc.paidAmount > 0 ? fmtIDR(acc.paidAmount) : 'Rp 0'}
+Denda: ${fmtIDR(acc.lateFee + cAdd)}
+Tagihan: ${fmtIDR(acc.balance + cAdd)} | JT ${acc.dueDate}
 No: ${acc.loanNo || acc.contractNo}`;
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(() => {
-            showToast('Berkas kontrak forensik berhasil disalin ke clipboard!', '✓');
+            showToast('Detail berhasil disalin.', '✓');
           }).catch(() => fallbackCopy(text));
         } else {
           fallbackCopy(text);
