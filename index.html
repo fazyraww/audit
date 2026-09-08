@@ -6314,8 +6314,23 @@
       }
       function pinjolLive(acc, days) { return acc.balance + pinjolAccrued(acc, days); }
       function pinjolDailyRate(acc) { return (Number(acc.initial) || 0) * (Number(acc.rateNum) || 0) / 100 / 30; }
-      /* Hari menunggak live: angka resmi 7 Sep + hari berjalan. */
+      /* Hari menunggak dinamis: selisih tanggal JT vs tanggal sistem hari ini (real-time). */
+      const PINJOL_MONTH_ID = { jan: 0, feb: 1, mar: 2, apr: 3, mei: 4, jun: 5, jul: 6, agu: 7, ags: 7, sep: 8, okt: 9, nov: 10, des: 11 };
+      function pinjolParseIDDate(str) {
+        if (!str) return null;
+        const m = String(str).match(/(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/);
+        if (!m) return null;
+        const mon = PINJOL_MONTH_ID[m[2].toLowerCase().slice(0, 3)];
+        if (mon === undefined) return null;
+        return new Date(Number(m[3]), mon, Number(m[1]));
+      }
       function pinjolOverdueDays(acc) {
+        const due = pinjolParseIDDate(acc && acc.dueDate);
+        if (due) {
+          due.setHours(0, 0, 0, 0);
+          const now = new Date(); now.setHours(0, 0, 0, 0);
+          return Math.max(0, Math.round((now - due) / 86400000));
+        }
         return (Number(acc.overdueDays) || 0) + pinjolDaysElapsed();
       }
 
@@ -6365,7 +6380,7 @@
               <td class="mono" style="text-align:right;">${dibayar}</td>
               <td class="mono" style="text-align:right;">${denda}</td>
               <td class="mono" style="text-align:right; font-weight:800; color:var(--color-danger);">${fmtIDR(accLive)}</td>
-              <td><span style="font-weight:600;">${escapeHtml(item.dueDate)}</span></td>
+              <td><span style="font-weight:600;">${escapeHtml(item.dueDate)}</span><br><span style="font-size:11px; color:var(--text-muted);">${pinjolOverdueDays(item)} hari</span></td>
             </tr>`;
         }).join('') || `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:22px;">Tidak ada akun yang cocok dengan pencarian.</td></tr>`;
 
@@ -6570,8 +6585,10 @@
         if (lateFeeEl) lateFeeEl.textContent = (acc.lateFee + mAdd) > 0 ? fmtIDR(acc.lateFee + mAdd) : 'Rp 0';
 
         if (dueEl) dueEl.textContent = acc.dueDate;
-        if (ovrEl) ovrEl.textContent = `Kol-5`;
-        if (noteEl) noteEl.textContent = `${acc.status}, denda berjalan aktif sejak ${acc.dueDate}.`;
+        if (ovrEl) ovrEl.textContent = `Kol-5 · ${pinjolOverdueDays(acc)} hari`;
+        if (noteEl) noteEl.textContent = acc.type === 'spaylater'
+          ? `Terlambat ${pinjolOverdueDays(acc)} hari, denda berjalan aktif sejak ${acc.dueDate}.`
+          : `${acc.status}, denda berjalan aktif sejak ${acc.dueDate}.`;
 
         const modal = document.getElementById('dpAccountDetailModal');
         if (modal) modal.classList.add('open');
@@ -6592,7 +6609,7 @@
         const text = `${acc.account} (${acc.type === 'spinjam' ? 'SPinjam' : 'SPayLater'})
 ${acc.type === 'spinjam' ? 'Tagihan Awal' : 'Plafon'}: ${fmtIDR(acc.type === 'spinjam' ? acc.initial : acc.facilityLimit)} | Jumlah Pembayaran: ${acc.paidAmount > 0 ? fmtIDR(acc.paidAmount) : 'Rp 0'}
 Denda: ${fmtIDR(acc.lateFee + cAdd)}
-Tagihan: ${fmtIDR(acc.balance + cAdd)} | JT ${acc.dueDate}
+Tagihan: ${fmtIDR(acc.balance + cAdd)} | JT ${acc.dueDate} (${pinjolOverdueDays(acc)} hari)
 No: ${acc.loanNo || acc.contractNo}`;
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
