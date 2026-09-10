@@ -27,13 +27,8 @@ window.FINAUDIT_FIREBASE_CONFIG = {
   appId: "1:63111198726:web:ed6d3d3ca2c451620beb87"
 };
 
-/* Contoh setelah diisi:
-window.FINAUDIT_FIREBASE_CONFIG = {
-  apiKey: "AIzaSy....",
-  authDomain: "finaudit-xxxx.firebaseapp.com",
-  projectId: "finaudit-xxxx",
-  storageBucket: "finaudit-xxxx.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef"
-};
-*/
+/* Batasi akun Google yang boleh masuk & mengakses data cloud.
+   - Terisi (seperti di bawah) = HANYA email itu yang bisa login.
+   - Kosongkan menjadi [] = semua akun Google boleh masuk
+     (masing-masing tetap punya vault cloud sendiri, tidak saling lihat). */
+window.FINAUDIT_ALLOWED_EMAILS = ['fahmifahrezy823@gmail.com'];

@@ -19,8 +19,8 @@
   var PUSH_DEBOUNCE_MS = 5000;
   var MAX_DOC_CHARS = 950000; // di bawah batas 1MB/dokumen Firestore
 
-  // Key yang TIDAK BOLEH keluar/masuk cloud (sesi, registry lokal, auto-backup)
-  var SYNC_BLOCK_RE = /^(FINAUDIT_AUTH_SESSION|FINAUDIT_USERS|FINAUDIT_USER|FINAUDIT_LOGIN_ATTEMPTS|FINAUDIT_AUTOBACKUP_)/;
+  // Key yang TIDAK BOLEH keluar/masuk cloud (sesi, registry lokal, meta, auto-backup)
+  var SYNC_BLOCK_RE = /^(FINAUDIT_AUTH_SESSION|FINAUDIT_USERS|FINAUDIT_USER|FINAUDIT_LOGIN_ATTEMPTS|FINAUDIT_AUTOBACKUP_|FINAUDIT_CLOUD_META|FINAUDIT_BACKUP_META)/;
   var SYNC_ALLOW_RE = /^(FINAUDIT_|AUDIT_|KOS_|KULIAH_|MALANG_)/;
 
   var clientId = 'c' + Math.random().toString(36).slice(2) + Date.now().toString(36);
@@ -103,6 +103,7 @@
         try { global.localStorage.setItem(k, v); n++; } catch (e) {}
       });
       writeMeta({ updatedAt: updatedAt || Date.now(), by: by || '' });
+      try { lastHash = localHash(); } catch (e) {}
     } finally {
       applyingRemote = false;
     }
@@ -137,6 +138,7 @@
     return ref.set({ storage: storage, updatedAt: now, by: clientId }, { merge: false })
       .then(function () {
         writeMeta({ updatedAt: now, by: clientId });
+        try { lastHash = localHash(); } catch (e) {}
         return true;
       })
       .catch(function (err) {
@@ -261,15 +263,34 @@
     } catch (e) { return Promise.resolve(); }
   }
 
+  function isEmailAllowed(email) {
+    try {
+      var list = global.FINAUDIT_ALLOWED_EMAILS;
+      if (!list || !list.length) return true;
+      return list.some(function (a) { return String(a).toLowerCase() === String(email || '').toLowerCase(); });
+    } catch (e) { return true; }
+  }
+
   function startSync() {
     if (!ensureInit()) return false;
     hookStore();
+    patchStorage();
+    startPoll();
     try {
       auth.onAuthStateChanged(function (user) {
         fUser = user || null;
         if (user) {
           var email = '';
           try { email = (user.email || '').toLowerCase(); } catch (e) {}
+          if (!isEmailAllowed(email)) {
+            // Sesi lama akun tak diizinkan (mis. login sebelum allowlist ada)
+            try { auth.signOut().catch(function () {}); } catch (e) {}
+            try { if (global.FinAuditAuth) global.FinAuditAuth.clearSession(); } catch (e) {}
+            fUser = null;
+            toast('Akun ' + (email || 'ini') + ' tidak diizinkan mengakses aplikasi ini.', 'error');
+            try { global.location.href = 'login.html'; } catch (e) {}
+            return;
+          }
           ensureLocalSession(email).then(function () {
             attachListener();
             reconcile();
@@ -296,10 +317,74 @@
         });
       }
     } catch (e) {}
-    // Fallback: bila store.js belum ada, pantau storage event (tab lain) — tab
-    // yang sama tidak memicu event, jadi ini hanya bonus, bukan andalan.
     try {
       global.addEventListener('storage', function () { schedulePush(); });
+    } catch (e) {}
+  }
+
+  /* Tangkap tulisan LANGSUNG ke localStorage (jadwal, kos, avatar, tema, …)
+     yang tidak lewat FinAuditStore: patch setItem/removeItem + poll hash
+     + flush saat halaman disembunyikan/ditutup. Tanpa ini, data yang diisi
+     di HP tidak pernah terunggah ke cloud. */
+  var storagePatched = false, pollTimer = null, lastHash = '';
+
+  function shouldSyncKey(k) {
+    return typeof k === 'string' && SYNC_ALLOW_RE.test(k) && !SYNC_BLOCK_RE.test(k);
+  }
+  function hashStr(s) {
+    var h = 5381, i;
+    for (i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+    return (h >>> 0).toString(36) + ':' + s.length;
+  }
+  function localHash() {
+    try {
+      var st = collectLocal();
+      var keys = Object.keys(st).sort();
+      var parts = [];
+      for (var i = 0; i < keys.length; i++) {
+        parts.push(keys[i] + '=' + hashStr(String(st[keys[i]])));
+      }
+      return hashStr(parts.join('|'));
+    } catch (e) { return ''; }
+  }
+  function patchStorage() {
+    if (storagePatched) return;
+    storagePatched = true;
+    try {
+      var proto = (global.Storage && global.Storage.prototype) || null;
+      var target = (proto && typeof proto.setItem === 'function') ? proto : global.localStorage;
+      if (!target || typeof target.setItem !== 'function') return;
+      var origSet = target.setItem, origDel = target.removeItem;
+      target.setItem = function (k, v) {
+        var r = origSet.apply(this, arguments);
+        try { if (!applyingRemote && fUser && shouldSyncKey(k)) schedulePush(); } catch (e) {}
+        return r;
+      };
+      target.removeItem = function (k) {
+        var r = origDel.apply(this, arguments);
+        try { if (!applyingRemote && fUser && shouldSyncKey(k)) schedulePush(); } catch (e) {}
+        return r;
+      };
+    } catch (e) {}
+  }
+  function startPoll() {
+    if (pollTimer) return;
+    try { lastHash = localHash(); } catch (e) {}
+    pollTimer = setInterval(function () {
+      try {
+        if (!fUser || !ensureInit()) return;
+        var h = localHash();
+        if (h && h !== lastHash) { lastHash = h; schedulePush(); }
+      } catch (e) {}
+    }, 30000);
+    try {
+      var flush = function () { try { if (fUser && ensureInit()) pushNow(true); } catch (e) {} };
+      global.addEventListener('pagehide', flush);
+      if (global.document && global.document.addEventListener) {
+        global.document.addEventListener('visibilitychange', function () {
+          try { if (global.document.hidden) flush(); } catch (e) {}
+        });
+      }
     } catch (e) {}
   }
 
@@ -325,7 +410,8 @@
       if (m === null) e2.silent = true;
       throw e2;
     }
-    var e3 = new Error(((err && err.message) || 'Login cloud gagal.') + (code ? ' [' + code + ']' : ''));
+    var suffix = code ? ' [' + code + ']' : '';
+    var e3 = new Error(((err && err.message) || 'Login cloud gagal.') + suffix);
     e3.code = code;
     try { console.error('[FinAudit cloud] auth error:', code, err); } catch (e) {}
     throw e3;
@@ -334,6 +420,19 @@
   function afterAuth(fbUser, remember) {
     var email = '';
     try { email = (fbUser.email || '').toLowerCase(); } catch (e) {}
+    // Allowlist: tolak akun di luar daftar sebelum sesi apa pun dibuat.
+    try {
+      var list = global.FINAUDIT_ALLOWED_EMAILS;
+      if (list && list.length) {
+        var ok = list.some(function (a) { return String(a).toLowerCase() === email; });
+        if (!ok) {
+          try { if (auth) auth.signOut().catch(function () {}); } catch (e) {}
+          try { if (global.FinAuditAuth) global.FinAuditAuth.clearSession(); } catch (e) {}
+          fUser = null;
+          return Promise.reject(new Error('Akun ' + (email || 'ini') + ' tidak diizinkan mengakses aplikasi ini.'));
+        }
+      }
+    } catch (e) {}
     fUser = fbUser;
     try {
       if (global.FinAuditAuth) {
