@@ -637,8 +637,8 @@
 
         <!-- Options: Remember Me & Forgot Password -->
         <div class="form-options-row">
-          <label class="remember-me-label">
-            <input type="checkbox" id="rememberMe" checked>
+          <label class="remember-me-label" title="Centang agar tetap masuk setelah tab ditutup (30 hari)">
+            <input type="checkbox" id="rememberMe">
             <span>Remember me</span>
           </label>
           <a href="#" onclick="alert('Instruksi pemulihan kata sandi telah dikirim ke email Anda.'); return false;"
@@ -940,7 +940,7 @@
             setBusy(false, 'Sign up now');
             return;
           }
-          await FinAuditFirebase.signUpEmail(fullName, email, password);
+          await FinAuditFirebase.signUpEmail(fullName, email, password, remember);
           showToast('Pendaftaran berhasil! Mengarahkan...');
         } else {
           await FinAuditFirebase.signInEmail(email, password, remember);
@@ -958,8 +958,10 @@
 
     async function handleSocialAuth(provider) {
       if (provider === 'Google' && window.FinAuditFirebase && FinAuditFirebase.isConfigured()) {
+        let remember = false;
+        try { remember = document.getElementById('rememberMe').checked === true; } catch (e) {}
         try {
-          await FinAuditFirebase.signInGoogle();
+          await FinAuditFirebase.signInGoogle(remember);
           showToast('Berhasil login dengan Google! Mengarahkan...');
           setTimeout(() => { window.location.href = 'index.html'; }, 700);
         } catch (err) {

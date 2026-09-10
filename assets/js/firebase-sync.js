@@ -248,7 +248,9 @@
     unsub = null;
   }
 
-  /* ─── Sesi lokal pendamping (agar requireAuth lama tetap lolos) ─── */
+  /* ─── Sesi lokal pendamping (agar requireAuth lama tetap lolos) ───
+     Selalu session-only (tab ditutup = hangus). Sesi Firebase yang
+     persisten (remember dicentang) akan membuatnya ulang saat tab baru. */
   function ensureLocalSession(email) {
     try {
       if (!global.FinAuditAuth) return Promise.resolve();
@@ -258,7 +260,7 @@
           try { if (global.FinAuditStore) global.FinAuditStore.setCurrentUser(email); } catch (e) {}
           return;
         }
-        return global.FinAuditAuth.createSession(email, true);
+        return global.FinAuditAuth.createSession(email, false);
       });
     } catch (e) { return Promise.resolve(); }
   }
@@ -271,11 +273,31 @@
     } catch (e) { return true; }
   }
 
+  /* Migrasi sekali ke kebijakan session-only: cabut sesi lama yang persisten
+     (LOCAL / remember-30-hari) agar perilaku logout-otomatis langsung berlaku
+     di semua perangkat. User login ulang satu kali setelah update ini. */
+  function migrateSessionPolicy() {
+    try {
+      if (global.localStorage.getItem('FINAUDIT_SESSION_POLICY_V1')) return Promise.resolve(false);
+    } catch (e) { return Promise.resolve(false); }
+    var p = Promise.resolve();
+    try {
+      if (auth) p = auth.signOut().catch(function () {});
+    } catch (e) {}
+    return p.then(function () {
+      try { if (global.FinAuditAuth) global.FinAuditAuth.clearSession(); } catch (e) {}
+      fUser = null;
+      try { global.localStorage.setItem('FINAUDIT_SESSION_POLICY_V1', '1'); } catch (e) {}
+      return true;
+    });
+  }
+
   function startSync() {
     if (!ensureInit()) return false;
     hookStore();
     patchStorage();
     startPoll();
+    migrateSessionPolicy();
     try {
       auth.onAuthStateChanged(function (user) {
         fUser = user || null;
@@ -436,7 +458,7 @@
     fUser = fbUser;
     try {
       if (global.FinAuditAuth) {
-        return global.FinAuditAuth.createSession(email, remember !== false).then(function () {
+        return global.FinAuditAuth.createSession(email, remember === true).then(function () {
           try { global.FinAuditAuth.recordSuccess(email); } catch (e) {}
           try { if (global.FinAuditStore) global.FinAuditStore.setCurrentUser(email); } catch (e) {}
           attachListener();
@@ -453,34 +475,37 @@
     return Promise.resolve();
   }
 
-  function signUpEmail(name, email, password) {
+  function signUpEmail(name, email, password, remember) {
     return needInit().then(function () {
       return auth.createUserWithEmailAndPassword(email, password).then(function (cred) {
         var u = cred.user;
         var p = (name && u.updateProfile) ? u.updateProfile({ displayName: String(name).slice(0, 100) }) : Promise.resolve();
-        return p.then(function () { return afterAuth(u, true); });
+        return p.then(function () { return afterAuth(u, remember === true); });
       }).catch(function (err) { mapError(err); });
     });
   }
 
   function signInEmail(email, password, remember) {
     return needInit().then(function () {
-      var mode = remember ? global.firebase.auth.Auth.Persistence.LOCAL
-                          : global.firebase.auth.Auth.Persistence.SESSION;
+      var sticky = remember === true;
+      var mode = sticky ? global.firebase.auth.Auth.Persistence.LOCAL
+                        : global.firebase.auth.Auth.Persistence.SESSION;
       return auth.setPersistence(mode).then(function () {
         return auth.signInWithEmailAndPassword(email, password);
       }).then(function (cred) {
-        return afterAuth(cred.user, remember);
+        return afterAuth(cred.user, sticky);
       }).catch(function (err) { mapError(err); });
     });
   }
 
-  function signInGoogle() {
+  function signInGoogle(remember) {
     return needInit().then(function () {
+      var sticky = remember === true;
       var provider = new global.firebase.auth.GoogleAuthProvider();
-      return auth.setPersistence(global.firebase.auth.Auth.Persistence.LOCAL).then(function () {
+      return auth.setPersistence(sticky ? global.firebase.auth.Auth.Persistence.LOCAL
+                                        : global.firebase.auth.Auth.Persistence.SESSION).then(function () {
         return auth.signInWithPopup(provider).then(function (cred) {
-          return afterAuth(cred.user, true);
+          return afterAuth(cred.user, sticky);
         }).catch(function (err) {
           var code = (err && err.code) || '';
           // Popup dibatalkan user → diam. Popup gagal karena lingkungan
@@ -491,6 +516,11 @@
           if (code === 'auth/popup-blocked' || code === 'auth/internal-error' ||
               code === 'auth/unauthorized-domain' || code === 'auth/operation-not-supported') {
             try { toast('Popup terhalang — membuka login Google lewat redirect...'); } catch (e) {}
+            try {
+              if (global.sessionStorage) {
+                global.sessionStorage.setItem('FINAUDIT_REMEMBER', sticky ? '1' : '0');
+              }
+            } catch (e) {}
             return auth.signInWithRedirect(provider); // navigasi pergi; hasil diproses saat kembali
           }
           mapError(err);
@@ -502,9 +532,13 @@
   /* Dipanggil halaman login saat boot: memproses hasil kembali dari redirect. */
   function consumeRedirect() {
     if (!ensureInit()) return Promise.resolve(null);
+    var sticky = false;
+    try {
+      sticky = global.sessionStorage && global.sessionStorage.getItem('FINAUDIT_REMEMBER') === '1';
+    } catch (e) {}
     try {
       return auth.getRedirectResult().then(function (res) {
-        if (res && res.user) return afterAuth(res.user, true);
+        if (res && res.user) return afterAuth(res.user, sticky);
         return null;
       }).catch(function (err) {
         if (err && (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request')) return null;
