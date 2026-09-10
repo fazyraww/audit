@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://generativelanguage.googleapis.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://generativelanguage.googleapis.com https://*.googleapis.com https://*.gstatic.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
   <link rel="icon" type="image/png" href="assets/images/audit.png">
   <title>Audit & Financial Dashboard </title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,6 +20,11 @@
   <script src="assets/js/auth.js"></script>
   <script src="assets/js/store.js"></script>
   <script src="assets/js/backup.js"></script>
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="assets/js/firebase-sync.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
@@ -9081,6 +9086,7 @@ No: ${acc.loanNo || acc.contractNo}`;
 
       window.addEventListener('DOMContentLoaded', () => {
         checkAuth();
+        try { if (window.FinAuditFirebase) FinAuditFirebase.startSync(); } catch (e) {}
         initApp();
         initCardsDraggableCarousel();
         renderJadwalView();

@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.googleapis.com https://*.gstatic.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
   <link rel="icon" type="image/png" href="assets/images/audit.png">
   <title>Login audit</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -566,6 +566,7 @@
       <!-- Form Title & Subtitle -->
       <h1 class="auth-heading" id="authTitle">Login to your account</h1>
       <p class="auth-subtext" id="authSubtext">Continue tracking your progress after logging in to your account.</p>
+      <div id="cloudBadge" style="display:none;background:#ecfdf5;border:1px solid #a7f3d0;color:#047857;font-size:12px;font-weight:600;border-radius:8px;padding:8px 12px;margin-bottom:16px;">Cloud sync aktif — data tersinkron antar perangkat.</div>
 
       <!-- Social Login Buttons -->
       <div class="social-btn-stack">
@@ -715,6 +716,11 @@
 
   <script src="assets/js/auth.js"></script>
   <script src="assets/js/store.js"></script>
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="assets/js/firebase-sync.js"></script>
   <script>
     let isSignUpMode = false;
 
@@ -877,6 +883,13 @@
         return;
       }
 
+      // Cloud aktif → auth + data lewat Firebase (sinkron HP ↔ laptop).
+      // Belum dikonfigurasi → fallback lokal seperti biasa (data tidak hilang).
+      if (window.FinAuditFirebase && FinAuditFirebase.isConfigured()) {
+        handleCloudAuth(email, password, fullName, remember);
+        return;
+      }
+
       setBusy(true);
 
       try {
@@ -919,10 +932,56 @@
       }
     }
 
-    function handleSocialAuth(provider) {
+    async function handleCloudAuth(email, password, fullName, remember) {
+      setBusy(true);
+      try {
+        if (isSignUpMode) {
+          if (!fullName) {
+            showToast('Nama wajib diisi untuk daftar.', 'error');
+            setBusy(false, 'Sign up now');
+            return;
+          }
+          await FinAuditFirebase.signUpEmail(fullName, email, password);
+          showToast('Pendaftaran berhasil! Mengarahkan...');
+        } else {
+          await FinAuditFirebase.signInEmail(email, password, remember);
+          showToast('Berhasil login! Mengarahkan ke dashboard...');
+        }
+        setTimeout(() => { window.location.href = 'index.html'; }, 700);
+      } catch (err) {
+        setBusy(false, isSignUpMode ? 'Sign up now' : 'Login now');
+        if (err && err.silent) return;
+        FinAuditAuth.recordFailed(email);
+        showToast((err && err.message) || 'Login cloud gagal.', 'error');
+        flagInputError();
+      }
+    }
+
+    async function handleSocialAuth(provider) {
+      if (provider === 'Google' && window.FinAuditFirebase && FinAuditFirebase.isConfigured()) {
+        try {
+          await FinAuditFirebase.signInGoogle();
+          showToast('Berhasil login dengan Google! Mengarahkan...');
+          setTimeout(() => { window.location.href = 'index.html'; }, 700);
+        } catch (err) {
+          if (err && err.silent) return false;
+          showToast((err && err.message) || 'Login Google gagal.', 'error');
+        }
+        return false;
+      }
       showToast('Login ' + provider + ' belum tersedia. Gunakan email + password.', 'error');
       return false;
     }
+
+    // Tampilkan badge cloud bila Firebase sudah dikonfigurasi
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        if (window.FinAuditFirebase && FinAuditFirebase.isConfigured()) {
+          const b = document.getElementById('cloudBadge');
+          if (b) b.style.display = 'block';
+        }
+      } catch (e) {}
+    });
   </script>
 
   <style>
