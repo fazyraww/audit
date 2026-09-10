@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://generativelanguage.googleapis.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
   <link rel="icon" type="image/png" href="assets/images/audit.png">
   <title>Audit & Financial Dashboard </title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,6 +18,7 @@
   <script src="assets/js/pdf_bundle.js"></script>
   <script src="assets/js/xbet_data.js"></script>
   <script src="assets/js/auth.js"></script>
+  <script src="assets/js/store.js"></script>
   <script src="assets/js/backup.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
@@ -8994,7 +8997,10 @@ No: ${acc.loanNo || acc.contractNo}`;
       const AVATAR_STORAGE_KEY = 'AUDIT_USER_AVATAR';
 
       function applyAvatarPhoto() {
-        const dataUrl = localStorage.getItem(AVATAR_STORAGE_KEY);
+        const rawUrl = localStorage.getItem(AVATAR_STORAGE_KEY);
+        // Validasi ketat: hanya data:image/* agar tidak bisa diisi javascript: URL via XSS
+        const dataUrl = (typeof rawUrl === 'string' && /^data:image\/(jpeg|png|webp|gif);base64,/.test(rawUrl)) ? rawUrl : null;
+        if (!dataUrl && rawUrl) { try { localStorage.removeItem(AVATAR_STORAGE_KEY); } catch (e) {} }
         const img = document.getElementById('avatarPhoto');
         const initials = document.getElementById('avatarInitials');
         if (dataUrl && img) {
@@ -9013,7 +9019,8 @@ No: ${acc.loanNo || acc.contractNo}`;
         const preview = document.getElementById('avatarMenuPreview');
         if (deleteBtn) deleteBtn.style.display = hasPhoto ? 'flex' : 'none';
         if (preview) {
-          const dataUrl = localStorage.getItem(AVATAR_STORAGE_KEY);
+          const rawPrev = localStorage.getItem(AVATAR_STORAGE_KEY);
+          const dataUrl = (typeof rawPrev === 'string' && /^data:image\/(jpeg|png|webp|gif);base64,/.test(rawPrev)) ? rawPrev : null;
           preview.innerHTML = dataUrl
             ? '<img src="' + dataUrl + '" alt="Preview">'
             : '<span>FF</span>';

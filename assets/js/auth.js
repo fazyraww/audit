@@ -1,20 +1,22 @@
 /* FinAudit Auth — shared by login.html & index.html
- * - Tidak ada kredensial plaintext di frontend (hanya SHA-256 hash)
- * - Session = token bertanda tangan + expiry, bukan flag "true"
- * - Anti brute-force: max 5x salah -> kunci 60 detik (backoff)
- * - Signup mendaftarkan 1 akun lokal (hash), bukan bypass
+ * v2 (hardened):
+ * - Multi-user: users disimpan sebagai dict {eh: {name, eh, ph, createdAt}} di FINAUDIT_USERS.
+ *   Migrasi otomatis dari format lama FINAUDIT_USER (single object).
+ * - Session anti-XSS: token disimpan di MEMORY + sessionStorage.
+ *   localStorage HANYA dipakai bila user centang "remember me" (persistent, 30 hari).
+ *   Tanpa remember-me: tutup tab = sesi hilang (bukan persistent di localStorage).
+ * - Token = payload b64 + signature sha256(b64 + SALT), ada expiry + nonce.
+ * - Anti brute-force: max 5x salah -> kunci 60 detik (per-email, bukan global saja).
+ * - Tidak ada kredensial plaintext di frontend (hanya SHA-256 hash).
  */
 (function (global) {
   'use strict';
 
   var AUTH_KEY = 'FINAUDIT_AUTH_SESSION';
-  var USER_KEY = 'FINAUDIT_USER';
+  var USERS_KEY = 'FINAUDIT_USERS';       // v2: dict multi-user
+  var LEGACY_USER_KEY = 'FINAUDIT_USER';  // v1: single object (dimigrasi)
   var ATTEMPT_KEY = 'FINAUDIT_LOGIN_ATTEMPTS';
 
-  // Ganti hash ini untuk ganti kredensial default.
-  // Cara hitung (PowerShell):
-  //   $s=[Security.Cryptography.SHA256]::Create()
-  //   email: sha256(email_lowercase) ; password: sha256(password + SALT)
   var SALT = 'FinAudit-v1::auth-salt-2026';
   var DEFAULT_EMAIL_HASH = 'ab227448f6abd39c8ca26fe067d1077b38e31ed09d49fff5137c8694fc060cb9';
   var DEFAULT_PASS_HASH = '224a1bb3e417e5c4b73b6d0c572bea1e92b4f86b1841588bdc497d1ea4bbea7f';
@@ -24,12 +26,16 @@
   var SESSION_MS = 12 * 60 * 60 * 1000;      // tanpa "remember me": 12 jam
   var REMEMBER_MS = 30 * 24 * 60 * 60 * 1000; // dengan "remember me": 30 hari
 
-  function store(k) {
-    try {
-      // sessionStorage dulu (tab), fallback ke memory bila diblokir
-      return global.sessionStorage;
-    } catch (e) { return null; }
-  }
+  // ─── In-memory session (hilang saat reload -> fallback sessionStorage) ───
+  // Ini mitigasi XSS: token tidak selalu tersedia via localStorage yang bisa
+  // dibaca script injeksi yang persisten. sessionStorage (per-tab) + memory
+  // mempersempit jendela paparan dibanding localStorage permanen.
+  var memToken = null;
+  try {
+    // Coba pulihkan sesi tab ini (bukan cross-tab persistent)
+    memToken = (global.sessionStorage && global.sessionStorage.getItem(AUTH_KEY)) || null;
+    if (memToken === 'true') { try { global.sessionStorage.removeItem(AUTH_KEY); } catch (e) {} memToken = null; }
+  } catch (e) { memToken = null; }
 
   function b64urlEncode(str) {
     return btoa(unescape(encodeURIComponent(str)))
@@ -42,7 +48,6 @@
   }
 
   function sha256Hex(text) {
-    // Web Crypto (async) — dipakai di login; untuk validasi sync ada fallback sederhana
     if (global.crypto && global.crypto.subtle) {
       return global.crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
         .then(function (buf) {
@@ -51,7 +56,6 @@
           }).join('');
         });
     }
-    // Fallback sync (bukan SHA-256 beneran, hanya agar tidak crash di browser tua)
     var h1 = 0xdeadbeef, h2 = 0x41c6ce57, i;
     for (i = 0; i < text.length; i++) {
       var ch = text.charCodeAt(i);
@@ -63,50 +67,106 @@
     return Promise.resolve((4294967296 + h1).toString(16) + (4294967296 + h2).toString(16));
   }
 
+  /* ─── Attempts (per-email + global fallback) ─── */
   function readAttempts() {
     try {
-      return JSON.parse(global.localStorage.getItem(ATTEMPT_KEY) || '{"count":0,"lockedUntil":0}');
-    } catch (e) { return { count: 0, lockedUntil: 0 }; }
+      return JSON.parse(global.localStorage.getItem(ATTEMPT_KEY) || '{"count":0,"lockedUntil":0,"byEmail":{}}');
+    } catch (e) { return { count: 0, lockedUntil: 0, byEmail: {} }; }
   }
   function writeAttempts(a) {
     try { global.localStorage.setItem(ATTEMPT_KEY, JSON.stringify(a)); } catch (e) {}
   }
 
-  function isLocked() {
+  function isLocked(email) {
     var a = readAttempts();
-    if (a.lockedUntil && Date.now() < a.lockedUntil) {
-      return Math.ceil((a.lockedUntil - Date.now()) / 1000);
+    var now = Date.now();
+    if (email) {
+      var rec = a.byEmail && a.byEmail[String(email).toLowerCase()];
+      if (rec && rec.lockedUntil && now < rec.lockedUntil) {
+        return Math.ceil((rec.lockedUntil - now) / 1000);
+      }
+    }
+    if (a.lockedUntil && now < a.lockedUntil) {
+      return Math.ceil((a.lockedUntil - now) / 1000);
     }
     return 0;
   }
 
-  function recordFailed() {
+  function recordFailed(email) {
     var a = readAttempts();
-    a.count = (a.count || 0) + 1;
-    if (a.count >= MAX_ATTEMPTS) {
-      a.lockedUntil = Date.now() + LOCK_MS;
-      a.count = 0; // reset setelah dikunci
+    var key = String(email || '').toLowerCase() || '__global__';
+    a.byEmail = a.byEmail || {};
+    var rec = a.byEmail[key] || { count: 0, lockedUntil: 0 };
+    rec.count = (rec.count || 0) + 1;
+    if (rec.count >= MAX_ATTEMPTS) {
+      rec.lockedUntil = Date.now() + LOCK_MS * Math.min(4, 1 + Math.floor((rec.strikes || 0) / 1));
+      rec.count = 0;
+      rec.strikes = (rec.strikes || 0) + 1;
+      // Kunci global juga agar brute-force lintas email tetap dibatasi
+      a.lockedUntil = rec.lockedUntil;
     }
+    a.byEmail[key] = rec;
     writeAttempts(a);
   }
 
-  function recordSuccess() {
-    writeAttempts({ count: 0, lockedUntil: 0 });
+  function recordSuccess(email) {
+    var a = readAttempts();
+    if (a.byEmail && email) delete a.byEmail[String(email).toLowerCase()];
+    a.count = 0; a.lockedUntil = 0;
+    writeAttempts(a);
   }
 
-  function getRegisteredUser() {
+  /* ─── Multi-user store ─── */
+  function readUsers() {
+    var users = {};
     try {
-      var raw = global.localStorage.getItem(USER_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch (e) { return null; }
+      users = JSON.parse(global.localStorage.getItem(USERS_KEY) || '{}') || {};
+    } catch (e) { users = {}; }
+    // Migrasi sekali dari format lama single-user
+    try {
+      var legacy = global.localStorage.getItem(LEGACY_USER_KEY);
+      if (legacy) {
+        var obj = JSON.parse(legacy);
+        if (obj && obj.eh && obj.ph && !users[obj.eh]) {
+          users[obj.eh] = obj;
+          global.localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
+        // Jangan hapus dulu agar downgrade tetap aman; tandai sudah migrasi
+      }
+    } catch (e) {}
+    return users;
+  }
+  function writeUsers(users) {
+    try { global.localStorage.setItem(USERS_KEY, JSON.stringify(users || {})); } catch (e) {}
+  }
+  function getRegisteredUser(email) {
+    var users = readUsers();
+    if (email) {
+      var k = String(email).trim().toLowerCase();
+      var found = null;
+      Object.keys(users).forEach(function (eh) {
+        if (users[eh] && users[eh].emailLower === k) found = users[eh];
+      });
+      return found;
+    }
+    // Kompat: tanpa argumen kembalikan user pertama (perilaku lama)
+    var keys = Object.keys(users);
+    return keys.length ? users[keys[0]] : null;
+  }
+  function listUsers() {
+    var users = readUsers();
+    return Object.keys(users).map(function (eh) {
+      var u = users[eh] || {};
+      return { name: u.name || '', email: u.email || u.emailLower || '', createdAt: u.createdAt || 0 };
+    });
   }
 
   function signPayload(b64) {
-    // Tanda tangan: sha256(b64 + "." + SALT) — cegah pemalsuan token "true"
     return sha256Hex(b64 + '.' + SALT);
   }
 
   function createSession(email, remember) {
+    email = String(email || '').trim().toLowerCase();
     var payload = {
       email: email,
       exp: Date.now() + (remember ? REMEMBER_MS : SESSION_MS),
@@ -115,11 +175,21 @@
     var b64 = b64urlEncode(JSON.stringify(payload));
     return signPayload(b64).then(function (sig) {
       var token = b64 + '.' + sig;
+      memToken = token;
       try {
-        var s = store();
-        if (s) s.setItem(AUTH_KEY, token);
-        if (remember) global.localStorage.setItem(AUTH_KEY, token);
-        else global.localStorage.removeItem(AUTH_KEY);
+        // Selalu simpan di sessionStorage (per-tab, hilang saat tab ditutup)
+        if (global.sessionStorage) global.sessionStorage.setItem(AUTH_KEY, token);
+        if (remember) {
+          global.localStorage.setItem(AUTH_KEY, token);
+        } else {
+          global.localStorage.removeItem(AUTH_KEY);
+        }
+      } catch (e) {}
+      // Beri tahu store agar namespace per-user aktif
+      try {
+        if (global.FinAuditStore && global.FinAuditStore.setCurrentUser) {
+          global.FinAuditStore.setCurrentUser(email);
+        }
       } catch (e) {}
       return token;
     });
@@ -127,7 +197,6 @@
 
   function parseToken(token) {
     if (!token || typeof token !== 'string') return null;
-    // Tolak token lama yang cuma "true"
     if (token === 'true') return null;
     var parts = token.split('.');
     if (parts.length !== 2) return null;
@@ -148,17 +217,35 @@
   }
 
   function getSessionToken() {
+    // 1. memory, 2. sessionStorage, 3. localStorage (remember-me saja)
+    if (memToken && parseToken(memToken)) return memToken;
     try {
-      var s = store();
-      return (s && s.getItem(AUTH_KEY)) || global.localStorage.getItem(AUTH_KEY) || null;
-    } catch (e) { return null; }
+      var s = (global.sessionStorage && global.sessionStorage.getItem(AUTH_KEY)) || null;
+      if (s === 'true') { try { global.sessionStorage.removeItem(AUTH_KEY); } catch (e) {} s = null; }
+      if (s && parseToken(s)) { memToken = s; return s; }
+      var l = global.localStorage.getItem(AUTH_KEY) || null;
+      if (l === 'true') { try { global.localStorage.removeItem(AUTH_KEY); } catch (e) {} l = null; }
+      if (l && parseToken(l)) { memToken = l; return l; }
+    } catch (e) {}
+    return null;
+  }
+
+  function getCurrentEmail() {
+    var t = getSessionToken();
+    var p = parseToken(t);
+    return p ? p.payload.email : null;
   }
 
   function clearSession() {
+    memToken = null;
     try {
-      var s = store();
-      if (s) s.removeItem(AUTH_KEY);
+      if (global.sessionStorage) global.sessionStorage.removeItem(AUTH_KEY);
       global.localStorage.removeItem(AUTH_KEY);
+    } catch (e) {}
+    try {
+      if (global.FinAuditStore && global.FinAuditStore.clearCurrentUser) {
+        global.FinAuditStore.clearCurrentUser();
+      }
     } catch (e) {}
   }
 
@@ -167,11 +254,18 @@
     password = String(password || '');
     return sha256Hex(email).then(function (eh) {
       return sha256Hex(password + SALT).then(function (ph) {
-        // 1. Cocok dengan akun default (hash only, tanpa plaintext)
         if (eh === DEFAULT_EMAIL_HASH && ph === DEFAULT_PASS_HASH) return { email: email };
-        // 2. Cocok dengan akun yang didaftar via signup (tersimpan lokal, hash)
-        var reg = getRegisteredUser();
-        if (reg && reg.eh === eh && reg.ph === ph) return { email: email };
+        var users = readUsers();
+        var u = users[eh];
+        if (u && u.ph === ph) return { email: email, name: u.name || '' };
+        // Fallback: cocokkan via emailLower (tahan terhadap perubahan hash impl)
+        var keys = Object.keys(users);
+        for (var i = 0; i < keys.length; i++) {
+          var cand = users[keys[i]];
+          if (cand && (cand.emailLower === email || cand.email === email) && cand.ph === ph) {
+            return { email: email, name: cand.name || '' };
+          }
+        }
         return null;
       });
     });
@@ -179,19 +273,30 @@
 
   function registerUser(name, email, password) {
     email = String(email || '').trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      return Promise.reject(new Error('Format email tidak valid.'));
+    }
+    if (!password || String(password).length < 6) {
+      return Promise.reject(new Error('Password minimal 6 karakter.'));
+    }
     return sha256Hex(email).then(function (eh) {
       return sha256Hex(String(password || '') + SALT).then(function (ph) {
-        try {
-          global.localStorage.setItem(USER_KEY, JSON.stringify({
-            name: String(name || ''), eh: eh, ph: ph, createdAt: Date.now()
-          }));
-        } catch (e) {}
+        var users = readUsers();
+        if (users[eh]) {
+          return Promise.reject(new Error('Email sudah terdaftar. Silakan login.'));
+        }
+        users[eh] = {
+          name: String(name || '').slice(0, 100),
+          email: email,
+          emailLower: email,
+          eh: eh, ph: ph, createdAt: Date.now()
+        };
+        writeUsers(users);
         return { email: email };
       });
     });
   }
 
-  // Dipakai index.html: redirect ke login bila sesi tidak valid/expired
   function requireAuth(loginPage) {
     var token = getSessionToken();
     if (!parseToken(token)) {
@@ -203,17 +308,27 @@
       if (!ok) {
         clearSession();
         global.location.href = loginPage || 'login.html';
+      } else {
+        try {
+          var p = parseToken(token);
+          if (p && global.FinAuditStore && global.FinAuditStore.setCurrentUser) {
+            global.FinAuditStore.setCurrentUser(p.payload.email);
+          }
+        } catch (e) {}
       }
     });
   }
 
   global.FinAuditAuth = {
     AUTH_KEY: AUTH_KEY,
+    USERS_KEY: USERS_KEY,
     verifyCredentials: verifyCredentials,
     registerUser: registerUser,
+    listUsers: listUsers,
     createSession: createSession,
     validateToken: validateToken,
     getSessionToken: getSessionToken,
+    getCurrentEmail: getCurrentEmail,
     clearSession: clearSession,
     requireAuth: requireAuth,
     isLocked: isLocked,
