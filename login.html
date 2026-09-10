@@ -566,7 +566,6 @@
       <!-- Form Title & Subtitle -->
       <h1 class="auth-heading" id="authTitle">Login to your account</h1>
       <p class="auth-subtext" id="authSubtext">Continue tracking your progress after logging in to your account.</p>
-      <div id="cloudBadge" style="display:none;background:#ecfdf5;border:1px solid #a7f3d0;color:#047857;font-size:12px;font-weight:600;border-radius:8px;padding:8px 12px;margin-bottom:16px;">Cloud sync aktif — data tersinkron antar perangkat.</div>
 
       <!-- Social Login Buttons -->
       <div class="social-btn-stack">
@@ -973,12 +972,10 @@
       return false;
     }
 
-    // Tampilkan badge cloud + proses hasil kembali dari login redirect Google
+    // Proses hasil kembali dari login redirect Google (tanpa elemen visual)
     window.addEventListener('DOMContentLoaded', () => {
       try {
         if (window.FinAuditFirebase && FinAuditFirebase.isConfigured()) {
-          const b = document.getElementById('cloudBadge');
-          if (b) b.style.display = 'block';
           FinAuditFirebase.consumeRedirect().then((email) => {
             if (email) {
               showToast('Berhasil login dengan Google! Mengarahkan...');
