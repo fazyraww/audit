@@ -5755,8 +5755,8 @@
         if (hasDebit) {
           amountMatch = amounts.find(match => /\bDB\b/i.test(body.slice(match.index, match.index + match[0].length + 4))) || amountMatch;
         } else if (amounts.length > 1) {
-          if (/TRSF|BI-FAST|SETORAN|CDM/i.test(body)) amountMatch = amounts[0];
-          else amountMatch = amounts[1] || amounts[0];
+          // Nominal transaksi CREDIT selalu angka pertama; angka kedua = saldo berjalan
+          amountMatch = amounts[0];
         }
 
         const amount = parseMoney(amountMatch[1]);

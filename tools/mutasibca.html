@@ -1761,15 +1761,8 @@
         }
 
         function chooseCreditAmount(body, amounts) {
-            const text = body.toUpperCase();
-            const first = amounts[0];
-            const second = amounts[1];
-
-            if (/TRSF|BI-FAST|SETORAN|CDM/.test(text)) {
-                return first;
-            }
-
-            return second || first;
+            // Nominal transaksi CREDIT selalu angka pertama; angka kedua = saldo berjalan
+            return amounts[0];
         }
 
         function extractParty(description, type) {
