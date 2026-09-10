@@ -973,12 +973,18 @@
       return false;
     }
 
-    // Tampilkan badge cloud bila Firebase sudah dikonfigurasi
+    // Tampilkan badge cloud + proses hasil kembali dari login redirect Google
     window.addEventListener('DOMContentLoaded', () => {
       try {
         if (window.FinAuditFirebase && FinAuditFirebase.isConfigured()) {
           const b = document.getElementById('cloudBadge');
           if (b) b.style.display = 'block';
+          FinAuditFirebase.consumeRedirect().then((email) => {
+            if (email) {
+              showToast('Berhasil login dengan Google! Mengarahkan...');
+              setTimeout(() => { window.location.href = 'index.html'; }, 700);
+            }
+          });
         }
       } catch (e) {}
     });

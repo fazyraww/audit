@@ -325,8 +325,9 @@
       if (m === null) e2.silent = true;
       throw e2;
     }
-    var e3 = new Error((err && err.message) || 'Login cloud gagal.');
+    var e3 = new Error(((err && err.message) || 'Login cloud gagal.') + (code ? ' [' + code + ']' : ''));
     e3.code = code;
+    try { console.error('[FinAudit cloud] auth error:', code, err); } catch (e) {}
     throw e3;
   }
 
@@ -379,11 +380,43 @@
     return needInit().then(function () {
       var provider = new global.firebase.auth.GoogleAuthProvider();
       return auth.setPersistence(global.firebase.auth.Auth.Persistence.LOCAL).then(function () {
-        return auth.signInWithPopup(provider);
-      }).then(function (cred) {
-        return afterAuth(cred.user, true);
-      }).catch(function (err) { mapError(err); });
+        return auth.signInWithPopup(provider).then(function (cred) {
+          return afterAuth(cred.user, true);
+        }).catch(function (err) {
+          var code = (err && err.code) || '';
+          // Popup dibatalkan user → diam. Popup gagal karena lingkungan
+          // (diblokir / cookie / internal-error) → fallback redirect penuh.
+          if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+            mapError(err);
+          }
+          if (code === 'auth/popup-blocked' || code === 'auth/internal-error' ||
+              code === 'auth/unauthorized-domain' || code === 'auth/operation-not-supported') {
+            try { toast('Popup terhalang — membuka login Google lewat redirect...'); } catch (e) {}
+            return auth.signInWithRedirect(provider); // navigasi pergi; hasil diproses saat kembali
+          }
+          mapError(err);
+        });
+      });
     });
+  }
+
+  /* Dipanggil halaman login saat boot: memproses hasil kembali dari redirect. */
+  function consumeRedirect() {
+    if (!ensureInit()) return Promise.resolve(null);
+    try {
+      return auth.getRedirectResult().then(function (res) {
+        if (res && res.user) return afterAuth(res.user, true);
+        return null;
+      }).catch(function (err) {
+        if (err && (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request')) return null;
+        try { mapError(err); } catch (mapped) {
+          if (mapped && mapped.silent) return null;
+          toast((mapped && mapped.message) || 'Login Google gagal.');
+          return null;
+        }
+        return null;
+      });
+    } catch (e) { return Promise.resolve(null); }
   }
 
   function signOut() {
@@ -401,6 +434,7 @@
     signUpEmail: signUpEmail,
     signInEmail: signInEmail,
     signInGoogle: signInGoogle,
+    consumeRedirect: consumeRedirect,
     signOut: signOut,
     currentUser: function () { return fUser; },
     pushNow: function () { return pushNow(true); },
