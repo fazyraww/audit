@@ -713,13 +713,13 @@
     </div>
   </footer>
 
-  <script src="assets/js/auth.js"></script>
-  <script src="assets/js/store.js"></script>
-  <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/auth.js?v=20260912b"></script>
+  <script src="assets/js/store.js?v=20260912b"></script>
+  <script src="assets/js/firebase-config.js?v=20260912b"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="assets/js/firebase-sync.js"></script>
+  <script src="assets/js/firebase-sync.js?v=20260912b"></script>
   <script>
     let isSignUpMode = false;
 
@@ -975,6 +975,8 @@
     }
 
     // Proses hasil kembali dari login redirect Google (tanpa elemen visual)
+    // + self-heal: bila sesi Firebase sudah ada tapi sesi lokal hilang,
+    // lengkapi lalu antar ke dashboard (hanya bila sesi lokal valid).
     window.addEventListener('DOMContentLoaded', () => {
       try {
         if (window.FinAuditFirebase && FinAuditFirebase.isConfigured()) {
@@ -984,6 +986,12 @@
               setTimeout(() => { window.location.href = 'index.html'; }, 700);
             }
           });
+          if (FinAuditFirebase.watchAuth) {
+            FinAuditFirebase.watchAuth(() => {
+              showToast('Sesi ditemukan! Mengarahkan ke dashboard...');
+              setTimeout(() => { window.location.href = 'index.html'; }, 600);
+            });
+          }
         }
       } catch (e) {}
     });

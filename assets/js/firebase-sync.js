@@ -625,9 +625,45 @@
     });
   }
 
+  /* Untuk halaman login: pantau sesi Firebase, pastikan sesi lokal
+     pendamping ada. Self-heal bila login tercerai (mis. redirect kembali
+     tapi sesi lokal gagal dibuat): panggil onUser hanya bila sesi lokal
+     valid, sehingga tidak ada loop login↔dashboard. Tanpa reconcile/push. */
+  var watchStarted = false;
+  function watchAuth(onUser) {
+    if (!ensureInit()) return false;
+    if (watchStarted) return true;
+    watchStarted = true;
+    try {
+      auth.onAuthStateChanged(function (user) {
+        fUser = user || null;
+        if (!user) return;
+        var email = '';
+        try { email = (user.email || '').toLowerCase(); } catch (e) {}
+        if (!isEmailAllowed(email)) {
+          try { auth.signOut().catch(function () {}); } catch (e) {}
+          try { if (global.FinAuditAuth) global.FinAuditAuth.clearSession(); } catch (e) {}
+          fUser = null;
+          return;
+        }
+        ensureLocalSession(email).then(function () {
+          if (typeof onUser !== 'function') return;
+          try {
+            if (!global.FinAuditAuth) return;
+            global.FinAuditAuth.validateToken(global.FinAuditAuth.getSessionToken()).then(function (ok) {
+              if (ok) { try { onUser(email); } catch (e) {} }
+            });
+          } catch (e) {}
+        });
+      });
+    } catch (e) { return false; }
+    return true;
+  }
+
   global.FinAuditFirebase = {
     isConfigured: isConfigured,
     startSync: startSync,
+    watchAuth: watchAuth,
     signUpEmail: signUpEmail,
     signInEmail: signInEmail,
     signInGoogle: signInGoogle,
