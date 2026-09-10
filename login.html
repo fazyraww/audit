@@ -719,7 +719,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="assets/js/firebase-sync.js?v=20260912b"></script>
+  <script src="assets/js/firebase-sync.js?v=20260912c"></script>
   <script>
     let isSignUpMode = false;
 
@@ -1008,8 +1008,9 @@
         dbg('boot: firebase SDK=' + (!!window.firebase) + ' FinAuditFirebase=' + (!!window.FinAuditFirebase));
         if (window.FinAuditFirebase && FinAuditFirebase.isConfigured()) {
           dbg('boot: cloud TERKONFIGURASI, cek redirect...');
-          FinAuditFirebase.consumeRedirect().then((email) => {
-            dbg('consumeRedirect hasil: ' + (email || '(kosong)'));
+          const redirNote = (m) => dbg('redirect: ' + m);
+          FinAuditFirebase.consumeRedirect(redirNote).then((email) => {
+            dbg('consumeRedirect selesai: ' + (email || '(kosong — tidak ada hasil redirect)'));
             if (email) {
               showToast('Berhasil login dengan Google! Mengarahkan...');
               setTimeout(() => { window.location.href = 'index.html'; }, 700);

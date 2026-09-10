@@ -593,27 +593,41 @@
     });
   }
 
-  /* Dipanggil halaman login saat boot: memproses hasil kembali dari redirect. */
-  function consumeRedirect() {
+  /* Dipanggil halaman login saat boot: memproses hasil kembali dari redirect.
+     onProgress opsional: menerima string progres (dipakai panel ?debug=1).
+     Watchdog 8 detik mencatat bila hasil tak kunjung tiba (kasus iOS) —
+     hanya mencatat, tidak membatalkan (hasil yang telat tetap diproses). */
+  function consumeRedirect(onProgress) {
     if (!ensureInit()) return Promise.resolve(null);
     var sticky = false;
     try {
       sticky = global.sessionStorage && global.sessionStorage.getItem('FINAUDIT_REMEMBER') === '1';
     } catch (e) {}
+    var settled = false;
+    var note = function (m) { try { if (typeof onProgress === 'function') onProgress(m); } catch (e) {} };
+    try {
+      setTimeout(function () {
+        if (!settled) note('masih menunggu hasil redirect dari Google (8 dtk, kemungkinan tertahan di Safari)...');
+      }, 8000);
+    } catch (e) {}
     try {
       return auth.getRedirectResult().then(function (res) {
+        settled = true;
+        note('hasil diterima: ' + (res && res.user ? res.user.email : '(kosong)'));
         if (res && res.user) return afterAuth(res.user, sticky);
         return null;
       }).catch(function (err) {
+        settled = true;
         if (err && (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request')) return null;
         try { mapError(err); } catch (mapped) {
           if (mapped && mapped.silent) return null;
+          note('GAGAL: ' + ((mapped && mapped.message) || 'Login Google gagal.'));
           toast((mapped && mapped.message) || 'Login Google gagal.');
           return null;
         }
         return null;
       });
-    } catch (e) { return Promise.resolve(null); }
+    } catch (e) { settled = true; return Promise.resolve(null); }
   }
 
   function signOut() {
