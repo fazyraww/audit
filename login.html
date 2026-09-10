@@ -723,6 +723,28 @@
   <script>
     let isSignUpMode = false;
 
+    /* ─── Panel diagnosa (?debug=1): catat alur login di layar (untuk HP
+       tanpa console). Buka login.html?debug=1 lalu baca baris-barisnya. ─── */
+    const DEBUG_MODE = new URLSearchParams(window.location.search).has('debug');
+    function dbg(msg) {
+      try { console.log('[login-dbg]', msg); } catch (e) {}
+      if (!DEBUG_MODE) return;
+      try {
+        let box = document.getElementById('dbgPanel');
+        if (!box) {
+          box = document.createElement('div');
+          box.id = 'dbgPanel';
+          box.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;max-height:38vh;overflow:auto;z-index:99999;background:#09090b;color:#4ade80;font:11px/1.5 monospace;padding:10px 12px;border-radius:10px;white-space:pre-wrap;box-shadow:0 8px 30px rgba(0,0,0,.4)';
+          document.body.appendChild(box);
+        }
+        const t = new Date().toISOString().slice(11, 19);
+        box.textContent += '[' + t + '] ' + msg + '\n';
+        box.scrollTop = box.scrollHeight;
+      } catch (e) {}
+    }
+    window.addEventListener('error', (e) => { dbg('WINDOW-ERROR: ' + (e.message || e.type)); });
+    window.addEventListener('unhandledrejection', (e) => { dbg('UNHANDLED: ' + ((e.reason && (e.reason.message || e.reason.code)) || e.type)); });
+
     // Check URL query param for ?mode=signup + redirect bila sudah login
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
@@ -960,11 +982,14 @@
       if (provider === 'Google' && window.FinAuditFirebase && FinAuditFirebase.isConfigured()) {
         let remember = false;
         try { remember = document.getElementById('rememberMe').checked === true; } catch (e) {}
+        dbg('Google diklik (remember=' + remember + '), memanggil signInGoogle...');
         try {
           await FinAuditFirebase.signInGoogle(remember);
+          dbg('signInGoogle kembali tanpa redirect (popup sukses)');
           showToast('Berhasil login dengan Google! Mengarahkan...');
           setTimeout(() => { window.location.href = 'index.html'; }, 700);
         } catch (err) {
+          dbg('signInGoogle GAGAL: ' + ((err && (err.code || err.message)) || err));
           if (err && err.silent) return false;
           showToast((err && err.message) || 'Login Google gagal.', 'error');
         }
@@ -979,8 +1004,12 @@
     // lengkapi lalu antar ke dashboard (hanya bila sesi lokal valid).
     window.addEventListener('DOMContentLoaded', () => {
       try {
+        dbg('boot: UA=' + (navigator.userAgent || '').slice(0, 80));
+        dbg('boot: firebase SDK=' + (!!window.firebase) + ' FinAuditFirebase=' + (!!window.FinAuditFirebase));
         if (window.FinAuditFirebase && FinAuditFirebase.isConfigured()) {
+          dbg('boot: cloud TERKONFIGURASI, cek redirect...');
           FinAuditFirebase.consumeRedirect().then((email) => {
+            dbg('consumeRedirect hasil: ' + (email || '(kosong)'));
             if (email) {
               showToast('Berhasil login dengan Google! Mengarahkan...');
               setTimeout(() => { window.location.href = 'index.html'; }, 700);
@@ -988,12 +1017,15 @@
           });
           if (FinAuditFirebase.watchAuth) {
             FinAuditFirebase.watchAuth(() => {
+              dbg('watchAuth: sesi valid, ke dashboard');
               showToast('Sesi ditemukan! Mengarahkan ke dashboard...');
               setTimeout(() => { window.location.href = 'index.html'; }, 600);
             });
           }
+        } else {
+          dbg('boot: cloud TIDAK terkonfigurasi (mode lokal)');
         }
-      } catch (e) {}
+      } catch (e) { dbg('boot ERROR: ' + (e.message || e)); }
     });
   </script>
 
