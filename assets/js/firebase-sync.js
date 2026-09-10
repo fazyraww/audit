@@ -265,21 +265,61 @@
     } catch (e) { return Promise.resolve(); }
   }
 
+  /* Normalisasi email untuk allowlist: Gmail mengabaikan titik dan
+     tag-plus (fahmi.fahrezy823 == fahmifahrezy823 == fahmi+...@gmail). */
+  function normalizeEmail(email) {
+    try {
+      var e = String(email || '').trim().toLowerCase();
+      var parts = e.split('@');
+      if (parts.length !== 2) return e;
+      var local = parts[0], domain = parts[1];
+      if (domain === 'gmail.com' || domain === 'googlemail.com') {
+        local = local.split('+')[0].replace(/\./g, '');
+        domain = 'gmail.com';
+      }
+      return local + '@' + domain;
+    } catch (e2) { return String(email || '').toLowerCase(); }
+  }
+
   function isEmailAllowed(email) {
     try {
       var list = global.FINAUDIT_ALLOWED_EMAILS;
       if (!list || !list.length) return true;
-      return list.some(function (a) { return String(a).toLowerCase() === String(email || '').toLowerCase(); });
+      var norm = normalizeEmail(email);
+      return list.some(function (a) { return normalizeEmail(a) === norm; });
     } catch (e) { return true; }
+  }
+
+  /* Penanda login segar (sessionStorage, seumur tab): membedakan "baru saja
+     login 5 detik lalu" dari "sesi persisten sisa kemarin" agar migrasi
+     session-only tidak menendang login yang baru selesai. */
+  function markFreshLogin() {
+    try { if (global.sessionStorage) global.sessionStorage.setItem('FINAUDIT_FRESH_LOGIN', '1'); } catch (e) {}
+  }
+  function consumeFreshLogin() {
+    try {
+      if (global.sessionStorage && global.sessionStorage.getItem('FINAUDIT_FRESH_LOGIN') === '1') {
+        global.sessionStorage.removeItem('FINAUDIT_FRESH_LOGIN');
+        return true;
+      }
+    } catch (e) {}
+    return false;
   }
 
   /* Migrasi sekali ke kebijakan session-only: cabut sesi lama yang persisten
      (LOCAL / remember-30-hari) agar perilaku logout-otomatis langsung berlaku
-     di semua perangkat. User login ulang satu kali setelah update ini. */
+     di semua perangkat. Login SEBELUMNYA yang masih segar (penanda
+     FINAUDIT_FRESH_LOGIN) dikecualikan — tanpa ini login yang baru selesai
+     ikut ditendang dan user mental kembali ke halaman login. */
   function migrateSessionPolicy() {
     try {
       if (global.localStorage.getItem('FINAUDIT_SESSION_POLICY_V1')) return Promise.resolve(false);
     } catch (e) { return Promise.resolve(false); }
+    if (consumeFreshLogin()) {
+      // Baru saja login di tab ini → bukan sesi sisa kemarin. Tandai selesai.
+      try { global.localStorage.setItem('FINAUDIT_SESSION_POLICY_V1', '1'); } catch (e) {}
+      return Promise.resolve(false);
+    }
     var p = Promise.resolve();
     try {
       if (auth) p = auth.signOut().catch(function () {});
@@ -446,7 +486,7 @@
     try {
       var list = global.FINAUDIT_ALLOWED_EMAILS;
       if (list && list.length) {
-        var ok = list.some(function (a) { return String(a).toLowerCase() === email; });
+        var ok = list.some(function (a) { return normalizeEmail(a) === normalizeEmail(email); });
         if (!ok) {
           try { if (auth) auth.signOut().catch(function () {}); } catch (e) {}
           try { if (global.FinAuditAuth) global.FinAuditAuth.clearSession(); } catch (e) {}
@@ -459,6 +499,7 @@
     try {
       if (global.FinAuditAuth) {
         return global.FinAuditAuth.createSession(email, remember === true).then(function () {
+          markFreshLogin();
           try { global.FinAuditAuth.recordSuccess(email); } catch (e) {}
           try { if (global.FinAuditStore) global.FinAuditStore.setCurrentUser(email); } catch (e) {}
           attachListener();
