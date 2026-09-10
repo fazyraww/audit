@@ -3,3 +3,5 @@ package.json
 package-lock.json
 debug_parser.mjs
 debug_compare.mjs
+# Data keuangan lokal (PDF mutasi, catatan) — JANGAN masuk git/Vercel
+data/
