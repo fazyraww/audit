@@ -498,12 +498,39 @@
     });
   }
 
+  /* Safari (terutama iOS) memblokir komunikasi popup lintas-situs (ITP):
+     popup terbuka, user setuju, tapi hasilnya tidak pernah kembali → stuck.
+     Solusi: browser ini langsung pakai redirect penuh, tanpa popup. */
+  function useRedirectFirst() {
+    try {
+      var nav = global.navigator || {};
+      var ua = nav.userAgent || '';
+      var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+        (nav.platform === 'MacIntel' && nav.maxTouchPoints > 1);
+      var isSafari = /Safari/.test(ua) && !/Chrome|Chromium|CriOS|FxiOS|Edg|OPR/.test(ua);
+      return isIOS || isSafari;
+    } catch (e) { return false; }
+  }
+
+  function saveRememberFlag(sticky) {
+    try {
+      if (global.sessionStorage) {
+        global.sessionStorage.setItem('FINAUDIT_REMEMBER', sticky ? '1' : '0');
+      }
+    } catch (e) {}
+  }
+
   function signInGoogle(remember) {
     return needInit().then(function () {
       var sticky = remember === true;
       var provider = new global.firebase.auth.GoogleAuthProvider();
       return auth.setPersistence(sticky ? global.firebase.auth.Auth.Persistence.LOCAL
                                         : global.firebase.auth.Auth.Persistence.SESSION).then(function () {
+        if (useRedirectFirst()) {
+          try { toast('Membuka login Google...'); } catch (e) {}
+          saveRememberFlag(sticky);
+          return auth.signInWithRedirect(provider); // hasil diproses consumeRedirect saat kembali
+        }
         return auth.signInWithPopup(provider).then(function (cred) {
           return afterAuth(cred.user, sticky);
         }).catch(function (err) {
@@ -516,11 +543,7 @@
           if (code === 'auth/popup-blocked' || code === 'auth/internal-error' ||
               code === 'auth/unauthorized-domain' || code === 'auth/operation-not-supported') {
             try { toast('Popup terhalang — membuka login Google lewat redirect...'); } catch (e) {}
-            try {
-              if (global.sessionStorage) {
-                global.sessionStorage.setItem('FINAUDIT_REMEMBER', sticky ? '1' : '0');
-              }
-            } catch (e) {}
+            saveRememberFlag(sticky);
             return auth.signInWithRedirect(provider); // navigasi pergi; hasil diproses saat kembali
           }
           mapError(err);
