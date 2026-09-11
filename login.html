@@ -719,16 +719,28 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="assets/js/firebase-sync.js?v=20260912d"></script>
+  <script src="assets/js/firebase-sync.js?v=20260912e"></script>
   <script>
     let isSignUpMode = false;
     // Penanda build HTML ini — HARUS sama dengan FinAuditFirebase.BUILD.
     // Beda = Safari menyajikan campuran file lama+baru dari cache.
-    const LOGIN_BUILD = '20260912d';
+    const LOGIN_BUILD = '20260912e';
 
     /* ─── Panel diagnosa (?debug=1): catat alur login di layar (untuk HP
        tanpa console). Buka login.html?debug=1 lalu baca baris-barisnya. ─── */
     const DEBUG_MODE = new URLSearchParams(window.location.search).has('debug');
+    function fallbackCopy(txt, done) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = txt;
+        ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        done();
+      } catch (e) {}
+    }
     function dbg(msg) {
       try { console.log('[login-dbg]', msg); } catch (e) {}
       if (!DEBUG_MODE) return;
@@ -739,6 +751,18 @@
           box.id = 'dbgPanel';
           box.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;max-height:38vh;overflow:auto;z-index:99999;background:#09090b;color:#4ade80;font:11px/1.5 monospace;padding:10px 12px;border-radius:10px;white-space:pre-wrap;box-shadow:0 8px 30px rgba(0,0,0,.4)';
           document.body.appendChild(box);
+          const btn = document.createElement('button');
+          btn.id = 'dbgCopy';
+          btn.textContent = 'Salin log';
+          btn.style.cssText = 'position:fixed;right:16px;bottom:calc(38vh + 16px);z-index:100000;background:#4ade80;color:#09090b;border:none;border-radius:9999px;padding:8px 16px;font:700 12px system-ui;box-shadow:0 4px 14px rgba(0,0,0,.35)';
+          btn.onclick = () => {
+            const txt = document.getElementById('dbgPanel') ? document.getElementById('dbgPanel').textContent : '';
+            const done = () => { btn.textContent = 'Tersalin!'; setTimeout(() => { btn.textContent = 'Salin log'; }, 2000); };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(txt).then(done).catch(() => fallbackCopy(txt, done));
+            } else { fallbackCopy(txt, done); }
+          };
+          document.body.appendChild(btn);
         }
         const t = new Date().toISOString().slice(11, 19);
         box.textContent += '[' + t + '] ' + msg + '\n';

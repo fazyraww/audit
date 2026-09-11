@@ -21,7 +21,7 @@
   // Penanda build: dibaca panel ?debug=1 di login.html untuk membuktikan
   // file BARU yang jalan (vs cache Safari). WAJIB diganti tiap ada
   // perubahan file ini, dan query ?v= di <script> ikut di-bump.
-  var BUILD = '20260912d';
+  var BUILD = '20260912e';
 
   // Key yang TIDAK BOLEH keluar/masuk cloud (sesi, registry lokal, meta, auto-backup)
   var SYNC_BLOCK_RE = /^(FINAUDIT_AUTH_SESSION|FINAUDIT_USERS|FINAUDIT_USER|FINAUDIT_LOGIN_ATTEMPTS|FINAUDIT_AUTOBACKUP_|FINAUDIT_CLOUD_META|FINAUDIT_BACKUP_META)/;
@@ -618,10 +618,15 @@
       return auth.getRedirectResult().then(function (res) {
         settled = true;
         note('hasil diterima: ' + (res && res.user ? res.user.email : '(kosong)'));
+        try {
+          var cu = auth.currentUser;
+          note('firebase user saat ini: ' + (cu ? (cu.email || '(tanpa email)') : '(tidak ada)'));
+        } catch (e2) {}
         if (res && res.user) return afterAuth(res.user, sticky);
         return null;
       }).catch(function (err) {
         settled = true;
+        note('getRedirectResult ERROR kode=' + ((err && err.code) || '(tanpa kode)'));
         if (err && (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request')) return null;
         try { mapError(err); } catch (mapped) {
           if (mapped && mapped.silent) return null;
