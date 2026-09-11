@@ -18,6 +18,10 @@
   var META_KEY = 'FINAUDIT_CLOUD_META';
   var PUSH_DEBOUNCE_MS = 5000;
   var MAX_DOC_CHARS = 950000; // di bawah batas 1MB/dokumen Firestore
+  // Penanda build: dibaca panel ?debug=1 di login.html untuk membuktikan
+  // file BARU yang jalan (vs cache Safari). WAJIB diganti tiap ada
+  // perubahan file ini, dan query ?v= di <script> ikut di-bump.
+  var BUILD = '20260912d';
 
   // Key yang TIDAK BOLEH keluar/masuk cloud (sesi, registry lokal, meta, auto-backup)
   var SYNC_BLOCK_RE = /^(FINAUDIT_AUTH_SESSION|FINAUDIT_USERS|FINAUDIT_USER|FINAUDIT_LOGIN_ATTEMPTS|FINAUDIT_AUTOBACKUP_|FINAUDIT_CLOUD_META|FINAUDIT_BACKUP_META)/;
@@ -675,6 +679,8 @@
   }
 
   global.FinAuditFirebase = {
+    BUILD: BUILD,
+    loginMode: function () { try { return useRedirectFirst() ? 'redirect' : 'popup'; } catch (e) { return 'popup'; } },
     isConfigured: isConfigured,
     startSync: startSync,
     watchAuth: watchAuth,
