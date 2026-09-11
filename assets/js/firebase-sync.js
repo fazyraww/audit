@@ -21,7 +21,7 @@
   // Penanda build: dibaca panel ?debug=1 di login.html untuk membuktikan
   // file BARU yang jalan (vs cache Safari). WAJIB diganti tiap ada
   // perubahan file ini, dan query ?v= di <script> ikut di-bump.
-  var BUILD = '20260912h';
+  var BUILD = '20260912i';
 
   // Key yang TIDAK BOLEH keluar/masuk cloud (sesi, registry lokal, meta, auto-backup)
   var SYNC_BLOCK_RE = /^(FINAUDIT_AUTH_SESSION|FINAUDIT_USERS|FINAUDIT_USER|FINAUDIT_LOGIN_ATTEMPTS|FINAUDIT_AUTOBACKUP_|FINAUDIT_CLOUD_META|FINAUDIT_BACKUP_META)/;
@@ -30,6 +30,7 @@
   var clientId = 'c' + Math.random().toString(36).slice(2) + Date.now().toString(36);
   var db = null, auth = null, fUser = null, unsub = null;
   var pushTimer = null, applyingRemote = false, skipFirstSnap = true;
+  var retryCount = 0; // kegagalan push beruntun (reset saat push sukses)
   var authListeners = [];
   var storeHooked = false;
 
@@ -53,6 +54,15 @@
       if (!global.firebase.apps.length) global.firebase.initializeApp(config());
       auth = global.firebase.auth();
       db = global.firebase.firestore();
+      // Tulis yang tertunda jangan hilang saat tab ditutup (iOS Safari
+      // sering mematikan request saat pagehide): antrean offline Firestore
+      // dikirim ulang saat aplikasi dibuka berikutnya. Best-effort.
+      try {
+        if (db && db.enablePersistence && !db.__faPersist) {
+          db.__faPersist = true;
+          db.enablePersistence({ synchronizeTabs: true }).catch(function () {});
+        }
+      } catch (e) {}
       return true;
     } catch (e) { try { console.warn('[FinAudit cloud] init gagal:', e); } catch (_) {} return false; }
   }
@@ -143,10 +153,24 @@
       .then(function () {
         writeMeta({ updatedAt: now, by: clientId });
         try { lastHash = localHash(); } catch (e) {}
+        retryCount = 0;
         return true;
       })
       .catch(function (err) {
-        try { console.warn('[FinAudit cloud] push gagal:', err); } catch (e) {}
+        // Gagal upload JANGAN diam (kasus nyata: Rules menolak → database
+        // tetap kosong, user mengira sudah tersimpan). Beri tahu + coba lagi.
+        var code = (err && err.code) || '';
+        try { console.warn('[FinAudit cloud] push gagal:', code, err); } catch (e) {}
+        var hint = (code === 'permission-denied' || /permission/i.test(err && err.message || ''))
+          ? ' Izin Firestore menolak (periksa tab Rules).'
+          : ' Periksa koneksi internet.';
+        try { toast('Gagal menyimpan ke cloud, mencoba lagi…' + hint, 'error'); } catch (e) {}
+        if (retryCount < 3) {
+          retryCount++;
+          try {
+            setTimeout(function () { pushNow(true); }, 30000 * retryCount);
+          } catch (e) {}
+        }
         return false;
       });
   }
