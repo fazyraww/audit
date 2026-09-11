@@ -21,7 +21,7 @@
   // Penanda build: dibaca panel ?debug=1 di login.html untuk membuktikan
   // file BARU yang jalan (vs cache Safari). WAJIB diganti tiap ada
   // perubahan file ini, dan query ?v= di <script> ikut di-bump.
-  var BUILD = '20260912g';
+  var BUILD = '20260912h';
 
   // Key yang TIDAK BOLEH keluar/masuk cloud (sesi, registry lokal, meta, auto-backup)
   var SYNC_BLOCK_RE = /^(FINAUDIT_AUTH_SESSION|FINAUDIT_USERS|FINAUDIT_USER|FINAUDIT_LOGIN_ATTEMPTS|FINAUDIT_AUTOBACKUP_|FINAUDIT_CLOUD_META|FINAUDIT_BACKUP_META)/;
@@ -699,6 +699,25 @@
   function tokenRedirectUri() {
     try { return String(global.location.origin) + '/login.html'; } catch (e) { return ''; }
   }
+  /* URL OAuth2 manual (implicit flow, response_type=token): dipakai sebagai
+     FALLBACK bila google.accounts.oauth2.requestAccessToken() diam-diam
+     no-op (terbukti di Safari iOS 18: dipanggil, tidak throw, tapi tidak
+     ada navigasi — watchdog 3 dtk masih di login, tanpa pagehide).
+     Parameter identik dengan yang dipakai GIS sehingga hasil kembali
+     (#access_token=...&state=...) tetap diproses consumeTokenHash.
+     prompt=select_account = user selalu dapat dialog pilih akun. */
+  function manualGoogleTokenUrl(remember) {
+    var cid = googleClientId();
+    var uri = tokenRedirectUri();
+    var st = remember ? 'remember=1' : 'remember=0';
+    return 'https://accounts.google.com/o/oauth2/v2/auth'
+      + '?client_id=' + encodeURIComponent(cid)
+      + '&redirect_uri=' + encodeURIComponent(uri)
+      + '&response_type=token'
+      + '&scope=' + encodeURIComponent('openid email')
+      + '&state=' + encodeURIComponent(st)
+      + '&prompt=select_account';
+  }
   function beginGoogleTokenRedirect(remember, onStep) {
     var step = function (m) { try { if (typeof onStep === 'function') onStep(m); } catch (e) {} };
     var cid = googleClientId();
@@ -729,7 +748,29 @@
       }, 3000);
     } catch (e2) {}
     step('meminta token ke Google (pindah halaman)...');
-    client.requestAccessToken();
+    var navigated = false;
+    try {
+      if (global.addEventListener) {
+        global.addEventListener('pagehide', function () { navigated = true; });
+      }
+    } catch (e3) {}
+    try {
+      client.requestAccessToken();
+      step('requestAccessToken terpanggil (tanpa throw)');
+    } catch (e4) {
+      step('requestAccessToken THROW: ' + ((e4 && (e4.message || e4.code)) || e4));
+    }
+    // Fallback: bila GIS no-op (masih di halaman ini 2,5 dtk kemudian),
+    // navigasi manual — dijamin pindah karena location.href biasa.
+    try {
+      setTimeout(function () {
+        try {
+          if (navigated) { step('fallback: halaman sudah pergi, batal.'); return; }
+          step('fallback: GIS no-op, navigasi manual ke Google...');
+          global.location.href = manualGoogleTokenUrl(sticky);
+        } catch (e5) { step('fallback GAGAL: ' + ((e5 && e5.message) || e5)); }
+      }, 2500);
+    } catch (e6) {}
     return Promise.resolve(true); // navigasi pergi; hasil diproses consumeTokenHash
   }
   function clearHash() {
