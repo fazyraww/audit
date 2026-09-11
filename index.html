@@ -4905,6 +4905,10 @@
                 <span class="kos-stat-label">Saldo</span>
                 <span class="kos-stat-val" id="kpiKosSaldoVal">Rp 0</span>
               </div>
+              <div class="kos-stat">
+                <span class="kos-stat-label">Sisa /hari</span>
+                <span class="kos-stat-val" id="kpiKosDailyVal">—</span>
+              </div>
             </div>
           </div>
 
@@ -5301,9 +5305,15 @@
         </div>
       </div>
 
-      <div class="form-group-clean">
-        <label class="form-label-clean">Dosen Pengampu</label>
-        <input type="text" id="inClassLecturer" class="form-input-clean" placeholder="Nama Dosen">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="form-group-clean">
+          <label class="form-label-clean">Dosen Pengampu</label>
+          <input type="text" id="inClassLecturer" class="form-input-clean" placeholder="Nama Dosen">
+        </div>
+        <div class="form-group-clean">
+          <label class="form-label-clean">Kelas</label>
+          <input type="text" id="inClassKelas" class="form-input-clean" placeholder="Contoh: TI-2A">
+        </div>
       </div>
 
       <div class="modal-action-footer">
@@ -5371,7 +5381,7 @@
     <div class="modal-card">
       <div class="modal-title-row">
         <div>
-          <div class="modal-heading-title">Catat Pemasukan</div>
+          <div class="modal-heading-title" id="kosIncomeModalTitle">Catat Pemasukan</div>
           <div class="modal-heading-sub" id="kosIncomeModalSub">Bulan aktif</div>
         </div>
         <button class="btn-close-modal" onclick="closeKosIncomeModal()">&times;</button>
@@ -5389,7 +5399,7 @@
 
       <div class="modal-action-footer">
         <button class="btn-clean-secondary" onclick="closeKosIncomeModal()">Batal</button>
-        <button class="btn-clean-primary" onclick="saveKosIncome()">Simpan Pemasukan</button>
+        <button class="btn-clean-primary" id="kosIncomeSaveBtn" onclick="saveKosIncome()">Simpan Pemasukan</button>
       </div>
     </div>
   </div>
@@ -5399,7 +5409,7 @@
     <div class="modal-card">
       <div class="modal-title-row">
         <div>
-          <div class="modal-heading-title">Catat Pengeluaran</div>
+          <div class="modal-heading-title" id="kosExpenseModalTitle">Catat Pengeluaran</div>
           <div class="modal-heading-sub" id="kosExpenseModalSub">Bulan aktif</div>
         </div>
         <button class="btn-close-modal" onclick="closeAddExpenseModal()">&times;</button>
@@ -5429,7 +5439,7 @@
 
       <div class="modal-action-footer">
         <button class="btn-clean-secondary" onclick="closeAddExpenseModal()">Batal</button>
-        <button class="btn-clean-primary" onclick="saveNewExpense()">Simpan Pengeluaran</button>
+        <button class="btn-clean-primary" id="kosExpenseSaveBtn" onclick="saveNewExpense()">Simpan Pengeluaran</button>
       </div>
     </div>
   </div>
@@ -8569,6 +8579,7 @@ No: ${acc.loanNo || acc.contractNo}`;
             c.name.toLowerCase().includes(searchVal) ||
             c.lecturer.toLowerCase().includes(searchVal) ||
             c.room.toLowerCase().includes(searchVal) ||
+            (c.kelas || '').toLowerCase().includes(searchVal) ||
             c.day.toLowerCase().includes(searchVal)
           );
         }
@@ -8609,7 +8620,7 @@ No: ${acc.loanNo || acc.contractNo}`;
                     <span style="font-size:11px; font-weight:700; color:#2563eb; background:#eff6ff; padding:2px 7px; border-radius:4px;">${c.sks} SKS</span>
                   </div>
                   <div class="subject-meta-sub">
-                    <span>${escapeHtml(c.lecturer)}</span> &bull; <span>${escapeHtml(c.room)}</span>
+                    <span>${escapeHtml(c.lecturer)}</span> &bull; <span>${escapeHtml(c.room)}</span>${c.kelas ? ` &bull; <span>Kelas ${escapeHtml(c.kelas)}</span>` : ''}
                   </div>
                 </div>
               </div>
@@ -8685,6 +8696,7 @@ No: ${acc.loanNo || acc.contractNo}`;
         document.getElementById('inClassTime').value = '';
         document.getElementById('inClassRoom').value = '';
         document.getElementById('inClassLecturer').value = '';
+        document.getElementById('inClassKelas').value = '';
         document.getElementById('addClassModal').classList.add('open');
       }
       function openEditClassModal(id) {
@@ -8697,6 +8709,7 @@ No: ${acc.loanNo || acc.contractNo}`;
         document.getElementById('inClassTime').value = c.time || '';
         document.getElementById('inClassRoom').value = c.room || '';
         document.getElementById('inClassLecturer').value = c.lecturer || '';
+        document.getElementById('inClassKelas').value = c.kelas || '';
         const title = document.getElementById('classModalTitle');
         const saveBtn = document.getElementById('classModalSaveBtn');
         if (title) title.textContent = 'Edit Jadwal Kuliah';
@@ -8711,17 +8724,18 @@ No: ${acc.loanNo || acc.contractNo}`;
         const time = document.getElementById('inClassTime').value.trim() || '08.00 - 10.00';
         const room = document.getElementById('inClassRoom').value.trim() || 'Kampus Malang';
         const lecturer = document.getElementById('inClassLecturer').value.trim() || 'Dosen Pengampu';
+        const kelas = document.getElementById('inClassKelas').value.trim();
 
         if (!name) { alert('Harap isi nama mata kuliah.'); return; }
 
         if (editingClassId) {
           const c = customClasses.find(x => x.id === editingClassId);
-          if (c) { c.name = name; c.day = day; c.sks = sks; c.time = time; c.room = room; c.lecturer = lecturer; }
+          if (c) { c.name = name; c.day = day; c.sks = sks; c.time = time; c.room = room; c.lecturer = lecturer; c.kelas = kelas; }
           showToast('Perubahan jadwal disimpan.', '🎓');
         } else {
           customClasses.push({
             id: `CLS-${Date.now()}`,
-            name, day, sks, time, room, lecturer
+            name, day, sks, time, room, lecturer, kelas
           });
           showToast('Jadwal kuliah berhasil ditambahkan!', '🎓');
         }
@@ -8928,6 +8942,30 @@ No: ${acc.loanNo || acc.contractNo}`;
         setKpi('kpiKosPemasukanVal', sumIn, 'var(--color-success)');
         setKpi('kpiKosPengeluaranVal', sumOut, 'var(--color-danger)');
         setKpi('kpiKosSaldoVal', sumIn - sumOut, sumIn - sumOut >= 0 ? 'var(--text-main)' : '#ef4444');
+        // Fitur anak kos: sisa saldo dibagi sisa hari bulan aktif.
+        // Bulan lalu → '—'; bulan depan → dibagi penuh sebulan.
+        try {
+          const [ky, km] = kosActiveKey.split('-').map(Number);
+          const now = new Date();
+          const daysInMonth = new Date(ky, km, 0).getDate();
+          let daysLeft = daysInMonth;
+          if (ky === now.getFullYear() && km === now.getMonth() + 1) {
+            daysLeft = daysInMonth - now.getDate() + 1;
+          } else if (ky < now.getFullYear() || (ky === now.getFullYear() && km < now.getMonth() + 1)) {
+            daysLeft = 0;
+          }
+          const dailyEl = document.getElementById('kpiKosDailyVal');
+          if (dailyEl) {
+            if (daysLeft > 0 && (sumIn > 0 || sumOut > 0)) {
+              const perDay = Math.floor((sumIn - sumOut) / daysLeft);
+              dailyEl.textContent = fmtIDR(perDay);
+              dailyEl.style.color = perDay >= 0 ? 'var(--text-main)' : '#ef4444';
+            } else {
+              dailyEl.textContent = '—';
+              dailyEl.style.color = '';
+            }
+          }
+        } catch (e) {}
 
         const inSub = document.getElementById('kosIncomeSubLabel');
         const outSub = document.getElementById('kosExpenseSubLabel');
@@ -8956,7 +8994,7 @@ No: ${acc.loanNo || acc.contractNo}`;
         const sign = type === 'in' ? '+' : '-';
         const color = type === 'in' ? 'var(--color-success)' : '#ef4444';
         return `
-        <div class="clean-list-row" style="padding:12px 14px;">
+        <div class="clean-list-row" style="padding:12px 14px; cursor:pointer;" onclick="openEditKosItem('${type}','${item.id}')" title="Klik untuk edit">
           <div style="display:flex; align-items:center;">
             <div>
               <div style="font-weight:700; font-size:13px; color:var(--text-main);">${escapeHtml(item.desc || item.category || 'Tanpa keterangan')}</div>
@@ -8965,7 +9003,7 @@ No: ${acc.loanNo || acc.contractNo}`;
           </div>
           <div style="display:flex; align-items:center; gap:10px;">
             <span class="mono" style="font-weight:700; color:${color}; font-size:13px;">${sign}${fmtIDR(item.amount)}</span>
-            <button style="border:none; background:none; color:var(--text-muted); cursor:pointer; display:inline-flex; padding:2px;" onclick="deleteKosItem('${kosActiveKey}','${type}','${item.id}')" title="Hapus"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+            <button style="border:none; background:none; color:var(--text-muted); cursor:pointer; display:inline-flex; padding:2px;" onclick="event.stopPropagation(); deleteKosItem('${kosActiveKey}','${type}','${item.id}')" title="Hapus"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
           </div>
         </div>`;
       }
@@ -8998,36 +9036,80 @@ No: ${acc.loanNo || acc.contractNo}`;
         renderKosActiveView();
       }
 
+      // Klik baris = edit pemasukan/pengeluaran. {type:'in'|'out', id}.
+      let editingKos = null;
+      function resetKosModals() {
+        editingKos = null;
+        const pairs = [
+          ['kosIncomeModalTitle', 'Catat Pemasukan', 'kosIncomeSaveBtn', 'Simpan Pemasukan'],
+          ['kosExpenseModalTitle', 'Catat Pengeluaran', 'kosExpenseSaveBtn', 'Simpan Pengeluaran']
+        ];
+        pairs.forEach(p => {
+          const t = document.getElementById(p[0]);
+          const b = document.getElementById(p[2]);
+          if (t) t.textContent = p[1];
+          if (b) b.textContent = p[3];
+        });
+      }
+      function openEditKosItem(type, id) {
+        const month = kosGetMonth(kosActiveKey);
+        const list = type === 'in' ? (month.pemasukan || []) : (month.pengeluaran || []);
+        const item = list.find(x => x.id === id);
+        if (!item) return;
+        editingKos = { type, id };
+        if (type === 'in') {
+          document.getElementById('inIncomeAmount').value = item.amount || '';
+          document.getElementById('inIncomeDesc').value = item.desc || '';
+          document.getElementById('kosIncomeModalTitle').textContent = 'Edit Pemasukan';
+          document.getElementById('kosIncomeSaveBtn').textContent = 'Simpan Perubahan';
+          document.getElementById('kosIncomeModal').classList.add('open');
+        } else {
+          document.getElementById('inExpenseAmount').value = item.amount || '';
+          document.getElementById('inExpenseCategory').value = item.category || 'Lain-lain';
+          document.getElementById('inExpenseDesc').value = item.desc || '';
+          document.getElementById('kosExpenseModalTitle').textContent = 'Edit Pengeluaran';
+          document.getElementById('kosExpenseSaveBtn').textContent = 'Simpan Perubahan';
+          document.getElementById('addExpenseModal').classList.add('open');
+        }
+      }
       function openKosIncomeModal() {
+        resetKosModals();
         const sub = document.getElementById('kosIncomeModalSub');
         if (sub) sub.textContent = kosMonthNames(kosActiveKey);
         document.getElementById('kosIncomeModal').classList.add('open');
       }
-      function closeKosIncomeModal() { document.getElementById('kosIncomeModal').classList.remove('open'); }
+      function closeKosIncomeModal() { document.getElementById('kosIncomeModal').classList.remove('open'); resetKosModals(); }
       function saveKosIncome() {
         const amount = Number(document.getElementById('inIncomeAmount').value);
         const desc = document.getElementById('inIncomeDesc').value.trim() || 'Pemasukan';
         if (!amount || amount <= 0) { alert('Masukkan nominal pemasukan yang valid.'); return; }
         const month = kosGetMonth(kosActiveKey);
-        month.pemasukan.unshift({
-          id: 'IN-' + Date.now(),
-          date: new Date().toISOString().split('T')[0],
-          desc, amount
-        });
+        if (editingKos && editingKos.type === 'in') {
+          const item = (month.pemasukan || []).find(x => x.id === editingKos.id);
+          if (item) { item.amount = amount; item.desc = desc; }
+          showToast('Perubahan pemasukan disimpan.', '✓');
+        } else {
+          month.pemasukan.unshift({
+            id: 'IN-' + Date.now(),
+            date: new Date().toISOString().split('T')[0],
+            desc, amount
+          });
+          showToast('Pemasukan dicatat.', '✓');
+        }
         kosSaveMonths(kosMonthsData);
         closeKosIncomeModal();
         renderKosActiveView();
-        showToast('Pemasukan dicatat.', '✓');
         document.getElementById('inIncomeAmount').value = '';
         document.getElementById('inIncomeDesc').value = '';
       }
 
       function openAddExpenseModal() {
+        resetKosModals();
         const sub = document.getElementById('kosExpenseModalSub');
         if (sub) sub.textContent = kosMonthNames(kosActiveKey);
         document.getElementById('addExpenseModal').classList.add('open');
       }
-      function closeAddExpenseModal() { document.getElementById('addExpenseModal').classList.remove('open'); }
+      function closeAddExpenseModal() { document.getElementById('addExpenseModal').classList.remove('open'); resetKosModals(); }
       function saveNewExpense() {
         const amount = Number(document.getElementById('inExpenseAmount').value);
         const category = document.getElementById('inExpenseCategory').value;
@@ -9036,16 +9118,22 @@ No: ${acc.loanNo || acc.contractNo}`;
         if (!amount || amount <= 0) { alert('Masukkan nominal pengeluaran yang valid.'); return; }
 
         const month = kosGetMonth(kosActiveKey);
-        month.pengeluaran.unshift({
-          id: 'EXP-' + Date.now(),
-          date: new Date().toISOString().split('T')[0],
-          amount, category, desc
-        });
+        if (editingKos && editingKos.type === 'out') {
+          const item = (month.pengeluaran || []).find(x => x.id === editingKos.id);
+          if (item) { item.amount = amount; item.category = category; item.desc = desc; }
+          showToast('Perubahan pengeluaran disimpan.', '✓');
+        } else {
+          month.pengeluaran.unshift({
+            id: 'EXP-' + Date.now(),
+            date: new Date().toISOString().split('T')[0],
+            amount, category, desc
+          });
+          showToast('Pengeluaran dicatat.', '✓');
+        }
         kosSaveMonths(kosMonthsData);
 
         closeAddExpenseModal();
         renderKosActiveView();
-        showToast('Pengeluaran dicatat.', '✓');
         document.getElementById('inExpenseAmount').value = '';
         document.getElementById('inExpenseDesc').value = '';
       }
