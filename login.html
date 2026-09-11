@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="auth-pending">
 
 <head>
   <meta charset="UTF-8">
@@ -193,6 +193,17 @@
       background: #f9fafb;
       border-color: #d4d4d8;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-social:disabled {
+      opacity: 0.8;
+      cursor: wait;
+    }
+
+    .btn-social:disabled:hover {
+      background: #ffffff;
+      border-color: var(--border-subtle);
+      box-shadow: none;
     }
 
     .btn-social svg {
@@ -440,6 +451,45 @@
       margin-bottom: 16px;
     }
 
+    /* ── Implicit UX: splash + form ──
+       html.auth-pending = sesi masih diperiksa: form disembunyikan,
+       splash spinner yang tampil. JS menghapus class saat putusan ada
+       (masuk dashboard / tampilkan form). <noscript> di bawah = jaring
+       pengaman bila JS mati total. */
+    html.auth-pending .auth-main-wrapper {
+      visibility: hidden;
+    }
+    #splash {
+      display: none;
+    }
+    html.auth-pending #splash {
+      display: flex;
+      position: fixed;
+      inset: 0;
+      background: var(--bg-page);
+      align-items: center;
+      justify-content: center;
+      z-index: 99998;
+    }
+    .splash-spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid #e4e4e7;
+      border-top-color: var(--primary-blue);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    .btn-spinner-dark {
+      width: 15px;
+      height: 15px;
+      border: 2px solid rgba(0, 0, 0, 0.15);
+      border-top-color: #111111;
+      border-radius: 50%;
+      display: inline-block;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
     /* Toast notification */
     .toast-msg {
       position: fixed;
@@ -521,7 +571,19 @@
 
 <body>
 
-  <!-- Toast Feedback -->
+  <!-- Splash: tampil selama sesi diperiksa (silent auth check).
+       Hilang otomatis oleh JS; <noscript> di bawah jaga-jaga JS mati. -->
+  <div id="splash" role="status" aria-label="Memeriksa sesi">
+    <span class="splash-spinner" aria-hidden="true"></span>
+  </div>
+  <noscript>
+    <style>
+      html.auth-pending .auth-main-wrapper { visibility: visible !important; }
+      html.auth-pending #splash { display: none !important; }
+    </style>
+  </noscript>
+
+  <!-- Toast Feedback (HANYA untuk error; sukses = redirect senyap) -->
   <div id="toast" class="toast-msg">
     <span id="toastIcon" class="toast-icon">
       <svg id="toastIconSvg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -529,7 +591,7 @@
         <polyline points="20 6 9 17 4 12"></polyline>
       </svg>
     </span>
-    <span id="toastText">Berhasil masuk! Mengarahkan ke dashboard...</span>
+    <span id="toastText"></span>
   </div>
 
   <!-- ═════════════════════════════════════════════════════════════════════════
@@ -569,7 +631,7 @@
 
       <!-- Social Login Buttons -->
       <div class="social-btn-stack">
-        <button type="button" class="btn-social" onclick="handleSocialAuth('Google')">
+        <button type="button" class="btn-social" id="googleBtn" onclick="handleSocialAuth('Google')">
           <!-- Google colored SVG -->
           <svg viewBox="0 0 24 24">
             <path
@@ -720,12 +782,41 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="assets/js/firebase-sync.js?v=20260912i"></script>
+  <script src="assets/js/firebase-sync.js?v=20260912j"></script>
   <script>
     let isSignUpMode = false;
     // Penanda build HTML ini — HARUS sama dengan FinAuditFirebase.BUILD.
     // Beda = Safari menyajikan campuran file lama+baru dari cache.
-    const LOGIN_BUILD = '20260912i';
+    const LOGIN_BUILD = '20260912j';
+    // Implicit UX: sukses = redirect senyap, tanpa toast. Toast hanya untuk error.
+    let leaving = false;
+    function goDashboard() {
+      if (leaving) return;
+      leaving = true;
+      try { setGoogleLoading(false); } catch (e) {}
+      window.location.href = 'index.html';
+    }
+    function showLoginForm() {
+      if (leaving) return;
+      try { document.documentElement.classList.remove('auth-pending'); } catch (e) {}
+    }
+    // State loading tombol Google: disabled + spinner + "Memuat akun...".
+    // Mencegah klik ganda selama handshake OAuth berjalan.
+    let googleBtnOriginal = null;
+    function setGoogleLoading(on) {
+      const btn = document.getElementById('googleBtn');
+      if (!btn) return;
+      if (on) {
+        if (googleBtnOriginal === null) googleBtnOriginal = btn.innerHTML;
+        btn.disabled = true;
+        btn.setAttribute('aria-busy', 'true');
+        btn.innerHTML = '<span class="btn-spinner-dark" aria-hidden="true"></span><span>Memuat akun...</span>';
+      } else {
+        btn.disabled = false;
+        btn.removeAttribute('aria-busy');
+        if (googleBtnOriginal !== null) btn.innerHTML = googleBtnOriginal;
+      }
+    }
 
     /* ─── Panel diagnosa (?debug=1): catat alur login di layar (untuk HP
        tanpa console). Buka login.html?debug=1 lalu baca baris-barisnya. ─── */
@@ -795,13 +886,17 @@
         setSignUpMode(true);
       }
       refreshLockoutUI();
+      // Bila cloud terkonfigurasi, putusan tampil/redirect diserahkan ke
+      // pemeriksaan Firebase di bawah (agar form tidak kedip dulu).
+      let cloudTakesOver = false;
+      try { cloudTakesOver = !!(window.FinAuditFirebase && FinAuditFirebase.isConfigured()); } catch (e) {}
       if (window.FinAuditAuth) {
         const token = FinAuditAuth.getSessionToken();
         if (token) {
           FinAuditAuth.validateToken(token).then((ok) => {
-            if (ok) window.location.href = 'index.html';
-            else FinAuditAuth.clearSession();
-          });
+            if (ok) goDashboard();
+            else { FinAuditAuth.clearSession(); if (!cloudTakesOver) showLoginForm(); }
+          }).catch(() => { if (!cloudTakesOver) showLoginForm(); });
         } else {
           // Bersihkan sisa sesi lama format "true" (tidak aman)
           try {
@@ -810,7 +905,10 @@
               FinAuditAuth.clearSession();
             }
           } catch (e) {}
+          if (!cloudTakesOver) showLoginForm();
         }
+      } else {
+        showLoginForm();
       }
     });
 
@@ -973,15 +1071,13 @@
           await FinAuditAuth.registerUser(fullName, email, password);
           await FinAuditAuth.createSession(email, remember);
           FinAuditAuth.recordSuccess(email);
-          showToast('Pendaftaran berhasil! Mengarahkan...');
-          setTimeout(() => { window.location.href = 'index.html'; }, 700);
+          goDashboard();
         } else {
           const ok = await FinAuditAuth.verifyCredentials(email, password);
           if (ok) {
             await FinAuditAuth.createSession(email, remember);
             FinAuditAuth.recordSuccess(email);
-            showToast('Berhasil login! Mengarahkan ke dashboard...');
-            setTimeout(() => { window.location.href = 'index.html'; }, 700);
+            goDashboard();
           } else {
             FinAuditAuth.recordFailed(email);
             setBusy(false, 'Login now');
@@ -1006,12 +1102,11 @@
             return;
           }
           await FinAuditFirebase.signUpEmail(fullName, email, password, remember);
-          showToast('Pendaftaran berhasil! Mengarahkan...');
+          goDashboard();
         } else {
           await FinAuditFirebase.signInEmail(email, password, remember);
-          showToast('Berhasil login! Mengarahkan ke dashboard...');
+          goDashboard();
         }
-        setTimeout(() => { window.location.href = 'index.html'; }, 700);
       } catch (err) {
         setBusy(false, isSignUpMode ? 'Sign up now' : 'Login now');
         if (err && err.silent) return;
@@ -1023,13 +1118,13 @@
 
     async function handleSocialAuth(provider) {
       // Log mentah PALING ATAS: membuktikan handler kepanggil atau tidak,
-      // sebelum cek isConfigured apa pun.
+      // sebelum cek isConfigured apa pun. (Hanya panel ?debug=1, tanpa toast.)
       dbg('TOMBOL diklik mentah: provider=' + provider + ' firebase=' + (!!window.FinAuditFirebase) + ' configured=' + ((window.FinAuditFirebase && FinAuditFirebase.isConfigured && FinAuditFirebase.isConfigured()) || false));
-      try { showToast('Tombol ' + provider + ' diklik, memproses...'); } catch (e) {}
       if (provider === 'Google' && window.FinAuditFirebase && FinAuditFirebase.isConfigured()) {
         let remember = false;
         try { remember = document.getElementById('rememberMe').checked === true; } catch (e) {}
         dbg('Google diklik (remember=' + remember + '), memanggil signInGoogle...');
+        setGoogleLoading(true);
         try { dbg('mode login Google di perangkat ini: ' + FinAuditFirebase.loginMode()); } catch (e) {}
         // iOS/Safari: redirect Firebase pulang kosong (ITP). Coba jalur
         // token GIS tahan-ITP dulu; gagal → fallback redirect klasik.
@@ -1042,11 +1137,11 @@
               dbg('pindah ke Google (mode token), menunggu kembali...');
             } catch (gisErr) {
               dbg('gis GAGAL, fallback redirect klasik: code=' + ((gisErr && gisErr.code) || '(tanpa kode)') + ' msg=' + ((gisErr && gisErr.message) || gisErr));
+              setGoogleLoading(false);
               showToast((gisErr && gisErr.message) || 'GIS gagal, coba jalur biasa...', 'error');
               await FinAuditFirebase.signInGoogle(remember, (m) => dbg('google-step: ' + m));
               dbg('signInGoogle kembali tanpa redirect (popup sukses)');
-              showToast('Berhasil login dengan Google! Mengarahkan...');
-              setTimeout(() => { window.location.href = 'index.html'; }, 700);
+              goDashboard();
             }
             return false;
           }
@@ -1055,10 +1150,10 @@
         try {
           await FinAuditFirebase.signInGoogle(remember, (m) => dbg('google-step: ' + m));
           dbg('signInGoogle kembali tanpa redirect (popup sukses)');
-          showToast('Berhasil login dengan Google! Mengarahkan...');
-          setTimeout(() => { window.location.href = 'index.html'; }, 700);
+          goDashboard();
         } catch (err) {
           dbg('signInGoogle GAGAL: code=' + ((err && err.code) || '(tanpa kode)') + ' msg=' + ((err && err.message) || err));
+          setGoogleLoading(false);
           if (err && err.silent) return false;
           showToast((err && err.message) || 'Login Google gagal.', 'error');
         }
@@ -1083,32 +1178,37 @@
           dbg('boot: cloud TERKONFIGURASI, cek redirect...');
           const redirNote = (m) => dbg('redirect: ' + m);
           // Jalur token GIS (tahan-ITP) dicek DULU, baru redirect klasik.
+          // Sukses = redirect senyap; tanpa hasil = tampilkan form bersih.
           FinAuditFirebase.consumeTokenHash(redirNote).then((tokEmail) => {
             if (tokEmail) {
               dbg('consumeTokenHash selesai: ' + tokEmail);
-              showToast('Berhasil login dengan Google! Mengarahkan...');
-              setTimeout(() => { window.location.href = 'index.html'; }, 700);
-              return;
+              goDashboard();
+              return null;
             }
-            FinAuditFirebase.consumeRedirect(redirNote).then((email) => {
-              dbg('consumeRedirect selesai: ' + (email || '(kosong — tidak ada hasil redirect)'));
-              if (email) {
-                showToast('Berhasil login dengan Google! Mengarahkan...');
-                setTimeout(() => { window.location.href = 'index.html'; }, 700);
-              }
-            });
-          });
+            return FinAuditFirebase.consumeRedirect(redirNote);
+          }).then((email) => {
+            if (email) {
+              dbg('consumeRedirect selesai: ' + email);
+              goDashboard();
+            } else {
+              dbg('consumeRedirect selesai: (kosong — tidak ada hasil redirect)');
+              showLoginForm();
+            }
+          }).catch(() => showLoginForm());
           if (FinAuditFirebase.watchAuth) {
             FinAuditFirebase.watchAuth(() => {
-              dbg('watchAuth: sesi valid, ke dashboard');
-              showToast('Sesi ditemukan! Mengarahkan ke dashboard...');
-              setTimeout(() => { window.location.href = 'index.html'; }, 600);
+              dbg('watchAuth: sesi valid, ke dashboard (senyap)');
+              goDashboard();
             });
           }
+          // Jaring pengaman: bila Firebase menggantung (mis. offline),
+          // jangan kurung user di splash selamanya.
+          setTimeout(() => { if (!leaving) showLoginForm(); }, 8000);
         } else {
           dbg('boot: cloud TIDAK terkonfigurasi (mode lokal)');
+          showLoginForm();
         }
-      } catch (e) { dbg('boot ERROR: ' + (e.message || e)); }
+      } catch (e) { dbg('boot ERROR: ' + (e.message || e)); showLoginForm(); }
     });
   </script>
 

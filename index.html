@@ -24,7 +24,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="assets/js/firebase-sync.js?v=20260912i"></script>
+  <script src="assets/js/firebase-sync.js?v=20260912j"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
@@ -7358,11 +7358,25 @@ No: ${acc.loanNo || acc.contractNo}`;
         handleLogout();
       }
 
-      function handleLogout() {
-        if (window.FinAuditAuth) FinAuditAuth.clearSession();
-        else {
-          sessionStorage.removeItem(AUTH_STORAGE_KEY);
-          localStorage.removeItem(AUTH_STORAGE_KEY);
+      // Logout senyap: cabut sesi Firebase (bila ada) + sesi lokal,
+      // lalu ke halaman login TANPA toast. Mencabut Firebase penting —
+      // kalau tidak, login.html mengira "sesi ditemukan" dan melempar
+      // user kembali ke dashboard seolah logout gagal.
+      async function handleLogout() {
+        try {
+          if (window.FinAuditFirebase && FinAuditFirebase.signOut) {
+            await Promise.race([
+              FinAuditFirebase.signOut(),
+              new Promise((res) => setTimeout(res, 1500))
+            ]);
+          } else if (window.FinAuditAuth) {
+            FinAuditAuth.clearSession();
+          } else {
+            sessionStorage.removeItem(AUTH_STORAGE_KEY);
+            localStorage.removeItem(AUTH_STORAGE_KEY);
+          }
+        } catch (e) {
+          try { if (window.FinAuditAuth) FinAuditAuth.clearSession(); } catch (_) {}
         }
         window.location.href = 'login.html';
       }

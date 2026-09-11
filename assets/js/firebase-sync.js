@@ -21,7 +21,7 @@
   // Penanda build: dibaca panel ?debug=1 di login.html untuk membuktikan
   // file BARU yang jalan (vs cache Safari). WAJIB diganti tiap ada
   // perubahan file ini, dan query ?v= di <script> ikut di-bump.
-  var BUILD = '20260912i';
+  var BUILD = '20260912j';
 
   // Key yang TIDAK BOLEH keluar/masuk cloud (sesi, registry lokal, meta, auto-backup)
   var SYNC_BLOCK_RE = /^(FINAUDIT_AUTH_SESSION|FINAUDIT_USERS|FINAUDIT_USER|FINAUDIT_LOGIN_ATTEMPTS|FINAUDIT_AUTOBACKUP_|FINAUDIT_CLOUD_META|FINAUDIT_BACKUP_META)/;
@@ -608,7 +608,7 @@
       return auth.setPersistence(mode).then(function () {
         step('setPersistence selesai');
         if (useRedirectFirst()) {
-          try { toast('Membuka login Google...'); } catch (e) {}
+          // Implicit UX: redirect berjalan senyap, tanpa toast status.
           saveRememberFlag(sticky);
           try { step('mode=' + (useRedirectFirst() ? 'redirect' : 'popup') + ', redirect mulai'); } catch (e) {}
           try {
@@ -633,7 +633,7 @@
           }
           if (code === 'auth/popup-blocked' || code === 'auth/internal-error' ||
               code === 'auth/unauthorized-domain' || code === 'auth/operation-not-supported') {
-            try { toast('Popup terhalang — membuka login Google lewat redirect...'); } catch (e) {}
+            // Implicit UX: fallback redirect berjalan senyap.
             saveRememberFlag(sticky);
             step('fallback redirect mulai');
             return auth.signInWithRedirect(provider); // navigasi pergi; hasil diproses saat kembali
