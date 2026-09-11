@@ -21,7 +21,7 @@
   // Penanda build: dibaca panel ?debug=1 di login.html untuk membuktikan
   // file BARU yang jalan (vs cache Safari). WAJIB diganti tiap ada
   // perubahan file ini, dan query ?v= di <script> ikut di-bump.
-  var BUILD = '20260912e';
+  var BUILD = '20260912f';
 
   // Key yang TIDAK BOLEH keluar/masuk cloud (sesi, registry lokal, meta, auto-backup)
   var SYNC_BLOCK_RE = /^(FINAUDIT_AUTH_SESSION|FINAUDIT_USERS|FINAUDIT_USER|FINAUDIT_LOGIN_ATTEMPTS|FINAUDIT_AUTOBACKUP_|FINAUDIT_CLOUD_META|FINAUDIT_BACKUP_META)/;
@@ -565,21 +565,43 @@
     } catch (e) {}
   }
 
-  function signInGoogle(remember) {
+  function signInGoogle(remember, onStep) {
+    var step = function (m) { try { if (typeof onStep === 'function') onStep(m); } catch (e) {} };
     return needInit().then(function () {
+      step('needInit ok');
       var sticky = remember === true;
-      var provider = new global.firebase.auth.GoogleAuthProvider();
-      return auth.setPersistence(sticky ? global.firebase.auth.Auth.Persistence.LOCAL
-                                        : global.firebase.auth.Auth.Persistence.SESSION).then(function () {
+      var provider;
+      try {
+        provider = new global.firebase.auth.GoogleAuthProvider();
+        step('provider ok');
+      } catch (e) {
+        step('provider GAGAL: ' + ((e && (e.code || e.message)) || e));
+        throw e;
+      }
+      var mode = sticky ? global.firebase.auth.Auth.Persistence.LOCAL
+                        : global.firebase.auth.Auth.Persistence.SESSION;
+      step('setPersistence mulai (' + (sticky ? 'LOCAL' : 'SESSION') + ')');
+      return auth.setPersistence(mode).then(function () {
+        step('setPersistence selesai');
         if (useRedirectFirst()) {
           try { toast('Membuka login Google...'); } catch (e) {}
           saveRememberFlag(sticky);
+          try { step('mode=' + (useRedirectFirst() ? 'redirect' : 'popup') + ', redirect mulai'); } catch (e) {}
+          try {
+            setTimeout(function () {
+              try { step('WATCHDOG 3dtk: masih di login, belum navigasi. url=' + String(global.location && global.location.href).slice(0, 80)); } catch (e2) {}
+            }, 3000);
+          } catch (e2) {}
+          step('memanggil signInWithRedirect...');
           return auth.signInWithRedirect(provider); // hasil diproses consumeRedirect saat kembali
         }
+        step('popup mulai');
         return auth.signInWithPopup(provider).then(function (cred) {
+          step('popup sukses');
           return afterAuth(cred.user, sticky);
         }).catch(function (err) {
           var code = (err && err.code) || '';
+          step('popup GAGAL: code=' + (code || '(tanpa kode)'));
           // Popup dibatalkan user → diam. Popup gagal karena lingkungan
           // (diblokir / cookie / internal-error) → fallback redirect penuh.
           if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
@@ -589,10 +611,14 @@
               code === 'auth/unauthorized-domain' || code === 'auth/operation-not-supported') {
             try { toast('Popup terhalang — membuka login Google lewat redirect...'); } catch (e) {}
             saveRememberFlag(sticky);
+            step('fallback redirect mulai');
             return auth.signInWithRedirect(provider); // navigasi pergi; hasil diproses saat kembali
           }
           mapError(err);
         });
+      }, function (persistErr) {
+        step('setPersistence GAGAL: code=' + ((persistErr && persistErr.code) || '(tanpa kode)') + ' msg=' + ((persistErr && persistErr.message) || persistErr));
+        throw persistErr;
       });
     });
   }
