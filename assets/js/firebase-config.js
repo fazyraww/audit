@@ -32,3 +32,10 @@ window.FINAUDIT_FIREBASE_CONFIG = {
    - Kosongkan menjadi [] = semua akun Google boleh masuk
      (masing-masing tetap punya vault cloud sendiri, tidak saling lihat). */
 window.FINAUDIT_ALLOWED_EMAILS = ['fahmifahrezy823@gmail.com'];
+
+/* Client ID OAuth Web (PUBLIK, bukan rahasia — tampil di setiap URL login
+   Google). Dipakai jalur login tahan-ITP khusus iOS/Safari (token GIS +
+   signInWithCredential, memintas handler redirect yang digunting ITP).
+   Diambil dari: Firebase Console → Authentication → Sign-in method →
+   Google → Web SDK configuration, atau endpoint getProjectConfig. */
+window.FINAUDIT_GOOGLE_CLIENT_ID = '63111198726-03kv11agremej04panr23krkq2skg7df.apps.googleusercontent.com';

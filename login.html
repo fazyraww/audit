@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.googleapis.com https://*.gstatic.com https://apis.google.com https://accounts.google.com; frame-src 'self' https://audit-19624.firebaseapp.com https://accounts.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://audit-19624.firebaseapp.com https://accounts.google.com">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.googleapis.com https://*.gstatic.com https://apis.google.com https://accounts.google.com; frame-src 'self' https://audit-19624.firebaseapp.com https://accounts.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://audit-19624.firebaseapp.com https://accounts.google.com">
   <link rel="icon" type="image/png" href="assets/images/audit.png">
   <title>Login audit</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -719,12 +719,13 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="assets/js/firebase-sync.js?v=20260912f"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="assets/js/firebase-sync.js?v=20260912g"></script>
   <script>
     let isSignUpMode = false;
     // Penanda build HTML ini — HARUS sama dengan FinAuditFirebase.BUILD.
     // Beda = Safari menyajikan campuran file lama+baru dari cache.
-    const LOGIN_BUILD = '20260912f';
+    const LOGIN_BUILD = '20260912g';
 
     /* ─── Panel diagnosa (?debug=1): catat alur login di layar (untuk HP
        tanpa console). Buka login.html?debug=1 lalu baca baris-barisnya. ─── */
@@ -1030,6 +1031,27 @@
         try { remember = document.getElementById('rememberMe').checked === true; } catch (e) {}
         dbg('Google diklik (remember=' + remember + '), memanggil signInGoogle...');
         try { dbg('mode login Google di perangkat ini: ' + FinAuditFirebase.loginMode()); } catch (e) {}
+        // iOS/Safari: redirect Firebase pulang kosong (ITP). Coba jalur
+        // token GIS tahan-ITP dulu; gagal → fallback redirect klasik.
+        try {
+          if (FinAuditFirebase.loginMode() === 'redirect' &&
+              FinAuditFirebase.gisReady && FinAuditFirebase.gisReady()) {
+            dbg('jalur token GIS (tahan-ITP)...');
+            try {
+              await FinAuditFirebase.beginGoogleTokenRedirect(remember, (m) => dbg('gis-step: ' + m));
+              dbg('pindah ke Google (mode token), menunggu kembali...');
+            } catch (gisErr) {
+              dbg('gis GAGAL, fallback redirect klasik: code=' + ((gisErr && gisErr.code) || '(tanpa kode)') + ' msg=' + ((gisErr && gisErr.message) || gisErr));
+              showToast((gisErr && gisErr.message) || 'GIS gagal, coba jalur biasa...', 'error');
+              await FinAuditFirebase.signInGoogle(remember, (m) => dbg('google-step: ' + m));
+              dbg('signInGoogle kembali tanpa redirect (popup sukses)');
+              showToast('Berhasil login dengan Google! Mengarahkan...');
+              setTimeout(() => { window.location.href = 'index.html'; }, 700);
+            }
+            return false;
+          }
+          dbg('gis tidak dipakai (bukan Safari / belum siap), redirect klasik');
+        } catch (e2) { dbg('cek gis ERROR: ' + (e2.message || e2)); }
         try {
           await FinAuditFirebase.signInGoogle(remember, (m) => dbg('google-step: ' + m));
           dbg('signInGoogle kembali tanpa redirect (popup sukses)');
@@ -1060,12 +1082,21 @@
         if (window.FinAuditFirebase && FinAuditFirebase.isConfigured()) {
           dbg('boot: cloud TERKONFIGURASI, cek redirect...');
           const redirNote = (m) => dbg('redirect: ' + m);
-          FinAuditFirebase.consumeRedirect(redirNote).then((email) => {
-            dbg('consumeRedirect selesai: ' + (email || '(kosong — tidak ada hasil redirect)'));
-            if (email) {
+          // Jalur token GIS (tahan-ITP) dicek DULU, baru redirect klasik.
+          FinAuditFirebase.consumeTokenHash(redirNote).then((tokEmail) => {
+            if (tokEmail) {
+              dbg('consumeTokenHash selesai: ' + tokEmail);
               showToast('Berhasil login dengan Google! Mengarahkan...');
               setTimeout(() => { window.location.href = 'index.html'; }, 700);
+              return;
             }
+            FinAuditFirebase.consumeRedirect(redirNote).then((email) => {
+              dbg('consumeRedirect selesai: ' + (email || '(kosong — tidak ada hasil redirect)'));
+              if (email) {
+                showToast('Berhasil login dengan Google! Mengarahkan...');
+                setTimeout(() => { window.location.href = 'index.html'; }, 700);
+              }
+            });
           });
           if (FinAuditFirebase.watchAuth) {
             FinAuditFirebase.watchAuth(() => {

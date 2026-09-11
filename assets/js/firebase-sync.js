@@ -21,7 +21,7 @@
   // Penanda build: dibaca panel ?debug=1 di login.html untuk membuktikan
   // file BARU yang jalan (vs cache Safari). WAJIB diganti tiap ada
   // perubahan file ini, dan query ?v= di <script> ikut di-bump.
-  var BUILD = '20260912f';
+  var BUILD = '20260912g';
 
   // Key yang TIDAK BOLEH keluar/masuk cloud (sesi, registry lokal, meta, auto-backup)
   var SYNC_BLOCK_RE = /^(FINAUDIT_AUTH_SESSION|FINAUDIT_USERS|FINAUDIT_USER|FINAUDIT_LOGIN_ATTEMPTS|FINAUDIT_AUTOBACKUP_|FINAUDIT_CLOUD_META|FINAUDIT_BACKUP_META)/;
@@ -674,6 +674,124 @@
     });
   }
 
+  /* ─── Login Google tahan-ITP (iOS/Safari) ───
+     Masalah: signInWithRedirect pulang kosong di Safari (ITP memutus
+     jabat tangan sesi lewat handler firebaseapp.com): getRedirectResult
+     null tanpa error. Jalur ini memintas handler sepenuhnya — token
+     OAuth diambil lewat Google Identity Services (redirect penuh,
+     token kembali di hash URL), lalu ditukar ke sesi Firebase via
+     signInWithCredential (satu XHR biasa, tak bisa digunting ITP).
+     SYARAT CONSOLE (sekali saja): Cloud Console → APIs & Services →
+     Credentials → OAuth 2.0 Client milik project → Authorized redirect
+     URIs → tambah `https://audit-ebon-sigma.vercel.app/login.html`.
+     Tanpa itu Google menolak dengan redirect_uri_mismatch. */
+  function googleClientId() {
+    try {
+      var id = global.FINAUDIT_GOOGLE_CLIENT_ID || '';
+      if (typeof id === 'string' && id.indexOf('.apps.googleusercontent.com') > 0) return id;
+    } catch (e) {}
+    return '';
+  }
+  function gisLoaded() {
+    try { return !!(global.google && global.google.accounts && global.google.accounts.oauth2); } catch (e) { return false; }
+  }
+  function gisReady() { return !!(googleClientId() && gisLoaded() && isConfigured()); }
+  function tokenRedirectUri() {
+    try { return String(global.location.origin) + '/login.html'; } catch (e) { return ''; }
+  }
+  function beginGoogleTokenRedirect(remember, onStep) {
+    var step = function (m) { try { if (typeof onStep === 'function') onStep(m); } catch (e) {} };
+    var cid = googleClientId();
+    if (!cid) return Promise.reject(new Error('Google Client ID belum diisi di firebase-config.js.'));
+    if (!gisLoaded()) return Promise.reject(new Error('Pustaka Google (GIS) gagal dimuat. Periksa koneksi/CSP.'));
+    if (!isConfigured()) return Promise.reject(new Error('Cloud belum dikonfigurasi.'));
+    var sticky = remember === true;
+    var uri = tokenRedirectUri();
+    saveRememberFlag(sticky);
+    step('gis ok, redirect_uri=' + uri);
+    var client;
+    try {
+      client = global.google.accounts.oauth2.initTokenClient({
+        client_id: cid,
+        scope: 'openid email',
+        ux_mode: 'redirect',
+        redirect_uri: uri,
+        state: sticky ? 'remember=1' : 'remember=0'
+      });
+      step('token-client siap');
+    } catch (e) {
+      step('initTokenClient GAGAL: ' + ((e && (e.message || e.code)) || e));
+      throw e;
+    }
+    try {
+      setTimeout(function () {
+        try { step('WATCHDOG 3dtk: masih di login, belum pindah ke Google.'); } catch (e2) {}
+      }, 3000);
+    } catch (e2) {}
+    step('meminta token ke Google (pindah halaman)...');
+    client.requestAccessToken();
+    return Promise.resolve(true); // navigasi pergi; hasil diproses consumeTokenHash
+  }
+  function clearHash() {
+    try {
+      if (global.history && global.history.replaceState) {
+        global.history.replaceState(null, '', String(global.location.pathname) + String(global.location.search));
+      } else { global.location.hash = ''; }
+    } catch (e) {}
+  }
+  /* Dipanggil saat boot SEBELUM consumeRedirect: menukar #access_token
+     dari Google menjadi sesi Firebase. Mengembalikan email atau null. */
+  function consumeTokenHash(onProgress) {
+    var note = function (m) { try { if (typeof onProgress === 'function') onProgress(m); } catch (e) {} };
+    var hash = '';
+    try { hash = String((global.location && global.location.hash) || ''); } catch (e) {}
+    if (!hash || hash.length < 2) return Promise.resolve(null);
+    if (hash.indexOf('access_token=') < 0) {
+      if (/error=/.test(hash)) {
+        note('token kembali ERROR: ' + hash.slice(1, 120));
+        clearHash();
+        if (/access_denied/.test(hash)) return Promise.resolve(null);
+        toast('Login Google dibatalkan/ditolak.');
+      }
+      return Promise.resolve(null);
+    }
+    var mtok = hash.match(/access_token=([^&]+)/);
+    var tok = (mtok && mtok[1]) ? decodeURIComponent(mtok[1]) : '';
+    var mst = hash.match(/state=([^&]+)/);
+    var st = (mst && mst[1]) ? decodeURIComponent(mst[1]) : '';
+    clearHash();
+    if (!tok) return Promise.resolve(null);
+    var sticky = /remember=1/.test(st);
+    try {
+      if (!sticky && global.sessionStorage && global.sessionStorage.getItem('FINAUDIT_REMEMBER') === '1') sticky = true;
+    } catch (e) {}
+    note('token diterima, tukar ke sesi Firebase...');
+    return signInWithCredentialToken(tok, sticky).then(function (email) {
+      note('tukar token ok: ' + email);
+      return email;
+    }).catch(function (err) {
+      note('tukar token GAGAL: code=' + ((err && err.code) || '(tanpa kode)'));
+      try { mapError(err); } catch (mapped) {
+        if (!(mapped && mapped.silent)) toast((mapped && mapped.message) || 'Login Google gagal.');
+        return null;
+      }
+      return null;
+    });
+  }
+  function signInWithCredentialToken(accessToken, remember) {
+    return needInit().then(function () {
+      var sticky = remember === true;
+      var mode = sticky ? global.firebase.auth.Auth.Persistence.LOCAL
+                        : global.firebase.auth.Auth.Persistence.SESSION;
+      return auth.setPersistence(mode).then(function () {
+        var cred = global.firebase.auth.GoogleAuthProvider.credential(null, accessToken);
+        return auth.signInWithCredential(cred);
+      }).then(function (res) {
+        return afterAuth(res.user, sticky);
+      }).catch(function (err) { mapError(err); });
+    });
+  }
+
   /* Untuk halaman login: pantau sesi Firebase, pastikan sesi lokal
      pendamping ada. Self-heal bila login tercerai (mis. redirect kembali
      tapi sesi lokal gagal dibuat): panggil onUser hanya bila sesi lokal
@@ -718,6 +836,10 @@
     signUpEmail: signUpEmail,
     signInEmail: signInEmail,
     signInGoogle: signInGoogle,
+    gisReady: gisReady,
+    beginGoogleTokenRedirect: beginGoogleTokenRedirect,
+    consumeTokenHash: consumeTokenHash,
+    signInWithCredentialToken: signInWithCredentialToken,
     consumeRedirect: consumeRedirect,
     signOut: signOut,
     currentUser: function () { return fUser; },
