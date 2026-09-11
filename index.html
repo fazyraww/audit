@@ -5262,7 +5262,7 @@
     <div class="modal-card">
       <div class="modal-title-row">
         <div>
-          <div class="modal-heading-title">Tambah Jadwal Kuliah Malang</div>
+          <div class="modal-heading-title" id="classModalTitle">Tambah Jadwal Kuliah Malang</div>
           <div class="modal-heading-sub">Masukkan rincian mata kuliah semester aktif</div>
         </div>
         <button class="btn-close-modal" onclick="closeAddClassModal()">&times;</button>
@@ -5308,7 +5308,7 @@
 
       <div class="modal-action-footer">
         <button class="btn-clean-secondary" onclick="closeAddClassModal()">Batal</button>
-        <button class="btn-clean-primary" onclick="saveNewClass()">Simpan Jadwal</button>
+        <button class="btn-clean-primary" id="classModalSaveBtn" onclick="saveNewClass()">Simpan Jadwal</button>
       </div>
     </div>
   </div>
@@ -8504,7 +8504,21 @@ No: ${acc.loanNo || acc.contractNo}`;
       ];
 
       let customClasses = JSON.parse(localStorage.getItem('MALANG_CLASSES')) || defaultClasses;
+      // Filter hari otomatis ngikut hari ini (Senin–Jumat). Sabtu/Minggu
+      // tidak ada kuliah → tampilkan Semua.
       let activeJadwalDayFilter = 'ALL';
+      try {
+        const todayName = getTodayIndonesianDay();
+        if (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'].includes(todayName)) {
+          activeJadwalDayFilter = todayName;
+        }
+      } catch (e) {}
+      function syncJadwalDayPills() {
+        const want = activeJadwalDayFilter === 'ALL' ? 'Semua' : activeJadwalDayFilter;
+        document.querySelectorAll('.schedule-day-tabs .day-pill-btn').forEach(b => {
+          b.classList.toggle('active', b.textContent.trim() === want);
+        });
+      }
 
       let defaultTasks = [
         { id: 'TSK-1', title: 'Laporan Praktikum Basis Data Terdistribusi', course: 'Basis Data Terdistribusi', deadline: '2026-09-08', priority: 'Tinggi', done: false },
@@ -8530,6 +8544,7 @@ No: ${acc.loanNo || acc.contractNo}`;
       function renderJadwalView() {
         const container = document.getElementById('scheduleCardsContainer');
         const today = getTodayIndonesianDay();
+        syncJadwalDayPills();
         const searchVal = (document.getElementById('classSearchInput')?.value || '').toLowerCase().trim();
         const totalCountEl = document.getElementById('jadwalTotalCount');
         const kpiMatkulCountEl = document.getElementById('kpiJadwalMatkulCount');
@@ -8574,7 +8589,7 @@ No: ${acc.loanNo || acc.contractNo}`;
             const isToday = c.day === today;
             const initials = getSubjectInitials(c.name);
             return `
-            <div class="clean-list-row" style="padding:14px 18px;">
+            <div class="clean-list-row" style="padding:14px 18px; cursor:pointer;" onclick="openEditClassModal('${c.id}')" title="Klik untuk edit">
               <div style="display:flex; align-items:center;">
                 <div class="subject-avatar-circle" style="${isToday ? 'background:#2563eb; color:#ffffff;' : ''}">${initials}</div>
                 <div>
@@ -8590,7 +8605,7 @@ No: ${acc.loanNo || acc.contractNo}`;
               </div>
               <div style="display:flex; align-items:center; gap:12px;">
                 <span class="link-action-pill" style="font-weight:600;">${c.day}, ${c.time}</span>
-                <button style="border:none; background:none; color:var(--text-muted); cursor:pointer; padding:4px; display:inline-flex;" onclick="deleteClass('${c.id}')" title="Hapus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                <button style="border:none; background:none; color:var(--text-muted); cursor:pointer; padding:4px; display:inline-flex;" onclick="event.stopPropagation(); deleteClass('${c.id}')" title="Hapus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
               </div>
             </div>
           `;
@@ -8602,8 +8617,7 @@ No: ${acc.loanNo || acc.contractNo}`;
 
       function filterJadwalDay(day, btn) {
         activeJadwalDayFilter = day;
-        document.querySelectorAll('.schedule-day-tabs .day-pill-btn').forEach(b => b.classList.remove('active'));
-        if (btn) btn.classList.add('active');
+        syncJadwalDayPills();
         renderJadwalView();
       }
 
@@ -8642,8 +8656,41 @@ No: ${acc.loanNo || acc.contractNo}`;
         }).join('');
       }
 
-      function openAddClassModal() { document.getElementById('addClassModal').classList.add('open'); }
-      function closeAddClassModal() { document.getElementById('addClassModal').classList.remove('open'); }
+      // Klik kartu = edit. ID yang sedang diedit (null = tambah baru).
+      let editingClassId = null;
+      function resetClassModal() {
+        editingClassId = null;
+        const title = document.getElementById('classModalTitle');
+        const saveBtn = document.getElementById('classModalSaveBtn');
+        if (title) title.textContent = 'Tambah Jadwal Kuliah Malang';
+        if (saveBtn) saveBtn.textContent = 'Simpan Jadwal';
+      }
+      function openAddClassModal() {
+        resetClassModal();
+        document.getElementById('inClassName').value = '';
+        document.getElementById('inClassSks').value = '3';
+        document.getElementById('inClassTime').value = '';
+        document.getElementById('inClassRoom').value = '';
+        document.getElementById('inClassLecturer').value = '';
+        document.getElementById('addClassModal').classList.add('open');
+      }
+      function openEditClassModal(id) {
+        const c = customClasses.find(x => x.id === id);
+        if (!c) return;
+        editingClassId = id;
+        document.getElementById('inClassName').value = c.name || '';
+        document.getElementById('inClassDay').value = c.day || 'Senin';
+        document.getElementById('inClassSks').value = c.sks || 3;
+        document.getElementById('inClassTime').value = c.time || '';
+        document.getElementById('inClassRoom').value = c.room || '';
+        document.getElementById('inClassLecturer').value = c.lecturer || '';
+        const title = document.getElementById('classModalTitle');
+        const saveBtn = document.getElementById('classModalSaveBtn');
+        if (title) title.textContent = 'Edit Jadwal Kuliah';
+        if (saveBtn) saveBtn.textContent = 'Simpan Perubahan';
+        document.getElementById('addClassModal').classList.add('open');
+      }
+      function closeAddClassModal() { document.getElementById('addClassModal').classList.remove('open'); resetClassModal(); }
       function saveNewClass() {
         const name = document.getElementById('inClassName').value.trim();
         const day = document.getElementById('inClassDay').value;
@@ -8654,14 +8701,20 @@ No: ${acc.loanNo || acc.contractNo}`;
 
         if (!name) { alert('Harap isi nama mata kuliah.'); return; }
 
-        customClasses.push({
-          id: `CLS-${Date.now()}`,
-          name, day, sks, time, room, lecturer
-        });
+        if (editingClassId) {
+          const c = customClasses.find(x => x.id === editingClassId);
+          if (c) { c.name = name; c.day = day; c.sks = sks; c.time = time; c.room = room; c.lecturer = lecturer; }
+          showToast('Perubahan jadwal disimpan.', '🎓');
+        } else {
+          customClasses.push({
+            id: `CLS-${Date.now()}`,
+            name, day, sks, time, room, lecturer
+          });
+          showToast('Jadwal kuliah berhasil ditambahkan!', '🎓');
+        }
         localStorage.setItem('MALANG_CLASSES', JSON.stringify(customClasses));
         closeAddClassModal();
         renderJadwalView();
-        showToast('Jadwal kuliah berhasil ditambahkan!', '🎓');
         document.getElementById('inClassName').value = '';
       }
       function deleteClass(id) {
