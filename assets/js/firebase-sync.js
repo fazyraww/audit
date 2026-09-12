@@ -3,9 +3,10 @@
    TANPA MENGHILANGKAN DATA:
    - Sync TIDAK PERNAH menghapus key localStorage. Hanya menambah /
      menimpa dengan versi yang lebih baru (berdasarkan updatedAt).
-   - Rekonsiliasi pertama: kalau cloud masih kosong → data lokal
-     DIUNGGAH (bukan ditimpa). Kalau keduanya berisi dan berbeda →
-     muncul KONFIRMASI ke user, tidak ada overwrite diam-diam.
+    - Rekonsiliasi pertama: kalau cloud masih kosong → data lokal
+      DIUNGGAH (bukan ditimpa). Kalau keduanya berisi dan berbeda →
+      digabung otomatis tanpa dialog (cloud → lokal, lalu unggah
+      hasil gabungan). Tidak ada overwrite diam-diam yang menghapus.
    - FINAUDIT_AUTOBACKUP_* tidak ikut disync (hemat kuota, cegah
      dokumen > 1MB). Key sesi & registry akun lokal juga dikecualikan.
    - Tanpa config (FINAUDIT_FIREBASE_CONFIG = null): semua no-op,
@@ -21,7 +22,7 @@
   // Penanda build: dibaca panel ?debug=1 di login.html untuk membuktikan
   // file BARU yang jalan (vs cache Safari). WAJIB diganti tiap ada
   // perubahan file ini, dan query ?v= di <script> ikut di-bump.
-  var BUILD = '20260912j';
+  var BUILD = '20260912k';
 
   // Key yang TIDAK BOLEH keluar/masuk cloud (sesi, registry lokal, meta, auto-backup)
   var SYNC_BLOCK_RE = /^(FINAUDIT_AUTH_SESSION|FINAUDIT_USERS|FINAUDIT_USER|FINAUDIT_LOGIN_ATTEMPTS|FINAUDIT_AUTOBACKUP_|FINAUDIT_CLOUD_META|FINAUDIT_BACKUP_META)/;
@@ -177,7 +178,7 @@
 
   /* ─── Rekonsiliasi pertama (SETELAH login). Aman: ───
      cloud kosong → unggah lokal | lokal kosong → unduh cloud |
-     keduanya berisi & beda → TANYA USER dulu. */
+     keduanya berisi & beda → gabung otomatis tanpa dialog. */
   function reconcile() {
     var ref = docRef();
     if (!ref) return Promise.resolve();
@@ -208,25 +209,12 @@
       var cloudNewer = (d.updatedAt || 0) > (meta.updatedAt || 0);
       var localNewer = (meta.updatedAt || 0) > (d.updatedAt || 0);
       if (cloudNewer && d.by !== clientId) {
-        var me = '';
-        try { me = (fUser && fUser.email) || ''; } catch (e) {}
-        var ok = true;
-        try {
-          ok = global.confirm(
-            'Ditemukan data cloud yang LEBIH BARU (dari perangkat lain).\n\n' +
-            'OK = muat data cloud ke perangkat ini.\n' +
-            'Batal = PERTAHANKAN data perangkat ini & unggah ke cloud.\n\n' +
-            'Data tidak akan hilang dalam kedua pilihan.');
-        } catch (e) { ok = true; }
-        if (ok) {
-          var n2 = applyRemote(d.storage, d.updatedAt, d.by);
-          toast('Data cloud (' + n2 + ' bagian) dimuat.');
-          scheduleReload();
-        } else {
-          pushNow(true).then(function () {
-            toast('Data perangkat ini dipertahankan & diunggah ke cloud.');
-          });
-        }
+        // Beda dua sisi → gabung otomatis, tanpa dialog.
+        // applyRemote hanya menambah/menimpa per key, tidak menghapus
+        // key lokal; lalu hasil gabungan diunggah kembali ke cloud.
+        applyRemote(d.storage, d.updatedAt, d.by);
+        pushNow(true);
+        scheduleReload();
         return;
       }
       if (localNewer || (d.by === clientId && localCount > 0)) {
