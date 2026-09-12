@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://generativelanguage.googleapis.com https://*.googleapis.com https://*.gstatic.com https://apis.google.com https://accounts.google.com; frame-src 'self' https://audit-19624.firebaseapp.com https://accounts.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://audit-19624.firebaseapp.com https://accounts.google.com">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob: https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://tessdata.projectnaptha.com https://generativelanguage.googleapis.com https://*.googleapis.com https://*.gstatic.com https://apis.google.com https://accounts.google.com; worker-src 'self' blob:; frame-src 'self' https://audit-19624.firebaseapp.com https://accounts.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://audit-19624.firebaseapp.com https://accounts.google.com">
   <link rel="icon" type="image/png" href="assets/images/audit.png">
   <title>Audit & Financial Dashboard </title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -5231,6 +5231,22 @@
           </button>
           <button class="btn-clean-secondary" onclick="clearVoiceTranscript()">Hapus</button>
         </div>
+
+        <!-- Rekam & AI: andal di iPhone Safari (MediaRecorder -> Gemini),
+             mengatasi Web Speech API yang sering kosong di iOS. -->
+        <div style="display:flex; gap:8px; margin-bottom:10px;">
+          <button class="btn-record" id="voiceAiBtn" style="flex:1;" onclick="toggleVoiceAiRecording()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+            </svg>
+            <span id="voiceAiLabel">Rekam &amp; AI</span>
+            <span class="voice-wave" id="voiceAiWave" style="display:none;">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </span>
+          </button>
+        </div>
         <div id="voiceRecStatus" style="font-size:11px; color:var(--text-muted); margin-bottom:6px; min-height:18px;"></div>
         <textarea id="voiceTranscriptInput" class="form-textarea-clean"
           style="height:130px; font-family:'JetBrains Mono',monospace;"
@@ -7658,12 +7674,148 @@ No: ${acc.loanNo || acc.contractNo}`;
 
       function clearVoiceTranscript() {
         stopVoiceRecognition();
+        stopVoiceAiRecording(true);
         _voiceSegments.clear();
         _voiceBaseIdx = 0;
         _voiceMaxIdx = -1;
         const txt = document.getElementById('voiceTranscriptInput');
         if (txt) txt.value = '';
         setVoiceStatus('');
+      }
+
+      /* ── Rekam & AI (MediaRecorder → WAV → Gemini) ──
+         Jalan di iPhone Safari (Web Speech sering kosong di iOS). Audio
+         di-decode ke WAV PCM 16-bit mono 16kHz agar diterima Gemini. */
+      let _voiceAiMedia = null, _voiceAiRecorder = null, _voiceAiChunks = [], _voiceAiRecording = false;
+
+      function setVoiceAiUI(active) {
+        _voiceAiRecording = active;
+        const btn = document.getElementById('voiceAiBtn');
+        const label = document.getElementById('voiceAiLabel');
+        const wave = document.getElementById('voiceAiWave');
+        if (btn) btn.classList.toggle('recording', active);
+        if (wave) wave.style.display = active ? 'flex' : 'none';
+        if (label) label.textContent = active ? 'Stop & Kirim' : 'Rekam & AI';
+      }
+
+      function toggleVoiceAiRecording() {
+        if (_voiceAiRecording) { stopVoiceAiRecording(false); return; }
+        startVoiceAiRecording();
+      }
+
+      function startVoiceAiRecording() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          setVoiceStatus('Perekam tidak didukung browser ini. Pakai Chrome/Edge, atau ketik manual.');
+          return;
+        }
+        if (typeof MediaRecorder === 'undefined') {
+          setVoiceStatus('Perekam audio tidak didukung browser ini.');
+          return;
+        }
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+          _voiceAiMedia = stream;
+          _voiceAiChunks = [];
+          let rec;
+          try { rec = new MediaRecorder(stream); } catch (e) { rec = new MediaRecorder(stream, { mimeType: 'audio/webm' }); }
+          _voiceAiRecorder = rec;
+          rec.ondataavailable = (e) => { if (e.data && e.data.size) _voiceAiChunks.push(e.data); };
+          rec.onstop = () => { finishVoiceAiRecording(); };
+          rec.start();
+          setVoiceAiUI(true);
+          setVoiceStatus('Merekam... bicara, lalu tekan "Stop & Kirim".');
+        }).catch(() => {
+          setVoiceStatus('Akses mikrofon ditolak. Izinkan mikrofon di browser.');
+        });
+      }
+
+      function stopVoiceAiRecording(silent) {
+        try { if (_voiceAiRecorder && _voiceAiRecorder.state !== 'inactive') _voiceAiRecorder.stop(); } catch (e) {}
+        try { if (_voiceAiMedia) _voiceAiMedia.getTracks().forEach(t => t.stop()); } catch (e) {}
+        _voiceAiMedia = null;
+        setVoiceAiUI(false);
+        if (silent) { _voiceAiRecorder = null; _voiceAiChunks = []; }
+      }
+
+      async function finishVoiceAiRecording() {
+        const chunks = _voiceAiChunks;
+        _voiceAiRecorder = null;
+        _voiceAiChunks = [];
+        if (!chunks.length) { setVoiceStatus('Tidak ada audio terekam.'); return; }
+        setVoiceStatus('Mengirim audio ke AI...', true);
+        try {
+          const blob = new Blob(chunks, { type: (chunks[0] && chunks[0].type) || 'audio/webm' });
+          const wav = await blobToWavBase64(blob);
+          const items = await callGeminiTransactions(
+            'Transkripsi rekaman suara ini (bahasa Indonesia) dan ubah menjadi catatan transaksi keuangan. Kembalikan HANYA JSON array, setiap item: {"tanggal":"YYYY-MM-DD","jenis":"pemasukan"|"pengeluaran","nominal":number,"keterangan":string,"kategori":string}. Jika tanggal tidak disebut, pakai hari ini.',
+            wav.base64, 'audio/wav'
+          );
+          if (!items || !items.length) {
+            setVoiceStatus('AI tidak menemukan transaksi dari audio. Coba bicara lebih jelas.');
+            return;
+          }
+          playCashierBeep();
+          showScanResult(items, 'voice');
+          setVoiceStatus(items.length + ' transaksi dikenali dari suara (AI). Periksa & gabungkan.');
+          document.getElementById('scannerResultArea').style.display = 'block';
+        } catch (err) {
+          setVoiceStatus('Gagal memproses audio: ' + (err && err.message ? err.message : err));
+        }
+      }
+
+      // Decode blob audio apa pun → WAV PCM 16-bit mono 16kHz (base64 tanpa prefix)
+      async function blobToWavBase64(blob) {
+        const arrayBuf = await blob.arrayBuffer();
+        const AC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+        let buf;
+        if (AC) {
+          const tmp = new (window.AudioContext || window.webkitAudioContext)();
+          buf = await tmp.decodeAudioData(arrayBuf.slice(0));
+          try { tmp.close(); } catch (e) {}
+        }
+        if (!buf) throw new Error('Format audio tidak dikenali.');
+        const rate = 16000;
+        const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+        const off = new OAC(1, Math.max(1, Math.ceil(buf.duration * rate)), rate);
+        const src = off.createBufferSource();
+        src.buffer = buf;
+        src.connect(off.destination);
+        src.start(0);
+        const rendered = await off.startRendering();
+        const ch = rendered.getChannelData(0);
+        return { base64: pcmToWavBase64(ch, rate), mime: 'audio/wav' };
+      }
+
+      function pcmToWavBase64(samples, sampleRate) {
+        const n = samples.length;
+        const buffer = new ArrayBuffer(44 + n * 2);
+        const view = new DataView(buffer);
+        const writeStr = (o, s) => { for (let i = 0; i < s.length; i++) view.setUint8(o + i, s.charCodeAt(i)); };
+        writeStr(0, 'RIFF');
+        view.setUint32(4, 36 + n * 2, true);
+        writeStr(8, 'WAVE');
+        writeStr(12, 'fmt ');
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true);
+        view.setUint16(22, 1, true);
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, sampleRate * 2, true);
+        view.setUint16(32, 2, true);
+        view.setUint16(34, 16, true);
+        writeStr(36, 'data');
+        view.setUint32(40, n * 2, true);
+        let o = 44;
+        for (let i = 0; i < n; i++) {
+          let s = Math.max(-1, Math.min(1, samples[i]));
+          view.setInt16(o, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+          o += 2;
+        }
+        let bin = '';
+        const bytes = new Uint8Array(buffer);
+        const chunk = 0x8000;
+        for (let i = 0; i < bytes.length; i += chunk) {
+          bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+        }
+        return btoa(bin);
       }
 
       async function processVoiceText() {
@@ -7780,6 +7932,50 @@ No: ${acc.loanNo || acc.contractNo}`;
         }];
       }
 
+      /* ── Fallback AI (Gemini via /api/gemini) ──
+         Dipakai kamera (bila OCR lokal gagal) & suara (audio). API key
+         tersimpan di ENV Vercel; endpoint hanya menerima prompt teks +
+         gambar inline (audio ditranskripsi di klien lebih dulu). */
+      async function callGeminiTransactions(prompt, image, mime) {
+        const body = { prompt: prompt };
+        if (image) { body.image = image; body.mime = mime || 'image/jpeg'; }
+        const resp = await fetch('/api/gemini', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        if (!resp.ok) {
+          let msg = 'Gagal menghubungi AI (HTTP ' + resp.status + ')';
+          try { const e = await resp.json(); if (e && e.error) msg = e.error; } catch (x) {}
+          throw new Error(msg);
+        }
+        const data = await resp.json();
+        let text = (data && data.text) || '';
+        if (!text) return [];
+        text = text.replace(/```(?:json)?/gi, '').trim();
+        let arr;
+        try { arr = JSON.parse(text); } catch (e) { return []; }
+        return Array.isArray(arr) ? arr : [arr];
+      }
+
+      // Kamera: OCR lokal dulu; bila kosong/gagal → fallback Gemini.
+      async function scanImageToItems(image) {
+        try {
+          const items = await ocrScanImage(image);
+          if (items && items.length) return { items: items, via: 'ocr' };
+        } catch (e) { /* lanjut ke AI */ }
+        setScanImageStatus('OCR lokal tidak menemukan transaksi, mencoba AI...', true);
+        try {
+          const items = await callGeminiTransactions(
+            'Baca gambar struk / mutasi bank ini. Kembalikan HANYA JSON array transaksi keuangan, setiap item: {"tanggal":"YYYY-MM-DD","jenis":"pemasukan"|"pengeluaran","nominal":number,"keterangan":string,"kategori":string}. Jangan menambahkan penjelasan apa pun.',
+            image.dataUrl, image.mime
+          );
+          return { items: items, via: 'ai' };
+        } catch (e2) {
+          return { items: [], via: 'gagal', error: e2 };
+        }
+      }
+
       function prepareScanImage(dataUrl, mime, fileName) {
         return new Promise((resolve) => {
           const img = new Image();
@@ -7845,9 +8041,44 @@ No: ${acc.loanNo || acc.contractNo}`;
       async function getTesseractWorker() {
         if (_tesseractWorker) return _tesseractWorker;
         if (!window.Tesseract) throw new Error('Tesseract belum termuat. Periksa koneksi internet.');
-        _tesseractWorker = await Tesseract.createWorker('ind+eng');
-        await _tesseractWorker.setParameters({ tessedit_pagesegmentation_mode: '6' });
+        // Paksa bahasa langsung ke core (jangan lewat parameter path yang bisa
+        // memicu worker step tambahan): v5 butuh nama param berbeda dari v4.
+        _tesseractWorker = await Tesseract.createWorker(['ind', 'eng'], 1, {
+          logger: () => {},
+          errorHandler: () => {}
+        });
+        try {
+          await _tesseractWorker.setParameters({
+            tessedit_pageseg_mode: '6',
+            tessedit_pagesegmentation_mode: '6'
+          });
+        } catch (e) {}
         return _tesseractWorker;
+      }
+
+      // OCR dengan timeout + auto-terminate worker agar tidak menggantung
+      // selamanya bila bahasa gagal diunduh (CSP/offline).
+      async function ocrWithTimeout(image, timeoutMs) {
+        const worker = await getTesseractWorker();
+        let timer = null;
+        const guard = new Promise((_, rej) => {
+          timer = setTimeout(() => rej(new Error('timeout')), timeoutMs || 25000);
+        });
+        try {
+          const rec = worker.recognize(image.dataUrl, {
+            logger: m => {
+              if (m.status === 'recognizing text') {
+                setScanImageStatus('Membaca teks... ' + Math.round((m.progress || 0) * 100) + '%', true);
+              }
+            }
+          });
+          const res = await Promise.race([rec, guard]);
+          clearTimeout(timer);
+          return res && res.data ? (res.data.text || '') : '';
+        } catch (e) {
+          clearTimeout(timer);
+          throw e;
+        }
       }
 
       function preprocessToGrayscale(canvas) {
@@ -7966,12 +8197,13 @@ No: ${acc.loanNo || acc.contractNo}`;
           _pendingScanImage = prepared;
           document.getElementById('scanImageThumb').src = prepared.dataUrl;
           document.getElementById('scanImagePreview').style.display = 'block';
-          const items = await ocrScanImage(prepared);
+          const result = await scanImageToItems(prepared);
+          const items = result.items;
           stopScanCamera();
           if (items && items.length) {
             setScanBadge('Struk terbaca!', true);
             playCashierBeep();
-            setScanImageStatus(items.length + ' transaksi terbaca otomatis!');
+            setScanImageStatus(items.length + ' transaksi terbaca otomatis (' + (result.via === 'ai' ? 'AI' : 'OCR lokal') + ')!');
             showScanResult(items, 'image');
           } else {
             setScanImageStatus('Tidak ada transaksi terbaca. Coba foto lebih jelas atau tekan "Tangkap Sekarang".');
@@ -8023,13 +8255,15 @@ No: ${acc.loanNo || acc.contractNo}`;
         if (!_pendingScanImage) { setScanImageStatus('Pilih gambar atau ambil kamera dulu.'); return; }
         setScanningState(true);
         try {
-          const items = await ocrScanImage(_pendingScanImage);
+          const result = await scanImageToItems(_pendingScanImage);
+          const items = result.items;
           if (!items || !items.length) {
             setScanningState(false);
-            setScanImageStatus('Tidak ada angka transaksi terbaca. Coba foto lebih jelas & tegak.');
+            setScanImageStatus('Tidak ada angka transaksi terbaca. Coba foto lebih jelas & tegak, atau periksa koneksi AI.');
             return;
           }
-          setScanningState(false, items.length + ' transaksi terbaca (tanpa AI). Periksa hasil di bawah.');
+          const via = result.via === 'ai' ? 'AI' : 'OCR lokal';
+          setScanningState(false, items.length + ' transaksi terbaca (' + via + '). Periksa hasil di bawah.');
           playCashierBeep();
           showScanResult(items, 'image');
         } catch (err) {
@@ -8041,13 +8275,7 @@ No: ${acc.loanNo || acc.contractNo}`;
       async function ocrScanImage(image) {
         const worker = await getTesseractWorker();
         if (!worker) throw new Error('Mesin OCR belum siap.');
-        const { data: { text } } = await worker.recognize(image.dataUrl, {
-          logger: m => {
-            if (m.status === 'recognizing text') {
-              setScanImageStatus('Membaca teks... ' + Math.round((m.progress || 0) * 100) + '%', true);
-            }
-          }
-        });
+        const text = await ocrWithTimeout(image, 25000);
         return parseOcrToTx(text || '');
       }
 
